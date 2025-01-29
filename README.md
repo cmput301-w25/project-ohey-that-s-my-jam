@@ -9,7 +9,7 @@
 | Obaloluwa Odelana | odelana | @uodelana |
 | Hazel Cho | hcho3 | @cho-hazel     |
 | [Ethan Chen] | [yusheng9] | [@Raphael1144]     |
-| [Full Name] | [CCID] | [@username]     |
+| Maria Onido | onido | @maria-onido  |
 
 ## Project Description
 
