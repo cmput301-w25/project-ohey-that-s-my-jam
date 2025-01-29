@@ -1,7 +1,7 @@
 CMPUT 301 Student Submission License
 Version 2.0
 
-Copyright 2025 `<ohey that s my jam>`
+Copyright 2025 OHEY that's my JAM
 
 Unauthorized redistribution is forbidden under all circumstances. Use of this
 software without explicit authorization from the author **and** the CMPUT 301
