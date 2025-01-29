@@ -1,12 +1,12 @@
-# CMPUT 301 W25 - Team [Team Name]
+# CMPUT 301 W25 - Team OHEY that's my JAM
 
 ## Team Members
 
 | Name        | CCID   | GitHub Username |
 | ----------- | ------ | --------------- |
-| Jospin Muhanuzi | muhanuzi | JospinM |
+| Jospin Muhanuzi | muhanuzi | @JospinM |
 | Yves Tago | tago | @ytxgo     |
-| [Full Name] | [CCID] | [@username]     |
+| Obaloluwa Odelana | odelana | @uodelana |
 | [Full Name] | [CCID] | [@username]     |
 | [Full Name] | [CCID] | [@username]     |
 | [Full Name] | [CCID] | [@username]     |
