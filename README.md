@@ -8,7 +8,7 @@
 | Yves Tago | tago | @ytxgo     |
 | Obaloluwa Odelana | odelana | @uodelana |
 | Hazel Cho | hcho3 | @cho-hazel     |
-| [Full Name] | [CCID] | [@username]     |
+| [Ethan Chen] | [yusheng9] | [@Raphael1144]     |
 | [Full Name] | [CCID] | [@username]     |
 
 ## Project Description
