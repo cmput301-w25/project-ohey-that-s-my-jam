@@ -7,7 +7,7 @@
 | Jospin Muhanuzi | muhanuzi | @JospinM |
 | Yves Tago | tago | @ytxgo     |
 | Obaloluwa Odelana | odelana | @uodelana |
-| [Full Name] | [CCID] | [@username]     |
+| Hazel Cho | hcho3 | @cho-hazel     |
 | [Full Name] | [CCID] | [@username]     |
 | [Full Name] | [CCID] | [@username]     |
 
