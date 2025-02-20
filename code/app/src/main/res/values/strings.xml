@@ -43,4 +43,9 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="emotional_state_default">EMOTIONAL STATE 😊</string>
+    <string name="date_and_time_text">YYYY/MM/DD 00:00:00</string>
+    <string name="reason_why_text">Reason Why Text</string>
+    <string name="trigger_and_social_situation_text">Triggered by [given trigger] while [social situation]</string>
+    <string name="location_text">Location</string>
 </resources>
