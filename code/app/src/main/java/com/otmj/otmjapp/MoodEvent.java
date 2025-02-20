@@ -1,33 +1,24 @@
 package com.otmj.otmjapp;
 
+import android.location.Location;
+
 import java.util.Date;
 
 public class MoodEvent {
 
-    public enum MoodType{
-        ANGER,
-        CONFUSION,
-        DISGUST,
-        FEAR,
-        HAPPINESS,
-        SADNESS,
-        SHAME,
-        SURPRISE
-    }
-
     private Date date;
-    private MoodType emotionalState;
+    private EmotionalState emotionalState;
     private String trigger;
     private String socialSituation;
-    private String location;
+    private Location location;
     private String reason;
     private int photoId;
 
 
-    public MoodEvent(Date date, String emotionalState, String trigger, String socialSituation, String location, String reason , int photoId){
+    public MoodEvent(Date date, EmotionalState emotionalState, String trigger, String socialSituation, Location location, String reason , int photoId){
         // trigger, socialSituation, location, reason, photoId could be optional, if user didn't given please input null for argument
         this.date = date;
-        this.emotionalState = MoodType.valueOf(emotionalState);
+        this.emotionalState = emotionalState;
         this.trigger = trigger;
         this.socialSituation = socialSituation;
         this.location = location;
@@ -43,8 +34,12 @@ public class MoodEvent {
         this.date = date;
     }
 
-    public MoodType getEmotionalState() {
+    public EmotionalState getEmotionalState() {
         return emotionalState;
+    }
+
+    public void setEmotionalState(EmotionalState emotionalState){
+        this.emotionalState = emotionalState;
     }
 
     public String getTrigger() {
@@ -63,11 +58,11 @@ public class MoodEvent {
         this.socialSituation = socialSituation;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
@@ -94,7 +89,7 @@ public class MoodEvent {
                 ", emotionalState=" + emotionalState +
                 ", trigger='" + trigger + '\'' +
                 ", socialSituation='" + socialSituation + '\'' +
-                ", location='" + location + '\'' +
+                ", location=" + location +
                 ", reason='" + reason + '\'' +
                 ", photoId=" + photoId +
                 '}';
