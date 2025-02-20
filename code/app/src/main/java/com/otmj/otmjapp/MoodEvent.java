@@ -1,5 +1,6 @@
 package com.otmj.otmjapp;
 
+import android.graphics.Bitmap;
 import android.location.Location;
 
 import java.util.Date;
@@ -12,10 +13,10 @@ public class MoodEvent {
     private String socialSituation;
     private Location location;
     private String reason;
-    private int photoId;
+    private Bitmap photo;
 
 
-    public MoodEvent(Date date, EmotionalState emotionalState, String trigger, String socialSituation, Location location, String reason , int photoId){
+    public MoodEvent(Date date, EmotionalState emotionalState, String trigger, String socialSituation, Location location, String reason , Bitmap photo){
         // trigger, socialSituation, location, reason, photoId could be optional, if user didn't given please input null for argument
         this.date = date;
         this.emotionalState = emotionalState;
@@ -23,7 +24,7 @@ public class MoodEvent {
         this.socialSituation = socialSituation;
         this.location = location;
         this.reason = reason;
-        this.photoId = photoId;
+        this.photo = photo;
     }
 
     public Date getDate() {
@@ -74,24 +75,21 @@ public class MoodEvent {
         this.reason = reason;
     }
 
-    public int getPhotoId() {
-        return photoId;
+    public Bitmap getPhoto() {
+        return photo;
     }
 
-    public void setPhotoId(int photoId) {
-        this.photoId = photoId;
+    public void setPhoto(Bitmap photo) {
+        this.photo = photo;
     }
 
     @Override
     public String toString() {
         return "MoodEvent{" +
                 "date=" + date +
-                ", emotionalState=" + emotionalState +
                 ", trigger='" + trigger + '\'' +
                 ", socialSituation='" + socialSituation + '\'' +
-                ", location=" + location +
                 ", reason='" + reason + '\'' +
-                ", photoId=" + photoId +
                 '}';
     }
 }
