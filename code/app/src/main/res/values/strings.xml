@@ -48,4 +48,16 @@
     <string name="reason_why_text">Reason Why Text</string>
     <string name="trigger_and_social_situation_text">Triggered by [given trigger] while [social situation]</string>
     <string name="location_text">Location</string>
+
+    <string name="edit_event">Edit this mood event</string>
+    <string name="reason_why_image_desc">Reason why image for mood event</string>
+    <string name="location_icon_desc">Location associated with this mood event</string>
+
+    <string name="profile_picture">Default profile icon or image uploaded by the user</string>
+    <string name="username_text">Username</string>
+    <string name="followers">FOLLOWERS</string>
+    <string name="following">FOLLOWING</string>
+    <string name="requests">REQUESTS</string>
+    <string name="recent_events">RECENT EVENTS</string>
+    <string name="filter_desc">Initiates filter fragment for mood events list</string>
 </resources>
