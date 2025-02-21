@@ -43,4 +43,34 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="emotional_state_default">EMOTIONAL STATE 😊</string>
+    <string name="date_and_time_text">YYYY/MM/DD 00:00:00</string>
+    <string name="reason_why_text">Reason Why Text</string>
+    <string name="trigger_and_social_situation_text">Triggered by [given trigger] while [social situation]</string>
+    <string name="location_text">Location</string>
+
+    <string name="edit_event">Edit this mood event</string>
+    <string name="reason_why_image_desc">Reason why image for mood event</string>
+    <string name="location_icon_desc">Location associated with this mood event</string>
+
+    <string name="profile_picture">Default profile icon or image uploaded by the user</string>
+    <string name="username_text">Username</string>
+    <string name="followers">FOLLOWERS</string>
+    <string name="following">FOLLOWING</string>
+    <string name="requests">REQUESTS</string>
+    <string name="recent_events">RECENT EVENTS</string>
+    <string name="filter_desc">Initiates filter fragment for mood events list</string>
+    <string name="add_icon_desc">Pops the Add mood event fragment</string>
+    <string name="recent_week_filter_text">LAST 7 DAYS</string>
+    <string name="anger_text">ANGER</string>
+    <string name="disgust_text">DISGUST</string>
+    <string name="fear_text">FEAR</string>
+    <string name="sad_text">SAD</string>
+    <string name="confuse_text">CONFUSE</string>
+    <string name="shame_text">SHAME</string>
+    <string name="happy_text">HAPPY</string>
+    <string name="surprise_text">SURPRISE</string>
+    <string name="search_reason_why_text">Enter Keyword(s)</string>
+    <string name="ic_search_desc">Initiates the search of matching keyword(s) in reason why texts</string>
+    <string name="ic_close_desc">Closes a fragment</string>
 </resources>
