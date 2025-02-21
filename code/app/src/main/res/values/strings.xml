@@ -60,4 +60,5 @@
     <string name="requests">REQUESTS</string>
     <string name="recent_events">RECENT EVENTS</string>
     <string name="filter_desc">Initiates filter fragment for mood events list</string>
+    <string name="add_icon_desc">Pops the Add mood event fragment</string>
 </resources>
