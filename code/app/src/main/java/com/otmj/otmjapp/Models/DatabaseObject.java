@@ -1,13 +1,24 @@
 package com.otmj.otmjapp.Models;
 
-public class DatabaseObject {
-    private String id;
+import com.otmj.otmjapp.Helper.FirestoreDB;
+import com.otmj.otmjapp.Utilities.DB;
 
-    public DatabaseObject(String id) {
-        this.id = id;
+import java.io.Serializable;
+
+public class DatabaseObject {
+    private final long ID;
+    private final FirestoreDB dbInstance;
+    private final Serializable object;
+
+    public DatabaseObject(long ID, FirestoreDB dbInstance, Serializable object) {
+        this.ID = ID;
+        this.dbInstance = dbInstance;
+        this.object = object;
     }
 
-    public String getId() {
-        return id;
+    public void save() {
+    }
+
+    public void delete() {
     }
 }
