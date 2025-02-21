@@ -2,6 +2,10 @@ package com.otmj.otmjapp.Models;
 
 import com.otmj.otmjapp.Helper.FirestoreDB;
 
+/**
+ * Wrapper class for objects that are retrieved from database
+ */
+// TODO: Add Java Docs
 public class DatabaseObject {
     private final String ID;
     private final Entity object;
