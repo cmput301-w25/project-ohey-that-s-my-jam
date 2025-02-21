@@ -1,24 +1,36 @@
 package com.otmj.otmjapp.Models;
 
 import com.otmj.otmjapp.Helper.FirestoreDB;
-import com.otmj.otmjapp.Utilities.DB;
-
-import java.io.Serializable;
 
 public class DatabaseObject {
-    private final long ID;
-    private final FirestoreDB dbInstance;
-    private final Serializable object;
+    private final String ID;
+    private final Entity object;
+    private FirestoreDB db;
 
-    public DatabaseObject(long ID, FirestoreDB dbInstance, Serializable object) {
+    public DatabaseObject(String ID, Entity object, FirestoreDB db) {
         this.ID = ID;
-        this.dbInstance = dbInstance;
         this.object = object;
+        this.db = db;
+    }
+
+    public String getID() {
+        return this.ID;
+    }
+
+    public <T extends Entity> T getObject() {
+        return (T) this.object;
     }
 
     public void save() {
+        if (db != null) {
+            db.updateDocument(this);
+        }
     }
 
     public void delete() {
+        if (db != null) {
+            db.deleteDocument(this);
+            db = null;
+        }
     }
 }
