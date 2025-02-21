@@ -1,12 +1,10 @@
 package com.otmj.otmjapp.Models;
 
-import com.otmj.otmjapp.Helper.FirestoreDB;
-
 public class User extends DatabaseObject {
     private String username;
 
-    public User(String id, FirestoreDB db) {
-        super(id, db);
+    public User(String id) {
+        super(id);
     }
 
     public String getUsername() {
