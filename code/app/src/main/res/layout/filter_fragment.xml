@@ -14,7 +14,8 @@
         app:layout_constraintTop_toTopOf="parent"
         android:padding="8dp"
         app:tint="@color/black"
-        app:srcCompat="@drawable/ic_close" />
+        app:srcCompat="@drawable/ic_close"
+        android:contentDescription="@string/ic_close_desc"/>
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/filter_chips"
@@ -147,7 +148,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:boxBackgroundMode="none"
-        app:boxStrokeColorFocused="@color/sad"
         app:boxStrokeWidth="2dp"
         app:boxStrokeColor="@color/sad"
         app:counterEnabled="true"

@@ -72,5 +72,9 @@
     <string name="surprise_text">SURPRISE</string>
     <string name="search_reason_why_text">Enter Keyword(s)</string>
     <string name="ic_search_desc">Initiates the search of matching keyword(s) in reason why texts</string>
-    <string name="ic_close_desc">Closes a fragment</string>
+    <string name="ic_close_desc">Closes a fragment/view</string>
+    <string name="ic_send_desc">Sends a follow request</string>
+    <string name="ic_visibility_off_desc">Signals that the current user does not have permission to view recent events of another user</string>
+    <string name="send_request_text">REQUEST</string>
+    <string name="unfollow_text">UNFOLLOW</string>
 </resources>
