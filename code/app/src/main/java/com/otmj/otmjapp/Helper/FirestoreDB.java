@@ -10,7 +10,7 @@ import com.otmj.otmjapp.Models.Entity;
 
 import java.util.ArrayList;
 
-public class FirestoreDB implements DB {
+public class FirestoreDB {
 
     public interface DBCallback {
         void onSuccess(DatabaseObject object);
