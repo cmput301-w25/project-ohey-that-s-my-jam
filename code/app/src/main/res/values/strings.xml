@@ -85,4 +85,6 @@
     <string name="forgot_cap">FORGOT YOUR PASSWORD?</string>
     <string name="recovery_code_cap">\t\t\tRECOVERY CODE</string>
     <string name="reset_password_cap">RESET PASSWORD</string>
+    <string name="confirm_request_text">CONFIRM</string>
+    <string name="temp_list_title">LIST TITLE</string>
 </resources>
