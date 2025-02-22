@@ -6,52 +6,72 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.otmj.otmjapp.Models.DatabaseObject;
+import com.otmj.otmjapp.Models.Entity;
 
 import java.util.ArrayList;
+
 public class FirestoreDB implements DB {
-    private final FirebaseFirestore db;
-    public FirestoreDB() {
-        db = FirebaseFirestore.getInstance();
+
+    public interface DBCallback {
+        void onSuccess(DatabaseObject object);
+        void onSuccess(ArrayList<DatabaseObject> result);
+        void onFailure(Exception e);
     }
 
-    // write javadoc
-    public ArrayList<DatabaseObject> getDocuments(String collection) {
-        ArrayList<DatabaseObject> documents = new ArrayList<>();
+    private final FirebaseFirestore db;
+    private final String collection;
 
+    public FirestoreDB(String collection) {
+        this.collection = collection;
+        this.db = FirebaseFirestore.getInstance();
+    }
+
+    // TODO: write javadoc
+    public void getDocuments(DBCallback callback) {
         CollectionReference collectionRef = db.collection(collection);
-        collectionRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            for(DocumentSnapshot document : queryDocumentSnapshots) {
-                DatabaseObject object = new DatabaseObject(document.getId());
+        collectionRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<DatabaseObject> documents = new ArrayList<>();
+                for (DocumentSnapshot doc : task.getResult()) {
+                    DatabaseObject object = new DatabaseObject(doc.getId(),
+                            Entity.fromMap(doc.getData()),
+                            this);
 
-                documents.add(object);
+                    documents.add(object);
+                }
+
+                callback.onSuccess(documents);
+            } else {
+                callback.onFailure(task.getException());
             }
         });
-
-        return documents;
     }
 
-    // write javadoc
-    public void updateDocument(String collection, String id, DatabaseObject document) {
+    // TODO: write javadoc
+    public void updateDocument(DatabaseObject document) {
         CollectionReference collectionRef = db.collection(collection);
+        DocumentReference docRef = collectionRef.document(document.getID());
 
-        DocumentReference docRef = collectionRef.document(id);
-        docRef.set(document);
+        docRef.set(document.getObject());
     }
 
-    // write javadoc
-    public void addDocument(String collection, DatabaseObject document) {
+    // TODO: write javadoc
+    public <T extends Entity> void addDocument(T object, DBCallback callback) {
         CollectionReference collectionRef = db.collection(collection);
-        String id = collectionRef.document().getId();
-
-        DocumentReference docRef = collectionRef.document(id);
-        docRef.set(document);
+        collectionRef.add(object).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                callback.onSuccess(new DatabaseObject(task.getResult().getId(), object, this));
+            } else {
+                callback.onFailure(task.getException());
+            }
+        });
     }
 
-    // write javadoc
-    public void deleteDocument(String collection, String id) {
+    // TODO: write javadoc
+    public void deleteDocument(DatabaseObject document) {
         CollectionReference collectionRef = db.collection(collection);
+        DocumentReference docRef = collectionRef.document(document.getID());
 
-        DocumentReference docRef = collectionRef.document(id);
         docRef.delete();
     }
 }

@@ -72,9 +72,23 @@
     <string name="surprise_text">SURPRISE</string>
     <string name="search_reason_why_text">Enter Keyword(s)</string>
     <string name="ic_search_desc">Initiates the search of matching keyword(s) in reason why texts</string>
-    <string name="ic_close_desc">Closes a fragment/view</string>
+
+    <string name="ic_close_desc">Closes a fragment or view</string>
+    <string name="create_account">CREATE ACCOUNT</string>
+    <string name="record_your_mood">RECORD YOUR MOOD</string>
+    <string name="login">LOGIN</string>
+    <string name="signup">SIGNUP</string>
+    <string name="username_cap">\t\t\tUSERNAME</string>
+    <string name="email_cap">\t\t\tEMAIL</string>
+    <string name="password_cap">\t\t\tPASSWORD</string>
+    <string name="welcome_back_cap">WELCOME BACK!</string>
+    <string name="send_email_cap">SEND EMAIL</string>
+    <string name="forgot_cap">FORGOT YOUR PASSWORD?</string>
+    <string name="recovery_code_cap">\t\t\tRECOVERY CODE</string>
+    <string name="reset_password_cap">RESET PASSWORD</string>
     <string name="ic_send_desc">Sends a follow request</string>
     <string name="ic_visibility_off_desc">Signals that the current user does not have permission to view recent events of another user</string>
     <string name="send_request_text">REQUEST</string>
     <string name="unfollow_text">UNFOLLOW</string>
+
 </resources>
