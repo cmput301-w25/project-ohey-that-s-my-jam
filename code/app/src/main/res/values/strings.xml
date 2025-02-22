@@ -86,9 +86,13 @@
     <string name="forgot_cap">FORGOT YOUR PASSWORD?</string>
     <string name="recovery_code_cap">\t\t\tRECOVERY CODE</string>
     <string name="reset_password_cap">RESET PASSWORD</string>
+
     <string name="ic_send_desc">Sends a follow request</string>
     <string name="ic_visibility_off_desc">Signals that the current user does not have permission to view recent events of another user</string>
     <string name="send_request_text">REQUEST</string>
     <string name="unfollow_text">UNFOLLOW</string>
+  
+    <string name="confirm_request_text">CONFIRM</string>
+    <string name="temp_list_title">LIST TITLE</string>
 
 </resources>
