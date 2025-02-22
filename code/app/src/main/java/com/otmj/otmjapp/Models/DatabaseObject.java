@@ -6,12 +6,12 @@ import com.otmj.otmjapp.Helper.FirestoreDB;
  * Wrapper class for objects that are retrieved from database
  */
 // TODO: Add Java Docs
-public class DatabaseObject {
+public class DatabaseObject<T extends Entity> {
     private final String ID;
-    private final Entity object;
+    private final T object;
     private FirestoreDB db;
 
-    public DatabaseObject(String ID, Entity object, FirestoreDB db) {
+    public DatabaseObject(String ID, T object, FirestoreDB db) {
         this.ID = ID;
         this.object = object;
         this.db = db;
@@ -21,8 +21,8 @@ public class DatabaseObject {
         return this.ID;
     }
 
-    public <T extends Entity> T getObject() {
-        return (T) this.object;
+    public T getObject() {
+        return object;
     }
 
     public void save() {
