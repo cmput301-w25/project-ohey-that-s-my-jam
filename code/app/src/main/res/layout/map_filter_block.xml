@@ -7,12 +7,12 @@
     <!--Closing Button-->
     <ImageButton
         android:id="@+id/closeMapFilter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_close"
+        android:layout_width="44dp"
+        android:layout_height="43dp"
         android:layout_alignParentEnd="true"
-        android:contentDescription="@string/filterblock_closingic"/>
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/filterblock_closingic"
+        android:src="@drawable/ic_close" />
 
     <!--Group of the Buttons ALL/FRIEND/MINE-->
     <RadioGroup
