@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="105dp">
+
+    <TextView
+        android:id="@+id/mood_event_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/examName"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="21dp"
+        android:gravity="center"
+        android:text="@string/mood_event_location"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/examName"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toEndOf="@+id/examPic"
+        android:maxLines="1"
+        android:text="@string/username_placeholder"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/examPic"
+        android:layout_width="50dp"
+        android:layout_height="70dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginBottom="36dp"
+        app:srcCompat="@mipmap/ic_launcher_round" />
+
+    <TextView
+        android:id="@+id/mood_event_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/examName"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="-27dp"
+        android:layout_marginEnd="23dp"
+        android:gravity="center"
+        android:text="@string/time_ago"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/reason_why"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/examName"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="233dp"
+        android:gravity="center"
+        android:text="@string/reason_why"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/border2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_alignParentBottom="true"
+        android:background="#808080"/>
+
+</RelativeLayout>
