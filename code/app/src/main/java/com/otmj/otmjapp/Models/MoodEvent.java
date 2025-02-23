@@ -35,7 +35,7 @@ public class MoodEvent extends Entity {
         }
     }
 
-    public MoodEvent(Date createdDate,
+    private MoodEvent(Date createdDate,
                      EmotionalState emotionalState,
                      String trigger,
                      SocialSituation socialSituation,
