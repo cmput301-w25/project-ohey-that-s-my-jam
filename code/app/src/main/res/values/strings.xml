@@ -98,5 +98,6 @@
     <string name="friend_cap">FRIEND</string>
     <string name="all_cap">ALL</string>
     <string name="mine_cap">MINE</string>
+    <string name="filterblock_closingic">Closing button for this filter block</string>
 
 </resources>

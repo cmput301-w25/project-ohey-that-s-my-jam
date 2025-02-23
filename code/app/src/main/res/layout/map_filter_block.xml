@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_close"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/filterblock_closingic"/>
 
     <!--Group of the Buttons ALL/FRIEND/MINE-->
     <RadioGroup
@@ -87,9 +88,5 @@
         android:text="@string/mine_cap"
         android:textSize="20sp"
         android:textColor="@color/black" />
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
 </RelativeLayout>
