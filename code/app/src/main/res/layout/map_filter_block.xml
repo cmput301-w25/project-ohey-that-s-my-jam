@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="210dp"
+    android:layout_gravity="center">
+
+    <!--Closing Button-->
+    <ImageButton
+        android:id="@+id/closeMapFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_close"
+        android:layout_alignParentEnd="true"/>
+
+    <!--Group of the Buttons ALL/FRIEND/MINE-->
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/textFriend"
+        android:layout_marginTop="10dp"
+        >
+
+        <RadioButton
+            android:id="@+id/radioBtnALL"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            />
+
+        <RadioButton
+            android:id="@+id/radioBtnFRIEND"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginStart="52dp"/>
+
+        <RadioButton
+            android:id="@+id/radioBtnMINE"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="52dp"
+            />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/textFriend"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/whose_mood_cap"
+        android:layout_marginBottom="10dp"
+        />
+
+    <TextView
+        android:id="@+id/textFriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/friend_cap"
+        android:textSize="20sp"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/textALL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="30dp"
+        android:gravity="center"
+        android:text="@string/all_cap"
+        android:textSize="20sp"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/textMINE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/textFriend"
+        android:layout_marginStart="40dp"
+        android:text="@string/mine_cap"
+        android:textSize="20sp"
+        android:textColor="@color/black" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

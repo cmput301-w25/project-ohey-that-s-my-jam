@@ -94,5 +94,9 @@
   
     <string name="confirm_request_text">CONFIRM</string>
     <string name="temp_list_title">LIST TITLE</string>
+    <string name="whose_mood_cap">WHOSE MOOD DO YOU WANT TO SEE?</string>
+    <string name="friend_cap">FRIEND</string>
+    <string name="all_cap">ALL</string>
+    <string name="mine_cap">MINE</string>
 
 </resources>
