@@ -1,12 +1,10 @@
 package com.otmj.otmjapp.Models;
 
-import android.graphics.Bitmap;
-
-import androidx.annotation.NonNull;
-
 import com.otmj.otmjapp.R;
+import java.io.Serializable;
+import java.security.InvalidParameterException;
 
-public enum EmotionalState {
+public enum EmotionalState implements Serializable {
 
     Anger("😡", R.color.anger),
     Fear("😱", R.color.fear),
@@ -20,9 +18,19 @@ public enum EmotionalState {
     public final String emoji;
     public final int color;
 
-    private EmotionalState(String emoji, int color) {
+    EmotionalState(String emoji, int color) {
         this.emoji = emoji;
         this.color = color;
+    }
+
+    public static EmotionalState fromColor(int color) {
+        for (EmotionalState e : values()) {
+            if (color == e.color) {
+                return e;
+            }
+        }
+
+        throw new InvalidParameterException("Only use colors defined in 'colors.xml'");
     }
 
     public String getDescription() {
