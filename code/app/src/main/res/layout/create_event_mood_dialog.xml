@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Close Button (X) at the top right -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <ImageButton
+            android:id="@+id/closeButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_close" />
+    </RelativeLayout>
+
+    <!-- Mood Selection (10 ImageButtons) -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Mood"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <!-- Image Buttons for Mood Selection -->
+        <ImageButton
+            android:id="@+id/mood1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/mood_1"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <ImageButton
+            android:id="@+id/mood2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/mood_2"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <!-- Add 8 more ImageButtons for mood selection -->
+        <!-- Repeat similar ImageButtons with different IDs and images -->
+    </LinearLayout>
+
+    <!-- Reason TextBox -->
+
+    <EditText
+        android:id="@+id/reasonEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter reason here"
+        android:inputType="textMultiLine"
+        android:maxLines="4"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Trigger TextBox -->
+
+    <EditText
+        android:id="@+id/triggerEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter trigger here"
+        android:inputType="textMultiLine"
+        android:maxLines="4"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Radio Buttons for Mood Options -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Mood Option"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroupMoodOptions"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <RadioButton
+            android:id="@+id/radioAlone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alone" />
+
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1" />
+
+        <RadioButton
+            android:id="@+id/radio2plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2+" />
+
+        <RadioButton
+            android:id="@+id/radioCrowd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Crowd" />
+    </RadioGroup>
+
+    <!-- Button to add an image -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Image"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Action Buttons -->
+
+    <ImageButton
+        android:id="@+id/imageButtonAddImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:src="@mipmap/add_photo_foreground" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Post"/>
+    </LinearLayout>
+
+</LinearLayout>
