@@ -1,6 +1,9 @@
 package com.otmj.otmjapp.Models;
 
 import android.graphics.Bitmap;
+import android.location.Location;
+
+import java.util.Map;
 
 /**
  * User class extneds Entity class
@@ -8,19 +11,21 @@ import android.graphics.Bitmap;
  */
 public class User extends Entity{
     private String username;
-    private Bitmap profilePicture;
-    private int userId;
+    private String profilePictureLink;
+    private final String userId;
+    private String password;
 
     /**
      * User class constructor
      * @param username
      *              user name of a user
-     * @param profilePicture
+     * @param profilePictureLink
      *              optional profile picture of a user, if don't have one please input null
      */
-    public User(String username, Bitmap profilePicture, int userId) {
+    public User(String username, String password, String profilePictureLink, String userId) {
         this.username = username;
-        this.profilePicture = profilePicture;
+        this.password = password;
+        this.profilePictureLink = profilePictureLink;
         this.userId = userId;
     }
 
@@ -43,21 +48,47 @@ public class User extends Entity{
     }
 
     /**
-     * return profile picture
-     * @return  profilePicture
-     *      Bitmap of the profilePicture
+     * return user password
+     * @return password
      */
-    public Bitmap getProfilePicture() {
-        return profilePicture;
+    public String getPassword() {
+        return password;
     }
 
     /**
-     * set profile picture as the input profilePicture
-     * @param profilePicture
-     *                  Bitmap of the profilePicture to set
+     * set new password
+     * @param password
+     *              set this.password as password
      */
-    public void setProfilePicture(Bitmap profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * return whether the input password is the same as this.password
+     * @param input
+     * @return isPassword correct
+     */
+    public boolean isPassword(String input){
+        return (input.equals(this.password));
+    }
+
+    /**
+     * return profile picture Link
+     * @return  profilePictureLink
+     *      String of the profilePictureLink
+     */
+    public String getProfilePictureLink() {
+        return profilePictureLink;
+    }
+
+    /**
+     * set profile picture as the input profilePictureLink
+     * @param profilePictureLink
+     *                  String of the profilePictureLink to set
+     */
+    public void setProfilePicture(String profilePictureLink) {
+        this.profilePictureLink = profilePictureLink;
     }
 
     /**
@@ -65,17 +96,8 @@ public class User extends Entity{
      * @return userId
      *            userId
      */
-    public int getUserId() {
+    public String getUserId() {
         return userId;
-    }
-
-    /**
-     * set UserId
-     * @param userId
-     *          userId
-     */
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     /**
@@ -83,11 +105,25 @@ public class User extends Entity{
      * @return unique_UserId
      *              unique_UserId
      */
-    public static int createUserId(){
-        // this method is not done yet, will return 0 as a place holder
-        return 0;
+    public static String createUserId(){
+        // this method is not done yet, will return -1 as a place holder
+        return "-1";
     }
-    
+
+    /**
+     * User's class implementation. This static method creates a User
+     * from a map.
+     * @see Entity#fromMap(Map)
+     */
+    public static User fromMap(Map<String, Object> map) {
+        return new User(
+                (String) map.get("username"),
+                (String) map.get("password"),
+                (String) map.get("profilePictureLink"),
+                (String) map.get("userId")
+        );
+    }
+
     /**
      * return the string of username
      * @return User
@@ -97,6 +133,9 @@ public class User extends Entity{
     public String toString() {
         return "User{" +
                 "username='" + username + '\'' +
+                ", profilePictureLink='" + profilePictureLink + '\'' +
+                ", userId='" + userId + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }
