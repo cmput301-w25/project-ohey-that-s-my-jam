@@ -7,15 +7,23 @@
     android:padding="16dp">
 
     <!-- Exit Button (X) -->
-    <ImageButton
-        android:id="@+id/exitButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="end"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/transparent"
-        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+    <!-- Close Button (X) at the top right -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <ImageButton
+            android:id="@+id/closeButton"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:scaleType="fitXY"
+            android:src="@mipmap/exit_foreground" />
+    </RelativeLayout>
 
     <!-- Title Text -->
     <TextView
@@ -27,88 +35,115 @@
         android:textColor="@android:color/black"
         android:layout_marginBottom="16dp"/>
 
-    <!-- ChipGroup for Moods -->
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroupMoods"
+    <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:chipSpacing="8dp"
-        android:checkedChipIndicator="@drawable/chip_checked_indicator">
+        android:scrollbars="none"
+        android:layout_height="match_parent">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_anger"
-            android:text="Anger"
-            android:chipBackgroundColor="@color/B00020"
-            android:textColor="@android:color/white"
-            android:checkable="true"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_disgust"
-            android:text="Disgust"
-            android:chipBackgroundColor="@color/09851D"
-            android:textColor="@android:color/white"
-            android:checkable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAnger3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="ANGER"
+                android:textColor="#80B00020"
+                app:chipBackgroundColor="#61B00020"
+                app:chipStrokeColor="@android:color/transparent"
+                app:chipTextColor="#000000" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_fear"
-            android:text="Fear"
-            android:chipBackgroundColor="@color/5600E8"
-            android:textColor="@android:color/white"
-            android:checkable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipDisgust3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="DISGUST"
+                android:textColor="#09851D"
+                app:chipBackgroundColor="#6109851D"
+                app:chipStrokeColor="@android:color/transparent"
+                app:chipTextColor="#FFFFFF" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_sad"
-            android:text="Sad"
-            android:chipBackgroundColor="@color/1554F6"
-            android:textColor="@android:color/white"
-            android:checkable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipHappy3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="HAPPY"
+                android:textColor="#FF1D89"
+                app:chipBackgroundColor="#61FF1D89"
+                app:chipStrokeColor="@android:color/transparent"
+                app:chipTextColor="#000000" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_confuse"
-            android:text="Confuse"
-            android:chipBackgroundColor="@color/FFE000"
-            android:textColor="@android:color/white"
-            android:checkable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFear3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="FEAR"
+                android:textColor="#310566"
+                app:chipBackgroundColor="#615600E8"
+                app:chipStrokeColor="@android:color/transparent"
+                app:chipTextColor="#000000" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_shame"
-            android:text="Shame"
-            android:chipBackgroundColor="@color/964B00"
-            android:textColor="@android:color/white"
-            android:checkable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSad3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="SAD"
+                android:textColor="#1554F6"
+                app:chipBackgroundColor="#611554F6"
+                app:chipStrokeColor="@android:color/transparent"
+                app:chipTextColor="#000000" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_happy"
-            android:text="Happy"
-            android:chipBackgroundColor="@color/FF1D89"
-            android:textColor="@android:color/white"
-            android:checkable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipShame3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="SHAME"
+                android:textColor="#964B00"
+                app:chipBackgroundColor="#61964B00"
+                app:chipStrokeColor="@android:color/transparent"
+                app:chipTextColor="#000000" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_surprise"
-            android:text="Surprise"
-            android:chipBackgroundColor="@color/FFA500"
-            android:textColor="@android:color/white"
-            android:checkable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipConfuse3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="CONFUSION"
+                android:textColor="#FFE000"
+                app:chipBackgroundColor="#61FFE000"
+                app:chipStrokeColor="@android:color/transparent"
+                app:chipTextColor="#000000" />
 
-    </com.google.android.material.chip.ChipGroup>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSurprise3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="SURPRISE"
+                android:textColor="#FFA500"
+                app:chipBackgroundColor="#61FFA500"
+                app:chipStrokeColor="@android:color/transparent"
+                app:chipTextColor="#000000" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- ChipGroup for Moods -->
 
     <!-- Apply Button -->
 
