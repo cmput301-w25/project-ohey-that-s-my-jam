@@ -4,20 +4,20 @@ package com.otmj.otmjapp.Models;
  * Follow class extends Entity class
  * Follow class for storing the following userId and the followed userId
  */
-public class Follow extends Entity{
-    private int follower;
-    private int followee;
+public class Follow extends Entity {
+    private final String followerID;
+    private final String followeeID;
 
     /**
      * constructor for follow class
-     * @param follower
+     * @param followerID
      *              The UserId following
-     * @param followee
+     * @param followeeID
      *              The UserId being followed
      */
-    public Follow(int follower, int followee) {
-        this.follower = follower;
-        this.followee = followee;
+    public Follow(String followerID, String followeeID) {
+        this.followerID = followerID;
+        this.followeeID = followeeID;
     }
 
     /**
@@ -25,17 +25,8 @@ public class Follow extends Entity{
      * @return follower
      *              the UserId following
      */
-    public int getFollower() {
-        return follower;
-    }
-
-    /**
-     * set userId following
-     * @param follower
-     *              the UserId following
-     */
-    public void setFollower(int follower) {
-        this.follower = follower;
+    public String getFollowerID() {
+        return followerID;
     }
 
     /**
@@ -43,28 +34,7 @@ public class Follow extends Entity{
      * @return  followee
      *               userId being followed
      */
-    public int getFollowee() {
-        return followee;
-    }
-
-    /**
-     * set userId being followed
-     * @param followee
-     *              userId being followed
-     */
-    public void setFollowee(int followee) {
-        this.followee = followee;
-    }
-
-    /**
-     * String representation of Follow class
-     * @return Follow
-     */
-    @Override
-    public String toString() {
-        return "Follow{" +
-                "follower=" + follower +
-                ", followee=" + followee +
-                '}';
+    public String getFolloweeID() {
+        return followeeID;
     }
 }
