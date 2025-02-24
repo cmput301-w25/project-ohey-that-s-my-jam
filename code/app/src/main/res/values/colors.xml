@@ -2,4 +2,16 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray">#808080</color>
+    <color name="blue_nav_bar">#5E79A6</color>
+    <color name="anger">#B00020</color>
+    <color name="disgust">#09851D</color>
+    <color name="fear">#5600E8</color>
+    <color name="sad">#1554F6</color>
+    <color name="confuse">#FFE000</color>
+    <color name="shame">#964B00</color>
+    <color name="happy">#FF1D89</color>
+    <color name="surprise">#FFA500</color>
+    <color name="lightbtn">#A8B6CF</color>
+    <color name="navy">#3A4F73</color>
 </resources>
