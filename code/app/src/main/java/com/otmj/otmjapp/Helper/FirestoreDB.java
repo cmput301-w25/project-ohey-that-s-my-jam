@@ -9,11 +9,12 @@ import com.otmj.otmjapp.Models.DatabaseObject;
 import com.otmj.otmjapp.Models.Entity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class FirestoreDB<T extends Entity> {
 
     public interface DBCallback<T extends Entity> {
-        void onSuccess(DatabaseObject<T> object);
         void onSuccess(ArrayList<DatabaseObject<T>> result);
         void onFailure(Exception e);
     }
@@ -34,7 +35,7 @@ public class FirestoreDB<T extends Entity> {
                 ArrayList<DatabaseObject<T>> documents = new ArrayList<>();
                 for (DocumentSnapshot doc : task.getResult()) {
                     DatabaseObject<T> object = new DatabaseObject<>(doc.getId(),
-                            (T) Entity.fromMap(doc.getData()),
+                            (T) T.fromMap(doc.getData()),
                             this);
 
                     documents.add(object);
@@ -60,7 +61,8 @@ public class FirestoreDB<T extends Entity> {
         CollectionReference collectionRef = db.collection(collection);
         collectionRef.add(object).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                callback.onSuccess(new DatabaseObject<>(task.getResult().getId(), object, this));
+                DatabaseObject<T> dob = new DatabaseObject<>(task.getResult().getId(), object, this);
+                callback.onSuccess((ArrayList<DatabaseObject<T>>) List.of(dob));
             } else {
                 callback.onFailure(task.getException());
             }

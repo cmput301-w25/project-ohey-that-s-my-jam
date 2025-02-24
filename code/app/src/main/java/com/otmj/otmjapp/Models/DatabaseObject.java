@@ -9,9 +9,9 @@ import com.otmj.otmjapp.Helper.FirestoreDB;
 public class DatabaseObject<T extends Entity> {
     private final String ID;
     private final T object;
-    private FirestoreDB db;
+    private FirestoreDB<T> db;
 
-    public DatabaseObject(String ID, T object, FirestoreDB db) {
+    public DatabaseObject(String ID, T object, FirestoreDB<T> db) {
         this.ID = ID;
         this.object = object;
         this.db = db;
