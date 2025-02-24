@@ -2,55 +2,55 @@ package com.otmj.otmjapp.Models;
 
 /**
  * Follow class extends Entity class
- * Follow class for storing the following user and the followed user
+ * Follow class for storing the following userId and the followed userId
  */
 public class Follow extends Entity{
-    private User follower;
-    private User followee;
+    private int follower;
+    private int followee;
 
     /**
      * constructor for follow class
      * @param follower
-     *              The User following
+     *              The UserId following
      * @param followee
-     *              The User being followed
+     *              The UserId being followed
      */
-    public Follow(User follower, User followee) {
+    public Follow(int follower, int followee) {
         this.follower = follower;
         this.followee = followee;
     }
 
     /**
-     * return the User following
+     * return the UserId following
      * @return follower
-     *              the User following
+     *              the UserId following
      */
-    public User getFollower() {
+    public int getFollower() {
         return follower;
     }
 
     /**
-     * set user following
+     * set userId following
      * @param follower
-     *              the User following
+     *              the UserId following
      */
     public void setFollower(int follower) {
         this.follower = follower;
     }
 
     /**
-     * return user being followed
+     * return userId being followed
      * @return  followee
-     *               user being followed
+     *               userId being followed
      */
-    public User getFollowee() {
+    public int getFollowee() {
         return followee;
     }
 
     /**
-     * set user being followed
+     * set userId being followed
      * @param followee
-     *              user being followed
+     *              userId being followed
      */
     public void setFollowee(int followee) {
         this.followee = followee;
@@ -63,8 +63,8 @@ public class Follow extends Entity{
     @Override
     public String toString() {
         return "Follow{" +
-                "follower=" + follower.getUsername() +
-                ", followee=" + followee.getUsername() +
+                "follower=" + follower +
+                ", followee=" + followee +
                 '}';
     }
 }
