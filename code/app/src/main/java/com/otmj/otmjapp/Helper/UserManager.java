@@ -12,37 +12,83 @@ public class UserManager {
         this.db = db;
     }
 
-    public ArrayList<User> getUsers() {
-        return db.getDocuments("users", User.class);
-    }
+    /**
+     * Checks if a given username is already in use.
+     *
+     * @param username the username to check for availability
+     * @return {@code true} if the username is available, {@code false} otherwise
+     */
+    public boolean checkUsername(String username) {
+        final boolean[] validUsername = {true};
 
-    public void addUser(User user) {
-        db.addDocument("users", user);
-    }
+        db.getDocuments(new FirestoreDB.DBCallback() {
+            @Override
+            public void onSuccess(ArrayList<DatabaseObject> result) {
+                for (DatabaseObject object : result) {
+                    User user = (User) object.getObject();
 
-    public void updateUsername(User user, String newUsername) {
-        user.setUsername(newUsername);
-        // do check for valid username before updating
-        db.updateDocument("users", user.getId(), user);
-    }
+                    if(user.getUsername().equals(username)) {
+                        validUsername[0] = false;
 
-    public boolean validUser(String enteredUsername) {
-        ArrayList<User> users = db.getDocuments("users", User.class);
-
-        for(User user : users) {
-            if(user.getUsername().equals(enteredUsername)) {
-                return true;
+                        break;
+                    }
+                }
             }
-        }
 
-        return false;
+            @Override
+            public void onFailure(Exception e) {} // might not be necessary
+        });
+
+        return validUsername[0]; // Boolean value is returned for controller to use accordingly
     }
 
-    public boolean validateLogin(String enteredUsername, String enteredPassword) {
-        if(validUser(enteredUsername)) {
+    /**
+     * Checks if a given email is already in use.
+     *
+     * @param email the email to check for availability
+     * @return {@code true} if the email is available, {@code false} otherwise
+     */
+    public boolean checkEmail(String email) {
+        final boolean[] validEmail = {true};
 
+        db.getDocuments(new FirestoreDB.DBCallback() {
+            @Override
+            public void onSuccess(ArrayList<DatabaseObject> result) {
+                for (DatabaseObject object : result) {
+                    User user = (User) object.getObject();
+
+                    if(user.getEmail().equals(email)) {
+                        validEmail[0] = false;
+
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {} // might not be necessary
+        });
+
+        return validEmail[0]; // Boolean value is returned for controller to use accordingly
+    }
+
+    /**
+     * Updates the username of a given user if the new username is available.
+     *
+     * @param user        the user whose username is to be updated
+     * @param newUsername the new username to be set
+     * @return {@code true} if the username was successfully updated, {@code false} otherwise
+     */
+    public boolean updateUsername(User user, String newUsername) {
+        boolean validUsername = checkUsername(newUsername);
+
+        if(validUsername) {
+            user.setUsername(newUsername);
+
+            DatabaseObject document = new DatabaseObject(user.getId(), user, db);
+            document.save();
         }
 
-        return false;
+        return validUsername; // boolean value is returned for controller to use accordingly
     }
 }
