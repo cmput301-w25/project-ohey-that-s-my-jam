@@ -3,13 +3,13 @@ package com.otmj.otmjapp.Helper;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.otmj.otmjapp.Models.DatabaseObject;
 import com.otmj.otmjapp.Models.Entity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class FirestoreDB<T extends Entity> {
@@ -29,8 +29,13 @@ public class FirestoreDB<T extends Entity> {
 
     // TODO: write javadoc
     public void getDocuments(DBCallback<T> callback) {
+        getDocuments(new Filter(), callback);
+    }
+
+    // TODO: write javadoc
+    public void getDocuments(Filter filter, DBCallback<T> callback) {
         CollectionReference collectionRef = db.collection(collection);
-        collectionRef.get().addOnCompleteListener(task -> {
+        collectionRef.where(filter).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<DatabaseObject<T>> documents = new ArrayList<>();
                 for (DocumentSnapshot doc : task.getResult()) {
