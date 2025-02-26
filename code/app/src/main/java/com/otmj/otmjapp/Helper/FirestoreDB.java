@@ -3,18 +3,19 @@ package com.otmj.otmjapp.Helper;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.otmj.otmjapp.Models.DatabaseObject;
 import com.otmj.otmjapp.Models.Entity;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class FirestoreDB implements DB {
+public class FirestoreDB<T extends Entity> {
 
-    public interface DBCallback {
-        void onSuccess(DatabaseObject object);
-        void onSuccess(ArrayList<DatabaseObject> result);
+    public interface DBCallback<T extends Entity> {
+        void onSuccess(ArrayList<DatabaseObject<T>> result);
         void onFailure(Exception e);
     }
 
@@ -27,14 +28,19 @@ public class FirestoreDB implements DB {
     }
 
     // TODO: write javadoc
-    public void getDocuments(DBCallback callback) {
+    public void getDocuments(DBCallback<T> callback) {
+        getDocuments(new Filter(), callback);
+    }
+
+    // TODO: write javadoc
+    public void getDocuments(Filter filter, DBCallback<T> callback) {
         CollectionReference collectionRef = db.collection(collection);
-        collectionRef.get().addOnCompleteListener(task -> {
+        collectionRef.where(filter).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                ArrayList<DatabaseObject> documents = new ArrayList<>();
+                ArrayList<DatabaseObject<T>> documents = new ArrayList<>();
                 for (DocumentSnapshot doc : task.getResult()) {
-                    DatabaseObject object = new DatabaseObject(doc.getId(),
-                            Entity.fromMap(doc.getData()),
+                    DatabaseObject<T> object = new DatabaseObject<>(doc.getId(),
+                            (T) T.fromMap(doc.getData()),
                             this);
 
                     documents.add(object);
@@ -48,7 +54,7 @@ public class FirestoreDB implements DB {
     }
 
     // TODO: write javadoc
-    public void updateDocument(DatabaseObject document) {
+    public void updateDocument(DatabaseObject<T> document) {
         CollectionReference collectionRef = db.collection(collection);
         DocumentReference docRef = collectionRef.document(document.getID());
 
@@ -56,11 +62,12 @@ public class FirestoreDB implements DB {
     }
 
     // TODO: write javadoc
-    public <T extends Entity> void addDocument(T object, DBCallback callback) {
+    public void addDocument(T object, DBCallback<T> callback) {
         CollectionReference collectionRef = db.collection(collection);
         collectionRef.add(object).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                callback.onSuccess(new DatabaseObject(task.getResult().getId(), object, this));
+                DatabaseObject<T> dob = new DatabaseObject<>(task.getResult().getId(), object, this);
+                callback.onSuccess((ArrayList<DatabaseObject<T>>) List.of(dob));
             } else {
                 callback.onFailure(task.getException());
             }
@@ -68,7 +75,7 @@ public class FirestoreDB implements DB {
     }
 
     // TODO: write javadoc
-    public void deleteDocument(DatabaseObject document) {
+    public void deleteDocument(DatabaseObject<T> document) {
         CollectionReference collectionRef = db.collection(collection);
         DocumentReference docRef = collectionRef.document(document.getID());
 

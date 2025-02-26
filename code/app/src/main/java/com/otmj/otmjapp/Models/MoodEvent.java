@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Map;
 
 public class MoodEvent extends Entity {
-
+    private final String userID;
     private final Date createdDate;
     private EmotionalState emotionalState;
     private String trigger;
@@ -16,13 +16,15 @@ public class MoodEvent extends Entity {
     private String reason;
     private String imageLink;
 
-    public MoodEvent(Date createdDate,
+    public MoodEvent(String userID,
+                     Date createdDate,
                      int emotionColor,
                      String trigger,
                      String socialSituation,
                      boolean includeLocation,
                      String reason,
                      String imageLink) {
+        this.userID = userID;
         this.createdDate = createdDate;
         this.emotionalState = EmotionalState.fromColor(emotionColor);
         this.trigger = trigger;
@@ -35,16 +37,18 @@ public class MoodEvent extends Entity {
         }
     }
 
-    private MoodEvent(Date createdDate,
-                     EmotionalState emotionalState,
-                     String trigger,
-                     SocialSituation socialSituation,
-                     Location location,
-                     String reason,
-                     String imageLink) {
+    private MoodEvent(String userID,
+                      Date createdDate,
+                      EmotionalState emotionalState,
+                      String trigger,
+                      SocialSituation socialSituation,
+                      Location location,
+                      String reason,
+                      String imageLink) {
         // TODO: Ensure trigger is at most 1 word
         // TODO: Ensure reason is at most 3 words
 
+        this.userID = userID;
         this.createdDate = createdDate;
         this.emotionalState = emotionalState;
         this.trigger = trigger;
@@ -112,7 +116,9 @@ public class MoodEvent extends Entity {
      * @see Entity#fromMap(Map)
      */
     public static MoodEvent fromMap(Map<String, Object> map) {
+        // TODO: Fix emotional state and social situation
         return new MoodEvent(
+                (String) map.get("userID"),
                 (Date) map.get("createdDate"),
                 (EmotionalState) map.get("emotionalState"),
                 (String) map.get("trigger"),
