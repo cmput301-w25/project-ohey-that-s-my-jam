@@ -1,5 +1,7 @@
 package com.otmj.otmjapp.Controllers;
 
+import android.graphics.Bitmap;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -9,10 +11,9 @@ import com.otmj.otmjapp.Helper.FirestoreDB;
 import com.otmj.otmjapp.Helper.MoodHistoryFilter;
 import com.otmj.otmjapp.Models.DatabaseObject;
 import com.otmj.otmjapp.Models.MoodEvent;
-import com.otmj.otmjapp.Models.User;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Helper class to work with database in retrieving mood events
@@ -21,7 +22,13 @@ import java.util.Arrays;
  * data from a database happens asynchronously, we use LiveData
  * to be able to observe when its value is set.
  */
-public class MoodHistoryController {
+public class MoodEventController {
+
+    public interface ImageDownloadCallback {
+        public void onSuccess(Bitmap image);
+        public void onFailure(Exception e);
+    }
+
     /**
      * Specifies the user(s) from which to get mood events
      */
@@ -29,19 +36,20 @@ public class MoodHistoryController {
     /**
      * Holds its own reference to the mood events db collection
      */
-    private final FirestoreDB<MoodEvent> moodEventsDB;
+    private final FirestoreDB<MoodEvent> db;
     /**
      * Observable object that callers can observe to get notified of changes
      */
     private final MutableLiveData<ArrayList<DatabaseObject<MoodEvent>>> moodHistory;
 
-    public MoodHistoryController(String... userIDs) {
-        assert userIDs.length >= 1;
+    public MoodEventController(ArrayList<String> userIDs) {
+        assert !userIDs.isEmpty();
 
-        this.userIDs = new ArrayList<>(Arrays.asList(userIDs));
-        this.moodEventsDB = new FirestoreDB<>(FirestoreCollections.MoodEvents.name);
+        this.userIDs = userIDs;
+        this.db = new FirestoreDB<>(FirestoreCollections.MoodEvents.name);
 
-        moodHistory = new MutableLiveData<>();
+        moodHistory = new MutableLiveData<>(new ArrayList<>());
+        getMoodEvents(null); // Populate mood history
     }
 
     /**
@@ -50,26 +58,24 @@ public class MoodHistoryController {
      * @see #getMoodEvents(MoodHistoryFilter)
      */
     public LiveData<ArrayList<DatabaseObject<MoodEvent>>> getMoodEvents() {
-        return getMoodEvents(null);
+        // Assume that mood history has been populated (see constructor)
+        return moodHistory;
     }
 
     /**
      * Gets all mood events from user(s) that match the provided filters
-     * @param filter A filter specifies the condition for the mood event to be returned
+     * @param customFilter A filter specifies the condition for the mood event to be returned
      * @return An observable that returns the filtered mood events
      */
-    public LiveData<ArrayList<DatabaseObject<MoodEvent>>> getMoodEvents(MoodHistoryFilter filter) {
+    public LiveData<ArrayList<DatabaseObject<MoodEvent>>> getMoodEvents(MoodHistoryFilter customFilter) {
         // Specify to return only mood events where the 'user' property is one of `users`
-        Filter fromUsers = Filter.inArray("userID", userIDs);
-
-        Filter filterWithUserFilter;
-        if (filter != null) {
-            filterWithUserFilter = Filter.and(fromUsers, filter.getFilter());
-        } else {
-            filterWithUserFilter = fromUsers;
+        Filter filter = Filter.inArray("userID", userIDs);
+        // If a custom filter is specified, AND it to `filter`
+        if (customFilter != null) {
+            filter = Filter.and(filter, customFilter.getFilter());
         }
 
-        moodEventsDB.getDocuments(filterWithUserFilter, new FirestoreDB.DBCallback<>() {
+        db.getDocuments(filter, new FirestoreDB.DBCallback<>() {
             @Override
             public void onSuccess(ArrayList<DatabaseObject<MoodEvent>> result) {
                 moodHistory.setValue(result);
@@ -85,12 +91,37 @@ public class MoodHistoryController {
     }
 
     /**
+     * Insert new mood event to database
+     * @param moodEvent Mood event to insert
+     */
+    public void addMoodEvent(MoodEvent moodEvent) {
+        db.addDocument(moodEvent, new FirestoreDB.DBCallback<>() {
+            @Override
+            public void onSuccess(ArrayList<DatabaseObject<MoodEvent>> result) {
+                ArrayList<DatabaseObject<MoodEvent>> arr =
+                    Objects.requireNonNull(moodHistory.getValue());
+                arr.add(result.get(0));
+
+                moodHistory.notifyAll(); // Notify observers
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // TODO: Show error message
+            }
+        });
+    }
+
+    /**
      * Downloads the image of a mood event to the user's local storage
      * @param moodEvent A mood event retrieved from the database might have an image link property.
      *                  So, we download the image specified by the link
-     * @return An observable to the image file path
+     * @param downloadCallback Callback for handling success or failure of download operation
      */
-    public LiveData<String> downloadMoodEventImage(DatabaseObject<MoodEvent> moodEvent) {
+   public void downloadMoodEventImage(MoodEvent moodEvent, ImageDownloadCallback downloadCallback) {
+        assert moodEvent.getImageLink() != null;
+
+        // TODO: Implement downloading
         throw new UnsupportedOperationException("Not yet implemented");
     }
 }
