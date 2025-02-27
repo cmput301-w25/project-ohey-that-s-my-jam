@@ -12,7 +12,6 @@ import java.util.Map;
 public class User extends Entity{
     private String username;
     private String profilePictureLink;
-    private final String userId;
     private String password;
 
     /**
@@ -22,11 +21,10 @@ public class User extends Entity{
      * @param profilePictureLink
      *              optional profile picture of a user, if don't have one please input null
      */
-    public User(String username, String password, String profilePictureLink, String userId) {
+    public User(String username, String password, String profilePictureLink) {
         this.username = username;
         this.password = password;
         this.profilePictureLink = profilePictureLink;
-        this.userId = userId;
     }
 
     /**
@@ -92,25 +90,6 @@ public class User extends Entity{
     }
 
     /**
-     * return userID
-     * @return userId
-     *            userId
-     */
-    public String getUserId() {
-        return userId;
-    }
-
-    /**
-     * Create a unique UserId for a new User, will check with db to avoid duplicate
-     * @return unique_UserId
-     *              unique_UserId
-     */
-    public static String createUserId(){
-        // this method is not done yet, will return -1 as a place holder
-        return "-1";
-    }
-
-    /**
      * User's class implementation. This static method creates a User
      * from a map.
      * @see Entity#fromMap(Map)
@@ -119,8 +98,7 @@ public class User extends Entity{
         return new User(
                 (String) map.get("username"),
                 (String) map.get("password"),
-                (String) map.get("profilePictureLink"),
-                (String) map.get("userId")
+                (String) map.get("profilePictureLink")
         );
     }
 
@@ -134,7 +112,6 @@ public class User extends Entity{
         return "User{" +
                 "username='" + username + '\'' +
                 ", profilePictureLink='" + profilePictureLink + '\'' +
-                ", userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }
