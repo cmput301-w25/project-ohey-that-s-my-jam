@@ -46,4 +46,23 @@ public class UserManager {
 
         return user[0]; // return the authenticated user
     }
+
+    /**
+     * Adds a new user to the database.
+     * @param user
+     */
+    public void addUser(User user) {
+        db.addDocument(user, new FirestoreDB.DBCallback<User>() {
+            @Override
+            public void onSuccess(ArrayList<DatabaseObject<User>> result) {
+                // will be implemented later on when it has been decided what should happen on success
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // will be implemented later on when it has been decided what should happen on failure
+            }
+        });
+    }
+
 }

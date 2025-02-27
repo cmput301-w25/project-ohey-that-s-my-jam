@@ -12,10 +12,30 @@ import com.otmj.otmjapp.Models.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A generic class for managing Firestore database operations for entities extending {@link Entity}.
+ *
+ * @param <T> The type of entity that extends {@link Entity}.
+ */
 public class FirestoreDB<T extends Entity> {
-
+    /**
+     * Interface for handling asynchronous Firestore operations.
+     *
+     * @param <T> The type of entity being handled.
+     */
     public interface DBCallback<T extends Entity> {
+        /**
+         * Called when the Firestore operation is successful.
+         *
+         * @param result The list of retrieved {@link DatabaseObject} instances.
+         */
         void onSuccess(ArrayList<DatabaseObject<T>> result);
+
+        /**
+         * Called when the Firestore operation fails.
+         *
+         * @param e The exception that caused the failure.
+         */
         void onFailure(Exception e);
     }
 
@@ -27,12 +47,21 @@ public class FirestoreDB<T extends Entity> {
         this.db = FirebaseFirestore.getInstance();
     }
 
-    // TODO: write javadoc
+    /**
+     * Retrieves all documents from the Firestore collection without any filters.
+     *
+     * @param callback The callback to handle the operation result.
+     */
     public void getDocuments(DBCallback<T> callback) {
         getDocuments(new Filter(), callback);
     }
 
-    // TODO: write javadoc
+    /**
+     * Retrieves documents from the Firestore collection based on the specified filter.
+     *
+     * @param filter   The filter criteria for querying documents.
+     * @param callback The callback to handle the operation result.
+     */
     public void getDocuments(Filter filter, DBCallback<T> callback) {
         CollectionReference collectionRef = db.collection(collection);
         collectionRef.where(filter).get().addOnCompleteListener(task -> {
@@ -53,7 +82,11 @@ public class FirestoreDB<T extends Entity> {
         });
     }
 
-    // TODO: write javadoc
+    /**
+     * Updates an existing Firestore document with new data.
+     *
+     * @param document The document to be updated.
+     */
     public void updateDocument(DatabaseObject<T> document) {
         CollectionReference collectionRef = db.collection(collection);
         DocumentReference docRef = collectionRef.document(document.getID());
@@ -61,7 +94,12 @@ public class FirestoreDB<T extends Entity> {
         docRef.set(document.getObject());
     }
 
-    // TODO: write javadoc
+    /**
+     * Adds a new document to the Firestore collection.
+     *
+     * @param object   The entity object to be added to Firestore.
+     * @param callback The callback to handle the operation result.
+     */
     public void addDocument(T object, DBCallback<T> callback) {
         CollectionReference collectionRef = db.collection(collection);
         collectionRef.add(object).addOnCompleteListener(task -> {
@@ -74,7 +112,11 @@ public class FirestoreDB<T extends Entity> {
         });
     }
 
-    // TODO: write javadoc
+    /**
+     * Deletes a document from the Firestore collection.
+     *
+     * @param document The document to be deleted.
+     */
     public void deleteDocument(DatabaseObject<T> document) {
         CollectionReference collectionRef = db.collection(collection);
         DocumentReference docRef = collectionRef.document(document.getID());
