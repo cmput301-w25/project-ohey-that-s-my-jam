@@ -12,4 +12,6 @@
     <color name="shame">#964B00</color>
     <color name="happy">#FF1D89</color>
     <color name="surprise">#FFA500</color>
+    <color name="lightbtn">#A8B6CF</color>
+    <color name="navy">#3A4F73</color>
 </resources>

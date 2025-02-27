@@ -1,5 +1,6 @@
 package com.otmj.otmjapp.Models;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Map;
  * Every model class that is put in a database should subclass
  * this class and implement the `fromMap` method.
  */
-public abstract class Entity {
+public abstract class Entity implements Serializable {
     /**
      * Converts a string map of values to a class.
      * @param map   Map containing (string, object) pairs which would coincide

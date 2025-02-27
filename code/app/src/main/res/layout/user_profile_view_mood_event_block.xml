@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:layout_margin="8dp">
+
+    <!-- Emotional State and Emoji -->
+    <TextView
+        android:id="@+id/event_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/emotional_state_default"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <!-- Timestamp -->
+    <TextView
+        android:id="@+id/event_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/date_and_time_text"
+        android:textSize="11sp"
+        android:textColor="@color/gray"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Image -->
+    <ImageView
+        android:id="@+id/reason_why_image"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="6dp"
+        android:contentDescription="@string/reason_why_image_desc"/>
+
+    <!-- Reason Why -->
+    <TextView
+        android:id="@+id/reason_why"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/reason_why_text"
+        android:textSize="12sp"
+        android:layout_marginTop="6dp"/>
+
+    <!-- Trigger & Social Situation -->
+    <TextView
+        android:id="@+id/event_trigger"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/trigger_and_social_situation_text"
+        android:textSize="12sp"
+        android:textColor="@color/gray"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Location Layout -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="6dp">
+
+        <ImageView
+            android:id="@+id/location_icon"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_location"
+            android:contentDescription="@string/location_icon_desc"/>
+
+        <TextView
+            android:id="@+id/event_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/location_text"
+            android:textSize="12sp"
+            android:layout_marginStart="4dp"/>
+    </LinearLayout>
+
+</LinearLayout>
