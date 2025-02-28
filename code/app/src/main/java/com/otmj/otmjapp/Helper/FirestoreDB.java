@@ -1,80 +1,126 @@
 package com.otmj.otmjapp.Helper;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.otmj.otmjapp.Models.DatabaseObject;
+import com.otmj.otmjapp.Models.Entity;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+import java.util.List;
 
-public class FirestoreDB implements DB {
-    private final FirebaseFirestore db;
-    public FirestoreDB() {
-        db = FirebaseFirestore.getInstance();
+/**
+ * A generic class for managing Firestore database operations for entities extending {@link Entity}.
+ *
+ * @param <T> The type of entity that extends {@link Entity}.
+ */
+public class FirestoreDB<T extends Entity> {
+    /**
+     * Interface for handling asynchronous Firestore operations.
+     *
+     * @param <T> The type of entity being handled.
+     */
+    public interface DBCallback<T extends Entity> {
+        /**
+         * Called when the Firestore operation is successful.
+         *
+         * @param result The list of retrieved {@link DatabaseObject} instances.
+         */
+        void onSuccess(ArrayList<DatabaseObject<T>> result);
+
+        /**
+         * Called when the Firestore operation fails.
+         *
+         * @param e The exception that caused the failure.
+         */
+        void onFailure(Exception e);
     }
 
-    // write javadoc
-    public <T extends DatabaseObject> ArrayList<T> getDocuments(String collection, Class<T> type)  {
-        ArrayList<T> documents = new ArrayList<>();
+    private final FirebaseFirestore db;
+    private final String collection;
 
+    public FirestoreDB(String collection) {
+        this.collection = collection;
+        this.db = FirebaseFirestore.getInstance();
+    }
+
+    /**
+     * Retrieves all documents from the Firestore collection without any filters.
+     *
+     * @param callback The callback to handle the operation result.
+     */
+    public void getDocuments(DBCallback<T> callback) {
+        getDocuments(new Filter(), callback);
+    }
+
+    /**
+     * Retrieves documents from the Firestore collection based on the specified filter.
+     *
+     * @param filter   The filter criteria for querying documents.
+     * @param callback The callback to handle the operation result.
+     */
+    public void getDocuments(Filter filter, DBCallback<T> callback) {
         CollectionReference collectionRef = db.collection(collection);
-        collectionRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            for(DocumentSnapshot document : queryDocumentSnapshots) {
-                T object = null;
+        collectionRef.where(filter).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<DatabaseObject<T>> documents = new ArrayList<>();
+                for (DocumentSnapshot doc : task.getResult()) {
+                    DatabaseObject<T> object = new DatabaseObject<>(doc.getId(),
+                            (T) T.fromMap(doc.getData()),
+                            this);
 
-                try {
-                    object = type.getDeclaredConstructor(String.class, FirestoreDB.class).newInstance(document.getId(), this);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    documents.add(object);
                 }
 
-                documents.add(object);
+                callback.onSuccess(documents);
+            } else {
+                callback.onFailure(task.getException());
             }
         });
-
-        return documents;
     }
 
-    // write javadoc
-    public DocumentSnapshot getDocument(String collection, String id) {
-        DocumentReference docRef = db.collection(collection).document(id);
-
-        Task<DocumentSnapshot> task = docRef.get();
-
-        try {
-            return Tasks.await(task);
-        } catch (ExecutionException | InterruptedException e) {
-            return null;
-        }
-    }
-
-    // write javadoc
-    public void updateDocument(String collection, String id, DatabaseObject document) {
+    /**
+     * Updates an existing Firestore document with new data.
+     *
+     * @param document The document to be updated.
+     */
+    public void updateDocument(DatabaseObject<T> document) {
         CollectionReference collectionRef = db.collection(collection);
+        DocumentReference docRef = collectionRef.document(document.getID());
 
-        DocumentReference docRef = collectionRef.document(id);
-        docRef.set(document);
+        docRef.set(document.getObject());
     }
 
-    // write javadoc
-    public void addDocument(String collection, DatabaseObject document) {
+    /**
+     * Adds a new document to the Firestore collection.
+     *
+     * @param object   The entity object to be added to Firestore.
+     * @param callback The callback to handle the operation result.
+     */
+    public void addDocument(T object, DBCallback<T> callback) {
         CollectionReference collectionRef = db.collection(collection);
-        String id = collectionRef.document().getId();
-
-        DocumentReference docRef = collectionRef.document(id);
-        docRef.set(document);
+        collectionRef.add(object).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DatabaseObject<T> dob = new DatabaseObject<>(task.getResult().getId(), object, this);
+                callback.onSuccess((ArrayList<DatabaseObject<T>>) List.of(dob));
+            } else {
+                callback.onFailure(task.getException());
+            }
+        });
     }
 
-    // write javadoc
-    public void deleteDocument(String collection, String id) {
+    /**
+     * Deletes a document from the Firestore collection.
+     *
+     * @param document The document to be deleted.
+     */
+    public void deleteDocument(DatabaseObject<T> document) {
         CollectionReference collectionRef = db.collection(collection);
+        DocumentReference docRef = collectionRef.document(document.getID());
 
-        DocumentReference docRef = collectionRef.document(id);
         docRef.delete();
     }
 }

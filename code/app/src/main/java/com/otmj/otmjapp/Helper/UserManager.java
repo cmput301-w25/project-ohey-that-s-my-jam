@@ -1,94 +1,68 @@
 package com.otmj.otmjapp.Helper;
 
+import com.google.firebase.firestore.Filter;
 import com.otmj.otmjapp.Models.DatabaseObject;
 import com.otmj.otmjapp.Models.User;
-
 import java.util.ArrayList;
+
+/**
+ * Manages user authentification and retrieval from the Firestore database.
+ */
 
 public class UserManager {
     private final FirestoreDB db;
-
     public UserManager(FirestoreDB db) {
         this.db = db;
     }
 
     /**
-     * Checks if a given username is already in use.
+     * Attempts to authenticate a user with the provided username and password.
      *
-     * @param username the username to check for availability
-     * @return {@code true} if the username is available, {@code false} otherwise
+     * @param enteredUsername the username entered by the user
+     * @param enteredPassword the password entered by the user
+     * @return the authenticated {@link User} object if login is successful, or {@code null} otherwise
      */
-    public boolean checkUsername(String username) {
-        final boolean[] validUsername = {true};
 
-        db.getDocuments(new FirestoreDB.DBCallback() {
+    public User login(String enteredUsername, String enteredPassword) {
+        final User[] user = {null};
+
+        db.getDocuments(Filter.equalTo("username", enteredUsername), new FirestoreDB.DBCallback<User>() {
             @Override
-            public void onSuccess(ArrayList<DatabaseObject> result) {
-                for (DatabaseObject object : result) {
-                    User user = (User) object.getObject();
+            public void onSuccess(ArrayList<DatabaseObject<User>> result) {
+                if (!result.isEmpty()) {
+                    User u = result.get(0).getObject();
 
-                    if(user.getUsername().equals(username)) {
-                        validUsername[0] = false;
-
-                        break;
+                    if (u.getPassword().equals(enteredPassword)) {
+                        user[0] = u;
                     }
                 }
             }
 
             @Override
-            public void onFailure(Exception e) {} // might not be necessary
+            public void onFailure(Exception e) {
+                // will be implemented later on when it has been decided what should happen on failure
+            }
         });
 
-        return validUsername[0]; // Boolean value is returned for controller to use accordingly
+        return user[0]; // return the authenticated user
     }
 
     /**
-     * Checks if a given email is already in use.
-     *
-     * @param email the email to check for availability
-     * @return {@code true} if the email is available, {@code false} otherwise
+     * Adds a new user to the database.
+     * @param user
      */
-    public boolean checkEmail(String email) {
-        final boolean[] validEmail = {true};
-
-        db.getDocuments(new FirestoreDB.DBCallback() {
+    public void addUser(User user) {
+        db.addDocument(user, new FirestoreDB.DBCallback<User>() {
             @Override
-            public void onSuccess(ArrayList<DatabaseObject> result) {
-                for (DatabaseObject object : result) {
-                    User user = (User) object.getObject();
-
-                    if(user.getEmail().equals(email)) {
-                        validEmail[0] = false;
-
-                        break;
-                    }
-                }
+            public void onSuccess(ArrayList<DatabaseObject<User>> result) {
+                // will be implemented later on when it has been decided what should happen on success
             }
 
             @Override
-            public void onFailure(Exception e) {} // might not be necessary
+            public void onFailure(Exception e) {
+                // will be implemented later on when it has been decided what should happen on failure
+            }
         });
-
-        return validEmail[0]; // Boolean value is returned for controller to use accordingly
     }
 
-    /**
-     * Updates the username of a given user if the new username is available.
-     *
-     * @param user        the user whose username is to be updated
-     * @param newUsername the new username to be set
-     * @return {@code true} if the username was successfully updated, {@code false} otherwise
-     */
-    public boolean updateUsername(User user, String newUsername) {
-        boolean validUsername = checkUsername(newUsername);
-
-        if(validUsername) {
-            user.setUsername(newUsername);
-
-            DatabaseObject document = new DatabaseObject(user.getId(), user, db);
-            document.save();
-        }
-
-        return validUsername; // boolean value is returned for controller to use accordingly
-    }
 }
