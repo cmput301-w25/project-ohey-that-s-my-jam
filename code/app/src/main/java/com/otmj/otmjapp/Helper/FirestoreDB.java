@@ -1,16 +1,19 @@
 package com.otmj.otmjapp.Helper;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.google.firebase.firestore.QuerySnapshot;
 import com.otmj.otmjapp.Models.DatabaseObject;
 import com.otmj.otmjapp.Models.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A generic class for managing Firestore database operations for entities extending {@link Entity}.
@@ -53,7 +56,7 @@ public class FirestoreDB<T extends Entity> {
      * @param callback The callback to handle the operation result.
      */
     public void getDocuments(DBCallback<T> callback) {
-        getDocuments(new Filter(), callback);
+        getDocuments(null, callback);
     }
 
     /**
@@ -64,7 +67,15 @@ public class FirestoreDB<T extends Entity> {
      */
     public void getDocuments(Filter filter, DBCallback<T> callback) {
         CollectionReference collectionRef = db.collection(collection);
-        collectionRef.where(filter).get().addOnCompleteListener(task -> {
+
+        Task<QuerySnapshot> result;
+        if (filter == null) {
+            result = collectionRef.get();
+        } else {
+            result = collectionRef.where(filter).get();
+        }
+
+        result.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<DatabaseObject<T>> documents = new ArrayList<>();
                 for (DocumentSnapshot doc : task.getResult()) {
@@ -102,14 +113,24 @@ public class FirestoreDB<T extends Entity> {
      */
     public void addDocument(T object, DBCallback<T> callback) {
         CollectionReference collectionRef = db.collection(collection);
-        collectionRef.add(object).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DatabaseObject<T> dob = new DatabaseObject<>(task.getResult().getId(), object, this);
-                callback.onSuccess((ArrayList<DatabaseObject<T>>) List.of(dob));
-            } else {
-                callback.onFailure(task.getException());
-            }
-        });
+
+        Task<DocumentReference> returnedRef = null;
+        try {
+            // Try to use `toMap` function (implemented in `MoodEvent` model class)
+            returnedRef = collectionRef.add(object.toMap());
+        } catch (UnsupportedOperationException e) {
+            // If it is not implemented, just pass in the object
+            returnedRef = collectionRef.add(object);
+        } finally {
+            Objects.requireNonNull(returnedRef).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DatabaseObject<T> dob = new DatabaseObject<>(task.getResult().getId(), object, this);
+                    callback.onSuccess((ArrayList<DatabaseObject<T>>) List.of(dob));
+                } else {
+                    callback.onFailure(task.getException());
+                }
+            });
+        }
     }
 
     /**

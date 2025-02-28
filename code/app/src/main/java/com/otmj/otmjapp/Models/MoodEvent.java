@@ -1,14 +1,22 @@
 package com.otmj.otmjapp.Models;
 
-import android.graphics.Bitmap;
 import android.location.Location;
 
+import com.google.firebase.firestore.ServerTimestamp;
+
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MoodEvent extends Entity {
     private final String userID;
-    private final Date createdDate;
+    /**
+     * ServerTimestamp annotation automatically grabs the date and time
+     * the model was added to the database
+     */
+    @ServerTimestamp
+    private Date createdDate;
     private EmotionalState emotionalState;
     private String trigger;
     private SocialSituation socialSituation;
@@ -17,7 +25,6 @@ public class MoodEvent extends Entity {
     private String imageLink;
 
     public MoodEvent(String userID,
-                     Date createdDate,
                      int emotionColor,
                      String trigger,
                      String socialSituation,
@@ -25,7 +32,6 @@ public class MoodEvent extends Entity {
                      String reason,
                      String imageLink) {
         this.userID = userID;
-        this.createdDate = createdDate;
         this.emotionalState = EmotionalState.fromColor(emotionColor);
         this.trigger = trigger;
         this.socialSituation = SocialSituation.fromText(socialSituation);
@@ -102,8 +108,8 @@ public class MoodEvent extends Entity {
         this.reason = reason;
     }
 
-    public Bitmap getPhoto() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public String getImageLink() {
+        return imageLink;
     }
 
     public void setImageLink(String link) {
@@ -116,16 +122,33 @@ public class MoodEvent extends Entity {
      * @see Entity#fromMap(Map)
      */
     public static MoodEvent fromMap(Map<String, Object> map) {
-        // TODO: Fix emotional state and social situation
         return new MoodEvent(
                 (String) map.get("userID"),
                 (Date) map.get("createdDate"),
-                (EmotionalState) map.get("emotionalState"),
+                EmotionalState.fromColor((int) Objects.requireNonNull(map.get("emotionalState"))),
                 (String) map.get("trigger"),
-                (SocialSituation) map.get("socialSituation"),
-                (Location) map.getOrDefault("location", null),
+                SocialSituation.fromText((String) map.get("socialSituation")),
+                (Location) map.get("location"),
                 (String) map.get("reason"),
-                (String) map.getOrDefault("imageLink", "")
+                (String) map.get("imageLink")
         );
+    }
+
+    /**
+     * Custom implementation for storing MoodEvent in database.
+     * This static method creates a map from a MoodEvent.
+     * @see Entity#toMap()
+     */
+    public Map<String, Object> toMap() {
+       return Map.of(
+               "userID", userID,
+               "createdDate", createdDate,
+               "emotionalState", emotionalState.color, // Store enum with only its color
+               "trigger", trigger,
+               "socialSituation", socialSituation.toString(), // Store enum with its string
+               "location", location,
+               "reason", reason,
+               "imageLink", imageLink
+       );
     }
 }
