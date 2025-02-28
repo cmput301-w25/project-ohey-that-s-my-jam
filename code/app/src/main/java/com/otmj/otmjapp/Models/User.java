@@ -9,7 +9,7 @@ import java.util.Map;
  * User class extneds Entity class
  * this class stories the user name and profile picture of a user
  */
-public class User extends Entity{
+public class User extends Entity {
     private String username;
     private String profilePictureLink;
     private String password;
