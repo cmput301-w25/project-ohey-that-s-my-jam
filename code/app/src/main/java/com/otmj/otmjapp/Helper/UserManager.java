@@ -94,32 +94,6 @@ public class UserManager {
     }
 
     /**
-     * Checks if a given email is already in use.
-     *
-     * @param enteredEmail the email to check for availability
-     * @return {@code true} if the email is available, {@code false} otherwise
-     */
-    public boolean checkEmail(String enteredEmail) {
-        final boolean[] validEmail = {false};
-
-        db.getDocuments(Filter.equalTo("username", enteredEmail), new FirestoreDB.DBCallback<User>() {
-            @Override
-            public void onSuccess(ArrayList<DatabaseObject<User>> result) {
-                if(result.isEmpty()) {
-                    validEmail[0] = true;
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                // will be implemented later on when it has been decided what should happen on failure
-            }
-        });
-
-        return validEmail[0]; // Boolean value is returned for controller to use accordingly
-    }
-
-    /**
      * Updates the username of a given user if the new username is available.
      *
      * @param user        the user whose username is to be updated
@@ -148,6 +122,4 @@ public class UserManager {
 
         return validUsername; // boolean value is returned for controller to use accordingly
     }
-
-
 }
