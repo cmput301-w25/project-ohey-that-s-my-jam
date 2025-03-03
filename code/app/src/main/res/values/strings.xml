@@ -100,4 +100,9 @@
     <string name="mine_cap">MINE</string>
     <string name="filterblock_closingic">Closing button for this filter block</string>
 
+    <!-- Create Mood Event Strings -->
+    <string name="add_location_text">Add Location</string>
+    <string name="add_photo_text">Add Photo</string>
+    <string name="post_button">POST</string>
+
 </resources>

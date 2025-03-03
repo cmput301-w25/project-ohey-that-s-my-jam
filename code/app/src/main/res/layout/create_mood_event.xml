@@ -7,7 +7,7 @@
     android:scaleX="1"
     android:scaleY="1">
 
-    <!-- Close Button (X) at the top right -->
+    <!-- Close Button  -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,86 +44,78 @@
             android:orientation="horizontal"
             android:gravity="center">
 
-            <!-- Chips for Mood Selection -->
+            <!-- Buttons for Mood Selection -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/chipAnger"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:backgroundTint="@color/chipBackgroundColorAnger"
-                android:text="ANGER"
-                android:textColor="@color/chipTextColorAnger"
-
-                 />
-
+                android:backgroundTint="@color/BackgroundColorAnger"
+                android:text="@string/anger_text"
+                android:textColor="@color/TextColorAnger" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/chipDisgust"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="DISGUST"
-                android:backgroundTint="@color/chipBackgroundColorDisgust"
-                android:textColor="@color/chipTextColorDisgust" />
+                android:text="@string/disgust_text"
+                android:backgroundTint="@color/BackgroundColorDisgust"
+                android:textColor="@color/TextColorDisgust" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/chipHappy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="HAPPY"
-                android:textColor="@color/chipTextColorHappy"
-                android:backgroundTint="@color/chipBackgroundColorHappy"
-                />
+                android:text="@string/happy_text"
+                android:textColor="@color/TextColorHappy"
+                android:backgroundTint="@color/BackgroundColorHappy" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/chipFear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="FEAR"
-                android:textColor="@color/chipTextColorFear"
-                android:backgroundTint="@color/chipBackgroundColorFear"
-                />
+                android:text="@string/fear_text"
+                android:textColor="@color/TextColorFear"
+                android:backgroundTint="@color/BackgroundColorFear" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/chipSad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="SAD"
-                android:textColor="@color/chipTextColorSad"
-                android:backgroundTint="@color/chipBackgroundColorSad"
-                />
+                android:text="@string/sad_text"
+                android:textColor="@color/TextColorSad"
+                android:backgroundTint="@color/BackgroundColorSad" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/chipShame"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="SHAME"
-                android:textColor="@color/chipTextColorShame"
-                android:backgroundTint="@color/chipBackgroundColorShame"
-                />
+                android:text="@string/shame_text"
+                android:textColor="@color/TextColorShame"
+                android:backgroundTint="@color/BackgroundColorShame" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/chipConfuse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:backgroundTint="@color/chipBackgroundColorConfusion"
-                android:text="CONFUSION"
-                android:textColor="@color/chipTextColorConfusion" />
+                android:backgroundTint="@color/BackgroundColorConfusion"
+                android:text="@string/confuse_text"
+                android:textColor="@color/TextColorConfusion" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/chipSurprise"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="SURPRISE"
-                android:textColor="@color/chipTextColorSurprise"
-                android:backgroundTint="@color/chipBackgroundColorSurprise"
-                />
+                android:text="@string/surprise_text"
+                android:textColor="@color/TextColorSurprise"
+                android:backgroundTint="@color/BackgroundColorSurprise" />
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -149,7 +141,7 @@
         android:inputType="textMultiLine"
         android:maxLines="4" />
 
-    <!-- Mood Option Buttons -->
+    <!-- Social Situation Buttons -->
 
     <TextView
         android:layout_width="wrap_content"
@@ -198,7 +190,7 @@
             android:textColor="#193F80" />
     </LinearLayout>
 
-    <!--  -->
+    <!-- Add Photo and Add Location -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -215,7 +207,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Add Photo"
+            android:text="@string/add_photo_text"
             android:clickable="true"
             android:focusable="true" />
     </LinearLayout>
@@ -227,7 +219,7 @@
         android:layout_weight="1"
         android:clickable="true"
         android:focusable="true"
-        android:text="Add Location" />
+        android:text="@string/add_location_text" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -250,7 +242,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#4D193F80"
-            android:text="Post"
+            android:text="@string/post_button"
             android:textColor="#193F80" />
     </LinearLayout>
 
