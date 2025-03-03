@@ -8,10 +8,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <!-- Bottom Navigation Bar (Top) -->
-
-    <!-- Scrollable Content -->
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="93dp"
@@ -31,7 +27,7 @@
             android:layout_weight="1"
             android:background="@color/white"
             android:scaleType="fitXY"
-            app:srcCompat="@mipmap/user_add_foreground" />
+            app:srcCompat="@drawable/group" />
 
         <ImageButton
             android:id="@+id/imageButton5"
@@ -44,20 +40,34 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:elevation="5dp"
-            android:scaleType="centerCrop"
-            app:srcCompat="@mipmap/app_logo_foreground" />
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/app_logo" />
 
         <ImageButton
             android:id="@+id/imageButton"
             android:layout_width="27dp"
             android:layout_height="28dp"
             android:layout_below="@+id/imageButton6"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
-            app:srcCompat="@mipmap/filter_foreground" />
+            app:srcCompat="@drawable/filter" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="165dp"
+            android:layout_height="45dp"
+            android:layout_below="@+id/imageButton5"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="9dp"
+            android:layout_marginEnd="237dp"
+            android:layout_toEndOf="@+id/imageButton"
+            android:fontFamily="sans-serif"
+            android:text="RECENT EVENTS"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
@@ -75,7 +85,7 @@
             android:overScrollMode="never" />
     </ScrollView>
 
-    <!-- Bottom Navigation Bar (Bottom) -->
+    <!-- Bottom Navigation Bar -->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -94,7 +104,7 @@
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
 
-            app:srcCompat="@mipmap/map_icon_foreground" />
+            app:srcCompat="@drawable/location" />
 
         <ImageButton
             android:id="@+id/imageButton7"
@@ -105,18 +115,20 @@
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
 
-            app:srcCompat="@mipmap/profile_foreground" />
+            app:srcCompat="@drawable/profile" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton4"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="112.5dp"
-            android:layout_marginEnd="112.5dp"
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.IconOnly"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="107dp"
+            android:layout_marginEnd="107dp"
             android:layout_toStartOf="@+id/imageButton7"
             android:layout_toEndOf="@+id/imageButton3"
-            android:clickable="true"
-            android:src="@drawable/ic_plus" />
+            app:backgroundTint="#FFFFFF"
+            app:icon="@android:drawable/ic_input_add"
+            app:iconTint="#5E78A5"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Circle" />
 
 
     </RelativeLayout>

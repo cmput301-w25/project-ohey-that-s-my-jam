@@ -22,7 +22,7 @@
             android:layout_alignParentEnd="true"
             android:background="?android:attr/selectableItemBackground"
             android:scaleType="fitXY"
-            android:src="@mipmap/exit_foreground" />
+            android:src="@drawable/x" />
     </RelativeLayout>
 
     <!-- Title Text -->
@@ -55,7 +55,7 @@
                 android:textColor="#80B00020"
                 app:chipBackgroundColor="#61B00020"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#000000" />
+                 />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipDisgust3"
@@ -67,7 +67,7 @@
                 android:textColor="#09851D"
                 app:chipBackgroundColor="#6109851D"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#FFFFFF" />
+                 />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipHappy3"
@@ -79,7 +79,7 @@
                 android:textColor="#FF1D89"
                 app:chipBackgroundColor="#61FF1D89"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#000000" />
+                 />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipFear3"
@@ -91,7 +91,7 @@
                 android:textColor="#310566"
                 app:chipBackgroundColor="#615600E8"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#000000" />
+                 />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipSad3"
@@ -103,7 +103,7 @@
                 android:textColor="#1554F6"
                 app:chipBackgroundColor="#611554F6"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#000000" />
+                 />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipShame3"
@@ -115,7 +115,7 @@
                 android:textColor="#964B00"
                 app:chipBackgroundColor="#61964B00"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#000000" />
+                 />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipConfuse3"
@@ -127,7 +127,7 @@
                 android:textColor="#FFE000"
                 app:chipBackgroundColor="#61FFE000"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#000000" />
+                 />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipSurprise3"
@@ -139,7 +139,7 @@
                 android:textColor="#FFA500"
                 app:chipBackgroundColor="#61FFA500"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#000000" />
+                 />
         </LinearLayout>
     </HorizontalScrollView>
 

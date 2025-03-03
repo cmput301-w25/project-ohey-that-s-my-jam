@@ -31,7 +31,7 @@
             android:layout_weight="1"
             android:background="@color/white"
             android:scaleType="fitXY"
-            app:srcCompat="@mipmap/edit_foreground" />
+            app:srcCompat="@drawable/edit" />
 
         <ImageButton
             android:id="@+id/imageButton5"
@@ -45,7 +45,7 @@
             android:background="@android:color/transparent"
             android:elevation="5dp"
             android:scaleType="centerCrop"
-            app:srcCompat="@mipmap/back_foreground" />
+            app:srcCompat="@drawable/back" />
 
 
     </RelativeLayout>
@@ -86,7 +86,7 @@
             android:layout_marginTop="140dp"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
-            app:srcCompat="@mipmap/profile_pic_placeholder_foreground" />
+            app:srcCompat="@drawable/profile" />
 
         <Button
             android:id="@+id/button"
@@ -112,7 +112,7 @@
             android:layout_marginBottom="16dp"
             android:background="?android:attr/selectableItemBackground"
             android:scaleType="fitXY"
-            android:src="@mipmap/add_photo_foreground" />
+            android:src="@drawable/add_photo" />
 
         <TextView
             android:id="@+id/textView6"
@@ -148,36 +148,38 @@
 
         <ImageButton
             android:id="@+id/imageButton3"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentStart="true"
             android:layout_marginStart="30dp"
-
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
-            app:srcCompat="@mipmap/map_icon_foreground" />
+
+            app:srcCompat="@drawable/location" />
 
         <ImageButton
             android:id="@+id/imageButton7"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="37dp"
-
+            android:layout_marginEnd="30dp"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
-            app:srcCompat="@mipmap/profile_foreground" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton4"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="112.5dp"
-            android:layout_marginEnd="112.5dp"
+            app:srcCompat="@drawable/profile" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.IconOnly"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="107dp"
+            android:layout_marginEnd="107dp"
             android:layout_toStartOf="@+id/imageButton7"
             android:layout_toEndOf="@+id/imageButton3"
-            android:clickable="true"
-            android:src="@drawable/ic_plus" />
+            app:backgroundTint="#FFFFFF"
+            app:icon="@android:drawable/ic_input_add"
+            app:iconTint="#5E78A5"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Circle" />
 
 
     </RelativeLayout>

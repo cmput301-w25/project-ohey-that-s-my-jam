@@ -41,7 +41,7 @@
         android:layout_marginStart="18dp"
         android:layout_marginTop="29dp"
         android:layout_marginBottom="36dp"
-        app:srcCompat="@mipmap/profile_foreground" />
+        app:srcCompat="@drawable/profile" />
 
     <TextView
         android:id="@+id/mood_event_date"
@@ -75,5 +75,6 @@
         android:layout_marginEnd="15dp"
         android:layout_alignParentBottom="true"
         android:background="#808080"/>
+
 
 </RelativeLayout>

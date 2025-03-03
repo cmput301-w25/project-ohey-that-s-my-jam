@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Basic Colors -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+
+    <!-- Chip Colors -->
+    <color name="chipTextColor">#000000</color> <!-- Default text color for chips -->
+
+    <color name="chipBackgroundColorAnger">#61B00020</color> <!-- 'Anger' chip background -->
+    <color name="chipTextColorAnger">#80B00020</color> <!-- 'Anger' chip text color -->
+
+    <color name="chipBackgroundColorDisgust">#6109851D</color> <!-- 'Disgust' chip background -->
+    <color name="chipTextColorDisgust">#09851D</color> <!-- 'Disgust' chip text color -->
+
+    <color name="chipBackgroundColorHappy">#61FF1D89</color> <!-- 'Happy' chip background -->
+    <color name="chipTextColorHappy">#FF1D89</color> <!-- 'Happy' chip text color -->
+
+    <color name="chipBackgroundColorFear">#615600E8</color> <!-- 'Fear' chip background -->
+    <color name="chipTextColorFear">#310566</color> <!-- 'Fear' chip text color -->
+
+    <color name="chipBackgroundColorSad">#611554F6</color> <!-- 'Sad' chip background -->
+    <color name="chipTextColorSad">#1554F6</color> <!-- 'Sad' chip text color -->
+
+    <color name="chipBackgroundColorShame">#61964B00</color> <!-- 'Shame' chip background -->
+    <color name="chipTextColorShame">#964B00</color> <!-- 'Shame' chip text color -->
+
+    <color name="chipBackgroundColorConfusion">#61FFE000</color> <!-- 'Confusion' chip background -->
+    <color name="chipTextColorConfusion">#FFE000</color> <!-- 'Confusion' chip text color -->
+
+    <color name="chipBackgroundColorSurprise">#61FFA500</color> <!-- 'Surprise' chip background -->
+    <color name="chipTextColorSurprise">#FFA500</color> <!-- 'Surprise' chip text color -->
 </resources>

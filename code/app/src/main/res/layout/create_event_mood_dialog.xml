@@ -21,7 +21,7 @@
             android:layout_alignParentEnd="true"
             android:background="?android:attr/selectableItemBackground"
             android:scaleType="fitXY"
-            android:src="@mipmap/exit_foreground" />
+            android:src="@drawable/x" />
     </RelativeLayout>
 
     <!-- Mood Selection (Chips with specified colors) -->
@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="Mood"
+        android:text="Select Mood"
         android:textSize="16sp" />
 
     <HorizontalScrollView
@@ -51,10 +51,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="ANGER"
-                android:textColor="#80B00020"
-                app:chipBackgroundColor="#61B00020"
+                android:textColor="@color/chipTextColorAnger"
+                app:chipBackgroundColor="@color/chipBackgroundColorAnger"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#000000" />
+                 />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipDisgust"
@@ -62,10 +62,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="DISGUST"
-                android:textColor="#09851D"
-                app:chipBackgroundColor="#6109851D"
+                android:textColor="@color/chipTextColorDisgust"
+                app:chipBackgroundColor="@color/chipBackgroundColorDisgust"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#FFFFFF" />
+                 />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipHappy"
@@ -73,10 +73,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="HAPPY"
-                android:textColor="#FF1D89"
-                app:chipBackgroundColor="#61FF1D89"
+                android:textColor="@color/chipTextColorHappy"
+                app:chipBackgroundColor="@color/chipBackgroundColorHappy"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#000000" />
+                 />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipFear"
@@ -84,10 +84,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="FEAR"
-                android:textColor="#310566"
-                app:chipBackgroundColor="#615600E8"
+                android:textColor="@color/chipTextColorFear"
+                app:chipBackgroundColor="@color/chipBackgroundColorFear"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#000000" />
+                 />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipSad"
@@ -95,10 +95,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="SAD"
-                android:textColor="#1554F6"
-                app:chipBackgroundColor="#611554F6"
+                android:textColor="@color/chipTextColorSad"
+                app:chipBackgroundColor="@color/chipBackgroundColorSad"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#000000" />
+                 />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipShame"
@@ -106,10 +106,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="SHAME"
-                android:textColor="#964B00"
-                app:chipBackgroundColor="#61964B00"
+                android:textColor="@color/chipTextColorShame"
+                app:chipBackgroundColor="@color/chipBackgroundColorShame"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#000000" />
+                 />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipConfuse"
@@ -117,10 +117,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="CONFUSION"
-                android:textColor="#FFE000"
-                app:chipBackgroundColor="#61FFE000"
+                android:textColor="@color/chipTextColorConfusion"
+                app:chipBackgroundColor="@color/chipBackgroundColorConfusion"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#000000" />
+                 />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipSurprise"
@@ -128,10 +128,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="SURPRISE"
-                android:textColor="#FFA500"
-                app:chipBackgroundColor="#61FFA500"
+                android:textColor="@color/chipTextColorSurprise"
+                app:chipBackgroundColor="@color/chipBackgroundColorSurprise"
                 app:chipStrokeColor="@android:color/transparent"
-                app:chipTextColor="#000000" />
+                 />
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -181,12 +181,6 @@
             android:text="Alone"
             android:textColor="#193F80" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="14dp"
-            android:layout_height="match_parent">
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
         <Button
             android:id="@+id/button1"
             android:layout_width="wrap_content"
@@ -210,7 +204,6 @@
             android:backgroundTint="#4D193F80"
             android:text="Crowd"
             android:textColor="#193F80" />
-
     </LinearLayout>
 
     <!-- Button to add an image -->
@@ -220,13 +213,29 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"/>
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add Photo"
+            android:clickable="true"
+            android:focusable="true" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="Add Location" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -234,46 +243,15 @@
         android:gravity="end"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="0dp"
-            android:layout_height="33dp"
-            android:layout_weight="1"
-            android:scaleType="fitXY"
-
-            app:srcCompat="@mipmap/location_foreground" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <ImageButton
-            android:id="@+id/imageButtonAddImage"
-            android:layout_width="31dp"
-            android:layout_width="30dp"
-            android:layout_height="31dp"
-            android:layout_height="30dp"
-            android:layout_marginBottom="16dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:scaleType="fitXY"
-            android:src="@mipmap/add_photo_foreground" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="42dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_weight="1"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="37dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_weight="1"/>
 
         <Button
             android:id="@+id/submitButton"
