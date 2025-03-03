@@ -12,9 +12,16 @@ import java.util.ArrayList;
  */
 
 public class UserManager {
-    private final FirestoreDB db;
-    public UserManager(FirestoreDB db) {
-        this.db = db;
+    private final FirestoreDB<User> db;
+
+    public interface AuthenticationCallback {
+        void onAuthenticated(DatabaseObject<User> authenticatedUser);
+        void onAuthenticationFailure(String reason);
+        void onFailure(Exception e);
+    }
+
+    public UserManager() {
+        this.db = new FirestoreDB<>(FirestoreCollections.Users.name);
     }
 
     /**
@@ -22,31 +29,35 @@ public class UserManager {
      *
      * @param enteredUsername the username entered by the user
      * @param enteredPassword the password entered by the user
-     * @return the authenticated {@link User} object if login is successful, or {@code null} otherwise
+     * @param callback        the callback provides an interface for handling
+     *                        authentication success and failure
      */
 
-    public User login(String enteredUsername, String enteredPassword) {
-        final User[] user = {null};
-
-        db.getDocuments(Filter.equalTo("username", enteredUsername), new FirestoreDB.DBCallback<User>() {
+    public void login(String enteredUsername, String enteredPassword, AuthenticationCallback callback) {
+        Filter byUsername = Filter.equalTo("username", enteredUsername);
+        db.getDocuments(byUsername, new FirestoreDB.DBCallback<>() {
             @Override
             public void onSuccess(ArrayList<DatabaseObject<User>> result) {
                 if (!result.isEmpty()) {
-                    User u = result.get(0).getObject();
+                    DatabaseObject<User> dob = result.get(0);
+                    User u = dob.getObject();
 
-                    if (u.getPassword().equals(enteredPassword)) {
-                        user[0] = u;
+                    if (u.isPassword(enteredPassword)) {
+                        callback.onAuthenticated(dob);
+                    } else {
+                        callback.onAuthenticationFailure("Wrong password");
                     }
+                } else {
+                    callback.onAuthenticationFailure("No such user");
                 }
             }
 
             @Override
             public void onFailure(Exception e) {
-                // will be implemented later on when it has been decided what should happen on failure
+                callback.onFailure(e);
             }
         });
 
-        return user[0]; // return the authenticated user
     }
 
     /**

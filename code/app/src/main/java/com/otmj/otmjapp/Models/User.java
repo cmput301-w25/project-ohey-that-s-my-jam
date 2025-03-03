@@ -18,6 +18,8 @@ public class User extends Entity {
      * User class constructor
      * @param username
      *              user name of a user
+     * @param password
+     *              password of a user
      * @param profilePictureLink
      *              optional profile picture of a user, if don't have one please input null
      */
