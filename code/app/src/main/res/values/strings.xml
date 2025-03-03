@@ -100,4 +100,7 @@
     <string name="mine_cap">MINE</string>
     <string name="filterblock_closingic">Closing button for this filter block</string>
 
+    <!-- Detailed Mood Event Strings -->
+    <string name="example_post">User was feeling frustrated because of traffic and delays, with one other person.</string>
+
 </resources>
