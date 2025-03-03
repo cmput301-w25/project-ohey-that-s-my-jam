@@ -22,10 +22,10 @@
             android:id="@+id/imageButton"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
+            android:layout_alignParentBottom="true"
             android:layout_marginEnd="50dp"
+            android:layout_marginBottom="1dp"
             android:layout_weight="1"
             android:background="@color/white"
             android:scaleType="fitXY"
@@ -36,10 +36,10 @@
             android:id="@+id/imageButton6"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
+            android:layout_alignParentBottom="true"
             android:layout_marginEnd="10dp"
+            android:layout_marginBottom="1dp"
             android:layout_weight="1"
             android:background="@color/white"
             android:scaleType="fitXY"
@@ -53,7 +53,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="25dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:elevation="5dp"
@@ -173,21 +173,25 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:layout_marginStart="30dp"
+            android:layout_marginTop="8dp"
+
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
-
             app:srcCompat="@drawable/ic_location" />
 
         <ImageButton
             android:id="@+id/imageButton7"
             android:layout_width="35dp"
             android:layout_height="35dp"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="30dp"
+
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
-
             app:srcCompat="@drawable/profile" />
 
         <com.google.android.material.button.MaterialButton
