@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#203158">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="261dp"
+            android:layout_height="382dp"
+            android:layout_centerHorizontal="true"
+            android:translationY="120dp"
+            app:srcCompat="@drawable/oval" />
+
+        <TextView
+            android:id="@+id/record_your"
+            android:layout_width="312dp"
+            android:layout_height="38dp"
+            android:textSize="30sp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="520dp"
+            android:fontFamily="sans-serif"
+            android:text="@string/record_your_mood" />
+
+        <Button
+            android:id="@+id/loginbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:textSize="25sp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="580dp"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="@color/lightbtn"
+            />
+
+        <Button
+            android:id="@+id/signupbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signup"
+            android:textSize="25sp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="635dp"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="@color/blue_nav_bar"
+            />
+        </RelativeLayout>
+    </RelativeLayout>

@@ -53,7 +53,7 @@
             android:layout_marginTop="10dp"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
-            app:srcCompat="@drawable/filter" />
+            app:srcCompat="@drawable/ic_filter" />
 
         <TextView
             android:id="@+id/textView"

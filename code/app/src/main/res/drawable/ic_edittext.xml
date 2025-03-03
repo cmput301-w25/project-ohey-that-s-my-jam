@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="344dp"
+    android:height="58dp"
+    android:viewportWidth="344"
+    android:viewportHeight="58"
+    >
+    <group>
+        <clip-path
+            android:pathData="M29 0H315C331.016 0 344 12.9837 344 29C344 45.0163 331.016 58 315 58H29C12.9837 58 0 45.0163 0 29C0 12.9837 12.9837 0 29 0Z"
+            />
+        <path
+            android:pathData="M0 0V58H344V0"
+            android:fillColor="@color/lightbtn"
+            />
+    </group>
+</vector>

@@ -22,7 +22,7 @@
             android:layout_alignParentEnd="true"
             android:background="?android:attr/selectableItemBackground"
             android:scaleType="fitXY"
-            android:src="@drawable/x" />
+            android:src="@drawable/ic_close" />
     </RelativeLayout>
 
     <!-- Title Text -->
