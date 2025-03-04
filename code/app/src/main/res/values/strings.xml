@@ -1,4 +1,10 @@
 <resources>
+    <!-- Strings for Mood Event Item -->
+    <string name="username_placeholder">Username</string>
+    <string name="reason_why">Reason Why...</string>
+    <string name="time_ago">2hrs</string>
+    <string name="mood_event_location">University</string>
+
     <string name="app_name">OTMJ App</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
@@ -99,6 +105,9 @@
     <string name="all_cap">ALL</string>
     <string name="mine_cap">MINE</string>
     <string name="filterblock_closingic">Closing button for this filter block</string>
+
+    <!-- Detailed Mood Event Strings -->
+    <string name="example_post">User was feeling frustrated because of traffic and delays, with one other person.</string>
 
     <!-- Create Mood Event Strings -->
     <string name="add_location_text">Add Location</string>
