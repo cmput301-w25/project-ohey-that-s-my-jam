@@ -1,5 +1,7 @@
 package com.otmj.otmjapp.Models;
 
+import androidx.annotation.NonNull;
+
 import com.otmj.otmjapp.R;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
@@ -53,5 +55,11 @@ public enum EmotionalState implements Serializable {
      */
     public String getDescription() {
         return name();
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return name().toLowerCase() + " " + emoji;
     }
 }

@@ -4,19 +4,19 @@ import android.location.Location;
 
 import com.google.firebase.firestore.ServerTimestamp;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 
 public class MoodEvent extends Entity {
     private final String userID;
+    private String posterUsername = null;
     /**
      * ServerTimestamp annotation automatically grabs the date and time
      * the model was added to the database
      */
     @ServerTimestamp
-    private Date createdDate;
+    private LocalDateTime createdDate;
     private EmotionalState emotionalState;
     private String trigger;
     private SocialSituation socialSituation;
@@ -43,8 +43,8 @@ public class MoodEvent extends Entity {
         }
     }
 
-    private MoodEvent(String userID,
-                      Date createdDate,
+    public MoodEvent(String userID,
+                      LocalDateTime createdDate,
                       EmotionalState emotionalState,
                       String trigger,
                       SocialSituation socialSituation,
@@ -64,8 +64,19 @@ public class MoodEvent extends Entity {
         this.imageLink = imageLink;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
+    }
+
+    public void setPosterUsername(String username) {
+        posterUsername = username;
+    }
+
+    public String getPosterUsername() {
+        if (posterUsername == null) {
+            return userID;
+        }
+        return posterUsername;
     }
 
     public EmotionalState getEmotionalState() {
@@ -85,7 +96,10 @@ public class MoodEvent extends Entity {
     }
 
     public String getSocialSituation() {
-        return socialSituation.toString();
+        if (socialSituation != null) {
+            return socialSituation.toString();
+        }
+        return "";
     }
 
     public void setSocialSituation(String socialSituation) {
@@ -124,7 +138,7 @@ public class MoodEvent extends Entity {
     public static MoodEvent fromMap(Map<String, Object> map) {
         return new MoodEvent(
                 (String) map.get("userID"),
-                (Date) map.get("createdDate"),
+                (LocalDateTime) map.get("createdDate"),
                 EmotionalState.fromColor((int) Objects.requireNonNull(map.get("emotionalState"))),
                 (String) map.get("trigger"),
                 SocialSituation.fromText((String) map.get("socialSituation")),
