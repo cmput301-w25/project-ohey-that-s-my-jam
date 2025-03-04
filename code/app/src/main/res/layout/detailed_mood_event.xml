@@ -11,39 +11,15 @@
     <!-- Top Bar -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="59dp"
+        android:layout_height="54dp"
         android:background="@android:color/transparent"
         android:elevation="3dp"
         android:orientation="horizontal"
         android:padding="8dp">
 
-        <!-- Edit Button -->
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="50dp"
-            android:layout_marginBottom="1dp"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/ic_edit" />
+        <!-- REMOVED Edit Button -->
 
-        <!-- Delete Button -->
-        <ImageButton
-            android:id="@+id/imageButton6"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="1dp"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/delete" />
+        <!-- REMOVED Delete Button -->
 
         <!-- Back Button -->
         <ImageButton
@@ -51,9 +27,9 @@
             android:layout_width="18dp"
             android:layout_height="22dp"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginBottom="1dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:elevation="5dp"
@@ -67,7 +43,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="617dp">
+        android:layout_height="620dp">
 
         <!-- Location -->
         <TextView
