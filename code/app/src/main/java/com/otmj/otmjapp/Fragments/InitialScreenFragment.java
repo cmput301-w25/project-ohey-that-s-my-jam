@@ -1,4 +1,4 @@
-package com.otmj.otmjapp;
+package com.otmj.otmjapp.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import com.otmj.otmjapp.R;
 
 public class InitialScreenFragment extends Fragment {
     @Override
