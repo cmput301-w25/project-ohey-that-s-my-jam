@@ -10,18 +10,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.type.DateTime;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.R;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 
@@ -50,7 +45,7 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         if (m.getSocialSituation() != null) {
             desc.append(' ').append(m.getSocialSituation().toLowerCase());
         }
-        if (m.getTrigger() != null) {
+        if (m.getTrigger() != null && m.getTrigger().isBlank()) {
             desc.append("\nbecause of ").append(m.getTrigger());
         }
         String finalDescription = getContext().getString(R.string.mood_event_description,
@@ -61,9 +56,9 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
 
         // Change date string depending on how far away the event occurred
         String date;
-        Duration diff = Duration.between(m.getCreatedDate(), LocalDateTime.now());
+        Duration diff = Duration.between(LocalDateTime.now(), m.getCreatedDate());
         if (diff.toDays() > 14) {
-            date = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA)
+            date = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.CANADA)
                     .format(m.getCreatedDate());
         } else if (diff.toDays() > 7) {
             date = "two weeks ago";
