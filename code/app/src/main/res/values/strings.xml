@@ -97,7 +97,7 @@
     <string name="ic_visibility_off_desc">Signals that the current user does not have permission to view recent events of another user</string>
     <string name="send_request_text">REQUEST</string>
     <string name="unfollow_text">UNFOLLOW</string>
-  
+
     <string name="confirm_request_text">CONFIRM</string>
     <string name="temp_list_title">LIST TITLE</string>
     <string name="whose_mood_cap">WHOSE MOOD DO YOU WANT TO SEE?</string>
@@ -112,5 +112,8 @@
     <!-- Create Mood Event Strings -->
     <string name="add_location_text">add location</string>
     <string name="post_button">ADD</string>
+    <string name="ic_back_desc">Brings view back to the previous screen</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

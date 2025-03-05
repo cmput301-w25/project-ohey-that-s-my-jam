@@ -115,7 +115,7 @@ public class User extends Entity {
      * @param profilePictureLink
      *                  String of the profilePictureLink to set
      */
-    public void setProfilePicture(String profilePictureLink) {
+    public void setProfilePictureLink(String profilePictureLink) {
         this.profilePictureLink = profilePictureLink;
     }
 
