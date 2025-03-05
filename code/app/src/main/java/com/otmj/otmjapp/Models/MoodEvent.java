@@ -45,7 +45,7 @@ public class MoodEvent extends Entity {
         }
     }
 
-    private MoodEvent(String userID,
+    public MoodEvent(String userID,
                       Date createdDate,
                       EmotionalState emotionalState,
                       String trigger,
