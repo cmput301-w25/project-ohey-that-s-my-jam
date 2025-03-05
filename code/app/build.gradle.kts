@@ -3,6 +3,9 @@ plugins {
 
     // Firebase
     id("com.google.gms.google-services")
+
+    // SafeArgs
+    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -47,6 +50,13 @@ dependencies {
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.9.0"))
     implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.legacy.support.v4)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
+
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
