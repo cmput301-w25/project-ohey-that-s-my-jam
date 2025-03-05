@@ -3,6 +3,8 @@ plugins {
 
     // Firebase
     id("com.google.gms.google-services")
+    // SafeArgs
+    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -11,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.otmj.otmjapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"

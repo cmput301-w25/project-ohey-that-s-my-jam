@@ -10,8 +10,12 @@ import java.util.Objects;
 
 public class MoodEvent extends Entity {
     private final String userID;
-    private String posterUsername = null;
-    /**
+    /*
+     * This will be set by MoodEventController
+     * because the details of the user might change
+     */
+    private User user = null;
+    /*
      * ServerTimestamp annotation automatically grabs the date and time
      * the model was added to the database
      */
@@ -68,15 +72,12 @@ public class MoodEvent extends Entity {
         return createdDate;
     }
 
-    public void setPosterUsername(String username) {
-        posterUsername = username;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getPosterUsername() {
-        if (posterUsername == null) {
-            return userID;
-        }
-        return posterUsername;
+    public User getUser() {
+        return user;
     }
 
     public EmotionalState getEmotionalState() {

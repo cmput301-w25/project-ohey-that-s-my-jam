@@ -29,8 +29,6 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="10dp"
-            android:layout_marginBottom="1dp"
-            android:layout_weight="1"
             android:background="@android:color/transparent"
             android:elevation="5dp"
             android:scaleType="centerCrop"
@@ -136,54 +134,6 @@
     </RelativeLayout>
 
     <!-- Bottom Navigation Bar -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#5E79A6"
-        android:elevation="3dp"
-        android:orientation="horizontal"
-        android:padding="8dp">
-
-        <ImageButton
-            android:id="@+id/imageButton3"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="8dp"
-
-            android:background="@android:color/transparent"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/ic_location" />
-
-        <ImageButton
-            android:id="@+id/imageButton7"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="30dp"
-
-            android:background="@android:color/transparent"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/profile" />
-
-        <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.IconOnly"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="107dp"
-            android:layout_marginEnd="107dp"
-            android:layout_toStartOf="@+id/imageButton7"
-            android:layout_toEndOf="@+id/imageButton3"
-            app:backgroundTint="#FFFFFF"
-            app:icon="@android:drawable/ic_input_add"
-            app:iconTint="#5E78A5"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Circle" />
-
-
-    </RelativeLayout>
+    <include layout="@layout/bottom_navigation_bar"/>
 
 </LinearLayout>

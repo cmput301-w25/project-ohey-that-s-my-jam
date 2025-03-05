@@ -2,7 +2,7 @@
     <!-- Strings for Mood Event Item -->
     <string name="username_placeholder">Username</string>
     <string name="reason_why">Reason Why...</string>
-    <string name="time_ago">2hrs</string>
+    <string name="time_ago">less than a week ago</string>
     <string name="mood_event_location">University</string>
 
     <string name="app_name">OTMJ App</string>
@@ -52,6 +52,7 @@
     <string name="emotional_state_default">EMOTIONAL STATE 😊</string>
     <string name="date_and_time_text">YYYY/MM/DD 00:00:00</string>
     <string name="reason_why_text">Reason Why Text</string>
+    <string name="mood_event_description">Feeling %1$s</string>
     <string name="trigger_and_social_situation_text">Triggered by [given trigger] while [social situation]</string>
     <string name="location_text">Location</string>
 
@@ -117,5 +118,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="filter_mood_events_in_timeline_desc">Filter mood events in timeline</string>
     <string name="moodwsing_logo_desc">Moodwsing Logo</string>
+    <string name="users_profile_picture">User\'s Profile Picture</string>
 
 </resources>
