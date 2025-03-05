@@ -110,8 +110,7 @@
     <string name="example_post">User was feeling frustrated because of traffic and delays, with one other person.</string>
 
     <!-- Create Mood Event Strings -->
-    <string name="add_location_text">Add Location</string>
-    <string name="add_photo_text">Add Photo</string>
-    <string name="post_button">POST</string>
+    <string name="add_location_text">add location</string>
+    <string name="post_button">ADD</string>
 
 </resources>
