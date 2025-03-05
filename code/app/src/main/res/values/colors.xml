@@ -17,27 +17,34 @@
 
     <!-- Mood Selection Colors -->
 
-    <color name="BackgroundColorAnger">#61B00020</color>
-    <color name="TextColorAnger">#80B00020</color>
+    <color name="BackgroundColorAnger">#FF000433</color>
+    <color name="TextColorAnger">#B00020</color>
 
-    <color name="BackgroundColorDisgust">#6109851D</color>
+    <color name="BackgroundColorDisgust">#0AAE2626</color>
     <color name="TextColorDisgust">#09851D</color>
 
-    <color name="BackgroundColorHappy">#61FF1D89</color>
-    <color name="TextColorHappy">#FF1D89</color>
+    <color name="BackgroundColorFear">#DBB2FFFF</color>
+    <color name="TextColorFear">#5600E8</color>
 
-    <color name="BackgroundColorFear">#615600E8</color>
-    <color name="TextColorFear">#310566</color>
-
-    <color name="BackgroundColorSad">#611554F6</color>
+    <color name="BackgroundColorSad">#1E43CD33</color>
     <color name="TextColorSad">#1554F6</color>
 
-    <color name="BackgroundColorShame">#61964B00</color>
+    <color name="BackgroundColorConfuse">#33FFE000</color>
+    <color name="TextColorConfuse">#E3C700</color>
+
+    <color name="BackgroundColorShame">#33964B00</color>
     <color name="TextColorShame">#964B00</color>
 
-    <color name="BackgroundColorConfusion">#61FFE000</color>
-    <color name="TextColorConfusion">#FFE000</color>
+    <color name="BackgroundColorHappy">#FFC0CB80</color>
+    <color name="TextColorHappy">#FF1D89</color>
 
-    <color name="BackgroundColorSurprise">#61FFA500</color>
+    <color name="BackgroundColorSurprise">#33FFA500</color>
     <color name="TextColorSurprise">#FFA500</color>
+
+    <!-- Text Colors -->
+    <color name="SocialSituationTextColor">#A6000000</color>     <!-- Social Situation -->
+
+
+
+
 </resources>
