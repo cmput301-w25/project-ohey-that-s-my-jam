@@ -114,6 +114,7 @@
     <string name="add_location_text">Add Location</string>
     <string name="add_photo_text">Add Photo</string>
     <string name="post_button">POST</string>
+    <string name="ic_back_desc">Brings view back to the previous screen</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="filter_mood_events_in_timeline_desc">Filter mood events in timeline</string>
