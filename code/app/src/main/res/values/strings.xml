@@ -121,5 +121,6 @@
     <string name="with_one_person_text">1</string>
     <string name="with_more_than_two_people_text">2+</string>
     <string name="crowd_text">Crowd</string>
+    <string name="mood_event_example_with_full_details">Feeling confuse 😊 because of project part 3 triggered by cmput301 with 2+</string>
 
 </resources>
