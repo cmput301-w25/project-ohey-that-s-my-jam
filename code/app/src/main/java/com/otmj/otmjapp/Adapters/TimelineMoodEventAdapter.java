@@ -38,7 +38,7 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         assert m != null;
 
         TextView usernameText = view.findViewById(R.id.timeline_mood_event_username);
-        usernameText.setText(m.getPosterUsername());
+//        usernameText.setText(m.getUser().getUsername());
 
         // Build description text (incorporates emotional state, social situation and trigger)
         StringBuilder desc = new StringBuilder(m.getEmotionalState().toString());

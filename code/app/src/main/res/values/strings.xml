@@ -93,5 +93,6 @@
     <string name="crowd_text">Crowd</string>
     <string name="moodwsing_logo_desc">Moodswing Logo</string>
     <string name="filter_mood_events_in_timeline_desc">Filter mood events</string>
+    <string name="mood_event_description">Feeling $1%s</string>
 
 </resources>
