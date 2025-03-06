@@ -2,7 +2,6 @@ package com.otmj.otmjapp.Helper;
 
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.Filter;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.otmj.otmjapp.Models.DatabaseObject;
 import com.otmj.otmjapp.Models.User;
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class UserManager {
         void answer(boolean correct);
     }
 
-    // Singleton patter
+    // Singleton pattern
     private static final UserManager instance = new UserManager();
     private final FirestoreDB<User> db;
     private DatabaseObject<User> currentUser = null;

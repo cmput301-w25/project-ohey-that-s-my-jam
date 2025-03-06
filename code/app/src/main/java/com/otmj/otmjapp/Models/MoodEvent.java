@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
-// TODO: Update moodeventcontroller to set user
 // TODO: Create initial activity
 
 public class MoodEvent extends Entity {
