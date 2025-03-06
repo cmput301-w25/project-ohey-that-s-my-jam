@@ -1,24 +1,32 @@
 package com.otmj.otmjapp.Models;
 
 import android.location.Location;
-import android.os.Parcelable;
 
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
 
-import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+// TODO: Update moodeventcontroller to set user
+// TODO: Create initial activity
+
 public class MoodEvent extends Entity {
     private final String userID;
+    /**
+     * Will be set when mood event is retrieved from database
+     * Should not be saved directly in database
+     */
+    @Exclude // from database
+    private User user = null;
     /**
      * ServerTimestamp annotation automatically grabs the date and time
      * the model was added to the database
      */
     @ServerTimestamp
-    private Date createdDate;
+    private LocalDateTime createdDate;
     private EmotionalState emotionalState;
     private String trigger;
     private SocialSituation socialSituation;
@@ -46,7 +54,7 @@ public class MoodEvent extends Entity {
     }
 
     public MoodEvent(String userID,
-                      Date createdDate,
+                      LocalDateTime createdDate,
                       EmotionalState emotionalState,
                       String trigger,
                       SocialSituation socialSituation,
@@ -66,12 +74,20 @@ public class MoodEvent extends Entity {
         this.imageLink = imageLink;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
     public EmotionalState getEmotionalState() {
         return emotionalState;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setEmotionalState(int color) {
@@ -126,7 +142,7 @@ public class MoodEvent extends Entity {
     public static MoodEvent fromMap(Map<String, Object> map) {
         return new MoodEvent(
                 (String) map.get("userID"),
-                (Date) map.get("createdDate"),
+                (LocalDateTime) map.get("createdDate"),
                 EmotionalState.fromColor((int) Objects.requireNonNull(map.get("emotionalState"))),
                 (String) map.get("trigger"),
                 SocialSituation.fromText((String) map.get("socialSituation")),
