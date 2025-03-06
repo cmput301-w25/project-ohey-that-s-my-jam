@@ -21,7 +21,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.otmj.otmjapp.Fragments.LoginFragment"
-        android:label="@string/second_fragment_label"
+        android:label="@string/login_fragment_label"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginToSignup"

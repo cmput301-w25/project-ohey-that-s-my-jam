@@ -57,69 +57,69 @@ public class MoodEventDetailsFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(MoodEventDetailsViewModel.class);
 
         // Get the passed arguments using Safe Args
-        MoodEventDetailsFragmentArgs args = MoodEventDetailsFragmentArgs.fromBundle(getArguments());
-        MoodEvent moodEvent = args.getMoodEvent();
-
-        if (moodEvent != null) {
-            mViewModel.setMoodEvent(moodEvent);
-        }
-
-        // Observe MoodEvent and update UI
-        mViewModel.getMoodEvent().observe(getViewLifecycleOwner(), event -> {
-            if (event != null) {
-
-                // set the username text
-                // String moodEventOwnerUsername = event.user.getUsername();
-                // usernameText.setText(moodEventOwnerUsername);
-
-                // load profile image
-                // Glide.with(requireContext()).load(event.user.getProfilePictureLink()).into(profileImage);
-
-                // set time stamp text
-                eventTimestampText.setText(event.getCreatedDate().toString());
-
-                // obtain all of the available strings
-                String combined;
-                String emotionalStateEventText = "Feeling " + event.getEmotionalState().toString()
-                                                    + " " + event.getEmotionalState().emoji;
-                String reasonWhyText = " because of" + event.getReason();
-                combined = emotionalStateEventText + reasonWhyText;
-
-                String trigger = event.getTrigger();
-                // If mood event has an optional trigger
-                if (trigger != null) {
-                    String triggerText = " triggered by" + trigger;
-                    combined += triggerText;
-                }
-
-                String socialSituation = event.getSocialSituation();
-                // If mood event has an optional social situation
-                if (socialSituation != null) {
-                    String socialSituationText;
-                    if (socialSituation.equals("Alone")) {
-                        socialSituationText = " while" + socialSituation;
-                    } else if (socialSituation.equals("Crowd")) {
-                        socialSituationText = " while in a" + socialSituation;
-                    } else {
-                        socialSituationText = " with" + socialSituation;
-                    }
-                    combined += socialSituationText;
-                }
-
-                // set all the available text of a mood event
-                combinedText.setText(combined);
-
-                // set location text
-                eventLocationText.setText(event.getLocation().toString());
-
-                // load the reason why image (I'm not sure if this is right yet)
-                Glide.with(requireContext()).load(event.getImageLink()).into(reasonWhyImage);
-            }
-        });
-
-        // Handle back navigation
-        closeButton.setOnClickListener(v -> {
-            Navigation.findNavController(view).navigateUp(); // Go back in the navigation stack
-        });
+//        MoodEventDetailsFragmentArgs args = MoodEventDetailsFragmentArgs.fromBundle(getArguments());
+//        MoodEvent moodEvent = args.getMoodEvent();
+//
+//        if (moodEvent != null) {
+//            mViewModel.setMoodEvent(moodEvent);
+//        }
+//
+//        // Observe MoodEvent and update UI
+//        mViewModel.getMoodEvent().observe(getViewLifecycleOwner(), event -> {
+//            if (event != null) {
+//
+//                // set the username text
+//                // String moodEventOwnerUsername = event.user.getUsername();
+//                // usernameText.setText(moodEventOwnerUsername);
+//
+//                // load profile image
+//                // Glide.with(requireContext()).load(event.user.getProfilePictureLink()).into(profileImage);
+//
+//                // set time stamp text
+//                eventTimestampText.setText(event.getCreatedDate().toString());
+//
+//                // obtain all of the available strings
+//                String combined;
+//                String emotionalStateEventText = "Feeling " + event.getEmotionalState().toString()
+//                                                    + " " + event.getEmotionalState().emoji;
+//                String reasonWhyText = " because of" + event.getReason();
+//                combined = emotionalStateEventText + reasonWhyText;
+//
+//                String trigger = event.getTrigger();
+//                // If mood event has an optional trigger
+//                if (trigger != null) {
+//                    String triggerText = " triggered by" + trigger;
+//                    combined += triggerText;
+//                }
+//
+//                String socialSituation = event.getSocialSituation();
+//                // If mood event has an optional social situation
+//                if (socialSituation != null) {
+//                    String socialSituationText;
+//                    if (socialSituation.equals("Alone")) {
+//                        socialSituationText = " while" + socialSituation;
+//                    } else if (socialSituation.equals("Crowd")) {
+//                        socialSituationText = " while in a" + socialSituation;
+//                    } else {
+//                        socialSituationText = " with" + socialSituation;
+//                    }
+//                    combined += socialSituationText;
+//                }
+//
+//                // set all the available text of a mood event
+//                combinedText.setText(combined);
+//
+//                // set location text
+//                eventLocationText.setText(event.getLocation().toString());
+//
+//                // load the reason why image (I'm not sure if this is right yet)
+//                Glide.with(requireContext()).load(event.getImageLink()).into(reasonWhyImage);
+//            }
+//        });
+//
+//        // Handle back navigation
+//        closeButton.setOnClickListener(v -> {
+//            Navigation.findNavController(view).navigateUp(); // Go back in the navigation stack
+//        });
     }
 }

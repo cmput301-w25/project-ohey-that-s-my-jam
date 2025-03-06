@@ -60,17 +60,17 @@ public class SignupFragment extends Fragment {
         } else if (usernameText.length() < 3) {
             username.setError("Username must be at least 3 characters long");
             return false;
-        } else if (passwordText.isBlank()) {
-            password.setError("This filed cannot be blank");
-            return false;
-        } else if (passwordText.length() < 8) {
-            username.setError("Password must be at least 8 characters long");
-            return false;
         } else if (emailText.isBlank()) {
             email.setError("This field cannot be blank");
             return false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
             email.setError("Invalid email address");
+            return false;
+        } else if (passwordText.isBlank()) {
+            password.setError("This filed cannot be blank");
+            return false;
+        } else if (passwordText.length() < 8) {
+            password.setError("Password must be at least 8 characters long");
             return false;
         }
 

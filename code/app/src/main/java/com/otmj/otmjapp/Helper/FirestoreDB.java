@@ -125,7 +125,7 @@ public class FirestoreDB<T extends Entity> {
             Objects.requireNonNull(returnedRef).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DatabaseObject<T> dob = new DatabaseObject<>(task.getResult().getId(), object, this);
-                    callback.onSuccess((ArrayList<DatabaseObject<T>>) List.of(dob));
+                    callback.onSuccess(new ArrayList<>(List.of(dob)));
                 } else {
                     callback.onFailure(task.getException());
                 }

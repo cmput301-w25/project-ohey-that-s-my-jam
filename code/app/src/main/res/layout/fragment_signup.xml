@@ -68,7 +68,7 @@
         android:paddingHorizontal="20dp"
         android:background="@drawable/ic_edittext"
         android:fontFamily="@font/roboto_medium"
-        android:inputType="textVisiblePassword"
+        android:inputType="textPassword"
         android:autofillHints="password"
         android:hint="@string/password_cap"
         android:textColor="@color/white"

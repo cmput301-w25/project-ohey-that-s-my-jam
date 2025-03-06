@@ -15,6 +15,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.otmj.otmjapp.databinding.ActivityInitialBinding;
 
+import java.util.Objects;
+
 public class InitialActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
@@ -28,6 +30,7 @@ public class InitialActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_initial);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
