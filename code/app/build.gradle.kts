@@ -35,8 +35,19 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    buildFeatures {
-        viewBinding = true
+    sourceSets {
+        getByName("main") {
+            res.setSrcDirs(
+                listOf(
+                    "src/main/res/layout/authentication",
+                    "src/main/res/layout/profile",
+                    "src/main/res/layout/list_screens",
+                    "src/main/res/layout/map",
+                    "src/main/res/layout",  // subfolders
+                    "src/main/res"         // main res folder
+                )
+            )
+        }
     }
 }
 
