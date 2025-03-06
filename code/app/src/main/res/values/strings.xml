@@ -43,18 +43,20 @@
     <string name="ic_search_desc">Initiates the search of matching keyword(s) in reason why texts</string>
 
     <string name="ic_close_desc">Closes a fragment or view</string>
-    <string name="create_account">CREATE ACCOUNT</string>
     <string name="record_your_mood">RECORD YOUR MOOD</string>
 
+    <string name="welcome_back_cap">WELCOME BACK!</string>
     <string name="login">LOGIN</string>
     <string name="login_register">DON\'T HAVE AN ACCOUNT?</string>
     <string name="logging_in">LOGGING IN…</string>
 
+    <string name="create_account">CREATE ACCOUNT</string>
     <string name="signup">SIGN UP</string>
     <string name="username_cap">USERNAME</string>
     <string name="email_cap">EMAIL</string>
     <string name="password_cap">PASSWORD</string>
-    <string name="welcome_back_cap">WELCOME BACK!</string>
+    <string name="register_login">ALREADY HAVE AN ACCOUNT?</string>
+
     <string name="send_email_cap">SEND EMAIL</string>
     <string name="forgot_cap">FORGOT YOUR PASSWORD?</string>
     <string name="recovery_code_cap">\t\t\tRECOVERY CODE</string>
@@ -88,5 +90,7 @@
     <string name="with_one_person_text">1</string>
     <string name="with_more_than_two_people_text">2+</string>
     <string name="crowd_text">Crowd</string>
+    <string name="moodwsing_logo_desc">Moodswing Logo</string>
+    <string name="filter_mood_events_in_timeline_desc">Filter mood events</string>
 
 </resources>

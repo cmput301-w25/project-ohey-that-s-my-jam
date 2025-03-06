@@ -66,7 +66,8 @@ public class MoodEventController {
     }
 
     /**
-     * Gets all mood events from user(s) that match the provided filters
+     * Gets all mood events from user(s) that match the provided filters. (We get the user's
+     * information before retrieving mood events.)
      * @param customFilter A filter specifies the condition for the mood event to be returned
      * @return An observable that returns the filtered mood events
      */

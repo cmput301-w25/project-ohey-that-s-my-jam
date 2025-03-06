@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.DatabaseObject;
 import com.otmj.otmjapp.Models.User;
@@ -34,13 +35,13 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.loginButton.setOnClickListener(v -> login());
+        binding.loginButton.setOnClickListener(v -> login(v));
         binding.loginCreateAccount.setOnClickListener(v ->
                 NavHostFragment.findNavController(LoginFragment.this)
                         .navigate(R.id.action_loginToSignup));
     }
 
-    private void login() {
+    private boolean validateFields() {
         EditText username = binding.loginEditUsername,
                 password = binding.loginEditPassword;
         String usernameText = username.toString(),
@@ -48,13 +49,22 @@ public class LoginFragment extends Fragment {
 
         if (usernameText.isBlank()) {
             username.setError("This field cannot be blank");
+            return false;
+        } else if (passwordText.isBlank()) {
+            password.setError("This filed cannot be blank");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void login(View view) {
+        if (!validateFields()) {
             return;
         }
 
-        if (passwordText.isBlank()) {
-            password.setError("This filed cannot be blank");
-            return;
-        }
+        String usernameText = binding.loginEditUsername.toString(),
+                passwordText = binding.loginEditPassword.toString();
 
         setButtonStatus(true);
 
@@ -68,6 +78,9 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onAuthenticationFailure(String reason) {
+                Snackbar.make(view, reason, Snackbar.LENGTH_LONG)
+                        .show();
+
                 binding.loginWelcomeText.setText(reason);
                 setButtonStatus(false);
             }
