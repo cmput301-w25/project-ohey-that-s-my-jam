@@ -35,7 +35,7 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.loginButton.setOnClickListener(v -> login(v));
+        binding.loginButton.setOnClickListener(this::login);
         binding.loginCreateAccount.setOnClickListener(v ->
                 NavHostFragment.findNavController(LoginFragment.this)
                         .navigate(R.id.action_loginToSignup));
@@ -80,8 +80,6 @@ public class LoginFragment extends Fragment {
             public void onAuthenticationFailure(String reason) {
                 Snackbar.make(view, reason, Snackbar.LENGTH_LONG)
                         .show();
-
-                binding.loginWelcomeText.setText(reason);
                 setButtonStatus(false);
             }
         });

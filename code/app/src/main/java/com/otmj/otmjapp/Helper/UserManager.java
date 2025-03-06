@@ -78,19 +78,24 @@ public class UserManager {
     }
 
     /**
-     * Adds a new user to the database.
+     * Adds a new user to the database and makes them the current user.
      * @param user User to add
      */
-    public void addUser(User user) {
+    public void signup(User user, AuthenticationCallback callback) {
         db.addDocument(user, new FirestoreDB.DBCallback<>() {
             @Override
             public void onSuccess(ArrayList<DatabaseObject<User>> result) {
-                // will be implemented later on when it has been decided what should happen on success
+                if (!result.isEmpty()) {
+                    currentUser = result.get(0);
+                    callback.onAuthenticated(result);
+                } else {
+                    callback.onAuthenticationFailure("Unable to access server");
+                }
             }
 
             @Override
             public void onFailure(Exception e) {
-                // will be implemented later on when it has been decided what should happen on failure
+                callback.onAuthenticationFailure(e.getMessage());
             }
         });
     }

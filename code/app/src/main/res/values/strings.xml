@@ -52,6 +52,7 @@
 
     <string name="create_account">CREATE ACCOUNT</string>
     <string name="signup">SIGN UP</string>
+    <string name="signing_up">LOADING…</string>
     <string name="username_cap">USERNAME</string>
     <string name="email_cap">EMAIL</string>
     <string name="password_cap">PASSWORD</string>
