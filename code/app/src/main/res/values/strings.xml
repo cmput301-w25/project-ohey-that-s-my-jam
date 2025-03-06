@@ -1,7 +1,7 @@
 <resources>
     <!-- Strings for Mood Event Item -->
     <string name="username_placeholder">Username</string>
-    <string name="reason_why">Reason Why...</string>
+    <string name="reason_why">Reason Why</string>
     <string name="time_ago">2hrs</string>
     <string name="mood_event_location">University</string>
 
@@ -121,5 +121,9 @@
     <string name="with_one_person_text">1</string>
     <string name="with_more_than_two_people_text">2+</string>
     <string name="crowd_text">Crowd</string>
+    <string name="reason_why_hint_text">Reason Why</string>
+    <string name="trigger_hint_text">Trigger</string>
+
+
 
 </resources>

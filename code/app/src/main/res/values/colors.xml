@@ -41,8 +41,10 @@
     <color name="BackgroundColorSurprise">#33FFA500</color>
     <color name="TextColorSurprise">#FFA500</color>
 
+    <!-- Create Mood Event Colors -->
     <!-- Text Colors -->
     <color name="SocialSituationTextColor">#A6000000</color>     <!-- Social Situation -->
+
 
 
 

@@ -46,7 +46,7 @@
             android:text="@string/anger_text"
             android:textColor="@color/anger"
             android:textStyle="bold"
-            app:checkable="false"
+            android:checkable="false"
             app:checkedIconVisible="false"
             app:chipBackgroundColor="#4DFF0004"
             app:chipCornerRadius="20dp"
@@ -70,7 +70,7 @@
             android:text="@string/fear_text"
             android:textColor="@color/fear"
             android:textStyle="bold"
-            app:checkable="false"
+            android:checkable="false"
             app:checkedIconVisible="false"
             app:chipBackgroundColor="#4D673AB7"
             app:chipCornerRadius="20dp"
@@ -94,7 +94,7 @@
             android:text="@string/sad_text"
             android:textColor="@color/sad"
             android:textStyle="bold"
-            app:checkable="false"
+            android:checkable="false"
             app:checkedIconVisible="false"
             app:chipBackgroundColor="#4D3F51B5"
             app:chipCornerRadius="20dp"
@@ -118,7 +118,7 @@
             android:text="@string/confuse_text"
             android:textColor="@color/confuse"
             android:textStyle="bold"
-            app:checkable="false"
+            android:checkable="false"
             app:checkedIconVisible="false"
             app:chipBackgroundColor="#4DFFEB3B"
             app:chipCornerRadius="20dp"
@@ -143,7 +143,7 @@
             android:text="@string/surprise_text"
             android:textColor="@color/surprise"
             android:textStyle="bold"
-            app:checkable="false"
+            android:checkable="false"
             app:checkedIconVisible="false"
             app:chipBackgroundColor="#4DFFA500"
             app:chipCornerRadius="20dp"
@@ -167,7 +167,7 @@
             android:text="@string/shame_text"
             android:textColor="@color/shame"
             android:textStyle="bold"
-            app:checkable="false"
+            android:checkable="false"
             app:checkedIconVisible="false"
             app:chipBackgroundColor="#4D964B00"
             app:chipCornerRadius="20dp"
@@ -191,7 +191,7 @@
             android:text="@string/disgust_text"
             android:textColor="@color/disgust"
             android:textStyle="bold"
-            app:checkable="false"
+            android:checkable="false"
             app:checkedIconVisible="false"
             app:chipBackgroundColor="#4D09851D"
             app:chipCornerRadius="20dp"
@@ -215,7 +215,7 @@
             android:text="@string/happy_text"
             android:textColor="@color/happy"
             android:textStyle="bold"
-            app:checkable="false"
+            android:checkable="false"
             app:checkedIconVisible="false"
             app:chipBackgroundColor="#33FF1D89"
             app:chipCornerRadius="20dp"
@@ -248,7 +248,7 @@
             android:id="@+id/reason_why_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Reason Why"
+            android:hint="@string/reason_why_hint_text"
             android:inputType="textMultiLine"
             android:maxLines="4" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -264,7 +264,7 @@
             android:id="@+id/trigger_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Trigger"
+            android:hint="@string/trigger_hint_text"
             android:inputType="textMultiLine"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -287,8 +287,8 @@
             android:text="@string/alone_text"
             android:backgroundTint="#26193F80"
             app:chipStrokeWidth="0dp"
-            app:textColor="@color/SocialSituationTextColor"
-            app:checkable="true"
+            android:textColor="@color/SocialSituationTextColor"
+            android:checkable="true"
             app:chipCornerRadius="20dp"/>
 
         <com.google.android.material.chip.Chip
@@ -298,8 +298,8 @@
             android:text="@string/with_one_person_text"
             android:backgroundTint="#26193F80"
             app:chipStrokeWidth="0dp"
-            app:textColor="@color/SocialSituationTextColor"
-            app:checkable="true"
+            android:textColor="@color/SocialSituationTextColor"
+            android:checkable="true"
             app:chipCornerRadius="20dp"/>
 
         <com.google.android.material.chip.Chip
@@ -309,8 +309,8 @@
             android:text="@string/with_more_than_two_people_text"
             android:backgroundTint="#26193F80"
             app:chipStrokeWidth="0dp"
-            app:textColor="@color/SocialSituationTextColor"
-            app:checkable="true"
+            android:textColor="@color/SocialSituationTextColor"
+            android:checkable="true"
             app:chipCornerRadius="20dp"/>
 
         <com.google.android.material.chip.Chip
@@ -319,7 +319,7 @@
             android:layout_height="wrap_content"
             android:text="@string/crowd_text"
             app:chipStrokeWidth="0dp"
-            app:checkable="true"
+            android:checkable="true"
             android:backgroundTint="#26193F80"
             app:chipCornerRadius="20dp"/>
 
