@@ -12,20 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OTMJApp"
         tools:targetApi="31">
+
         <activity
             android:name=".InitialActivity"
-            android:exported="false"
-            android:theme="@style/Theme.OTMJApp" />
-        <activity
-            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.OTMJApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.OTMJApp"/>
 
         <meta-data
             android:name="preloaded_fonts"

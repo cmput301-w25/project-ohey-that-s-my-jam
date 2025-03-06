@@ -72,7 +72,7 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:id="@+id/signup_button"
+        android:id="@+id/welcome_signup_button"
         android:layout_width="344dp"
         android:layout_height="58dp"
         android:layout_alignParentTop="true"

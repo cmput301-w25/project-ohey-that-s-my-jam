@@ -34,6 +34,10 @@ public class WelcomeFragment extends Fragment {
                 NavHostFragment.findNavController(WelcomeFragment.this)
                         .navigate(R.id.action_welcomeToLogin)
         );
+
+        binding.welcomeSignupButton.setOnClickListener(v ->
+                NavHostFragment.findNavController(WelcomeFragment.this)
+                        .navigate(R.id.action_welcomeToSignup));
     }
 
     @Override

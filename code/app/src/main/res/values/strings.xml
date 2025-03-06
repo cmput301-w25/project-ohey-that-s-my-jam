@@ -45,11 +45,15 @@
     <string name="ic_close_desc">Closes a fragment or view</string>
     <string name="create_account">CREATE ACCOUNT</string>
     <string name="record_your_mood">RECORD YOUR MOOD</string>
+
     <string name="login">LOGIN</string>
+    <string name="login_register">DON\'T HAVE AN ACCOUNT?</string>
+    <string name="logging_in">LOGGING IN…</string>
+
     <string name="signup">SIGN UP</string>
-    <string name="username_cap">\t\t\tUSERNAME</string>
-    <string name="email_cap">\t\t\tEMAIL</string>
-    <string name="password_cap">\t\t\tPASSWORD</string>
+    <string name="username_cap">USERNAME</string>
+    <string name="email_cap">EMAIL</string>
+    <string name="password_cap">PASSWORD</string>
     <string name="welcome_back_cap">WELCOME BACK!</string>
     <string name="send_email_cap">SEND EMAIL</string>
     <string name="forgot_cap">FORGOT YOUR PASSWORD?</string>

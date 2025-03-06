@@ -62,7 +62,7 @@ public class UserManager {
                         currentUser = dob;
                         callback.onAuthenticated(new ArrayList<>(List.of(dob)));
                     } else {
-                        callback.onAuthenticationFailure("Wrong password");
+                        callback.onAuthenticationFailure("Wrong username or password");
                     }
                 } else {
                     callback.onAuthenticationFailure("No such user");
