@@ -9,16 +9,16 @@ import java.security.InvalidParameterException;
  */
 public enum EmotionalState implements Serializable {
 
-    Anger("😡", R.color.anger),
-    Fear("😱", R.color.fear),
-    Surprise("😲", R.color.surprise),
-    Shame("😔", R.color.shame),
-    Happy("😆", R.color.happy),
-    Disgust("🤢", R.color.disgust),
-    Sad("😢", R.color.sad),
-    Confusion("🤨", R.color.confuse);
+    Anger(R.drawable.anger, R.color.anger),
+    Fear(R.drawable.fear, R.color.fear),
+    Surprise(R.drawable.surprise, R.color.surprise),
+    Shame(R.drawable.shame, R.color.shame),
+    Happy(R.drawable.happy, R.color.happy),
+    Disgust(R.drawable.disgust, R.color.disgust),
+    Sad(R.drawable.sad, R.color.sad),
+    Confusion(R.drawable.confuse, R.color.confuse);
 
-    public final String emoji;
+    public final int emoji;
     public final int color;
 
     /**
@@ -26,7 +26,7 @@ public enum EmotionalState implements Serializable {
      * @param emoji Emoji text of emotional state
      * @param color Assigned colour for emotional state to ensure uniformity across the app
      */
-    EmotionalState(String emoji, int color) {
+    EmotionalState(int emoji, int color) {
         this.emoji = emoji;
         this.color = color;
     }

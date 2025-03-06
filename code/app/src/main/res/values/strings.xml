@@ -115,5 +115,11 @@
     <string name="ic_back_desc">Brings view back to the previous screen</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ic_add_image_desc">Button for adding a reason why image</string>
+    <string name="ic_add_location_desc">Pins the current location of the user to their mood event</string>
+    <string name="alone_text">Alone</string>
+    <string name="with_one_person_text">1</string>
+    <string name="with_more_than_two_people_text">2+</string>
+    <string name="crowd_text">Crowd</string>
 
 </resources>
