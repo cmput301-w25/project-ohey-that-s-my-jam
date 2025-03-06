@@ -5,12 +5,15 @@ import android.graphics.Bitmap;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.Filter;
 import com.otmj.otmjapp.Helper.FirestoreCollections;
 import com.otmj.otmjapp.Helper.FirestoreDB;
 import com.otmj.otmjapp.Helper.MoodHistoryFilter;
+import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.DatabaseObject;
 import com.otmj.otmjapp.Models.MoodEvent;
+import com.otmj.otmjapp.Models.User;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -68,22 +71,47 @@ public class MoodEventController {
      * @return An observable that returns the filtered mood events
      */
     public LiveData<ArrayList<DatabaseObject<MoodEvent>>> getMoodEvents(MoodHistoryFilter customFilter) {
-        // Specify to return only mood events where the 'user' property is one of `users`
-        Filter filter = Filter.inArray("userID", userIDs);
-        // If a custom filter is specified, AND it to `filter`
-        if (customFilter != null) {
-            filter = Filter.and(filter, customFilter.getFilter());
-        }
-
-        db.getDocuments(filter, new FirestoreDB.DBCallback<>() {
+        // We need the users associated with each mood event
+        UserManager.getInstance().getUsers(userIDs, new UserManager.AuthenticationCallback() {
             @Override
-            public void onSuccess(ArrayList<DatabaseObject<MoodEvent>> result) {
-                moodHistory.setValue(result);
+            public void onAuthenticated(ArrayList<DatabaseObject<User>> authenticatedUsers) {
+                // Specify to return only mood events where the 'user' property is one of `users`
+                Filter filter = Filter.inArray("userID", userIDs);
+                // If a custom filter is specified, AND it to `filter`
+                if (customFilter != null) {
+                    filter = Filter.and(filter, customFilter.getFilter());
+                }
+
+                // Get all mood events from specified users
+                db.getDocuments(filter, new FirestoreDB.DBCallback<>() {
+                    @Override
+                    public void onSuccess(ArrayList<DatabaseObject<MoodEvent>> result) {
+                        // For each mood event
+                        for (DatabaseObject<MoodEvent> m : result) {
+                            MoodEvent moodEvent = m.getObject();
+                            // Look through all the users
+                            for (DatabaseObject<User> u : authenticatedUsers) {
+                                // When we get the user associated with the mood event
+                                if (u.getID().equals(moodEvent.getUserID())) {
+                                    moodEvent.setUser(u.getObject());
+                                    break;
+                                }
+                            }
+                        }
+
+                        moodHistory.setValue(result);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        // TODO: Do something about error
+                    }
+                });
             }
 
             @Override
-            public void onFailure(Exception e) {
-                // TODO: Do something about error
+            public void onAuthenticationFailure(String reason) {
+                // TODO: Handle case where we're unable to get users
             }
         });
 

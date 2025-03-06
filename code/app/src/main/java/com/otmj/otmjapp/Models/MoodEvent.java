@@ -82,7 +82,15 @@ public class MoodEvent extends Entity {
         return emotionalState;
     }
 
-    public User getUser() {
+    public String getUserID() {
+        return userID;
+    }
+
+    /**
+     * Get user associated with mood event
+     * @return A constant `User` object
+     */
+    public final User getUser() {
         return user;
     }
 
