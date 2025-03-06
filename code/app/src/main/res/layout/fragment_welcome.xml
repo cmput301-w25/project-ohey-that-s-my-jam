@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#203158">
+    android:background="#203158"
+    tools:context=".Fragments.WelcomeFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,6 +17,7 @@
             android:layout_width="261dp"
             android:layout_height="382dp"
             android:layout_centerHorizontal="true"
+            android:contentDescription="@string/app_name"
             android:translationY="120dp"
             app:srcCompat="@drawable/oval" />
 
@@ -33,7 +35,7 @@
             android:text="@string/record_your_mood" />
 
         <Button
-            android:id="@+id/loginbutton"
+            android:id="@+id/welcome_login_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login"
@@ -41,11 +43,10 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="580dp"
             android:layout_centerHorizontal="true"
-            android:backgroundTint="@color/lightbtn"
-            />
+            android:backgroundTint="@color/lightbtn" />
 
         <Button
-            android:id="@+id/signupbutton"
+            android:id="@+id/signup_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/signup"
@@ -53,7 +54,6 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="635dp"
             android:layout_centerHorizontal="true"
-            android:backgroundTint="@color/blue_nav_bar"
-            />
-        </RelativeLayout>
+            android:backgroundTint="@color/blue_nav_bar" />
     </RelativeLayout>
+</RelativeLayout>
