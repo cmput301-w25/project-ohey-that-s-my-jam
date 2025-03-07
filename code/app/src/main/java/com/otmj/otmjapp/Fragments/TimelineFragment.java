@@ -11,10 +11,11 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.databinding.FragmentSignupBinding;
+import com.otmj.otmjapp.databinding.FragmentTimelineBinding;
 
 public class TimelineFragment extends Fragment {
 
-    private FragmentSignupBinding binding;
+    private FragmentTimelineBinding binding;
 
     @Override
     public View onCreateView(
@@ -26,7 +27,7 @@ public class TimelineFragment extends Fragment {
             container.clearDisappearingChildren();
         }
 
-        binding = FragmentSignupBinding.inflate(inflater, container, false);
+        binding = FragmentTimelineBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
