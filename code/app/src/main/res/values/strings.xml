@@ -96,6 +96,7 @@
     <string name="mood_event_description">Feeling $1%s</string>
     <string name="reason_why_hint_text">Reason Why</string>
     <string name="trigger_hint_text">Trigger</string>
+    <string name="mood_event_example_with_full_details">Feeling confuse 😊 because of project part 3 triggered by cmput301 with 2+</string>
     <string name="users_profile_picture">User profile picture</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
