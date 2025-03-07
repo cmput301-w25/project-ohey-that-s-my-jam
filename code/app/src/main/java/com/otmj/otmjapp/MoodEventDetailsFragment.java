@@ -1,6 +1,5 @@
 package com.otmj.otmjapp;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
