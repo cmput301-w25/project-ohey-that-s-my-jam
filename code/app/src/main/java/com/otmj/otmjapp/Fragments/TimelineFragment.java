@@ -21,6 +21,10 @@ public class TimelineFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
+        if (container != null) {
+            container.removeAllViews();
+            container.clearDisappearingChildren();
+        }
 
         binding = FragmentSignupBinding.inflate(inflater, container, false);
         return binding.getRoot();
