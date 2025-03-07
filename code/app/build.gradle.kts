@@ -42,7 +42,7 @@ android {
 
 dependencies {
     implementation(libs.appcompat)
-    implementation(libs.material)
+    implementation("com.google.android.material:material:1.6.0")  //newer version
     implementation(libs.constraintlayout)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)

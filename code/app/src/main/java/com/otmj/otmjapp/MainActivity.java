@@ -12,6 +12,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.otmj.otmjapp.databinding.ActivityMainBinding;
 
@@ -26,6 +27,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // code for Adapter for followers list  (branch 162)
+        //ReyclerView recyclerView = findViewById(R.id.FollowersRecycleViewAdapter);
+        // setUpFollowersTestList();
+        // Create adapter AFTER you create models (data)
+
+        //FollowersRecyclerViewAdapter adapter = new FollowersRecyclerViewAdapter(this, FollowersTestList);
+
+        //recyclerView.setAdapter(adapter);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
