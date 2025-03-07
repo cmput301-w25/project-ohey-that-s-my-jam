@@ -5,17 +5,19 @@ import android.graphics.Bitmap;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.Filter;
 import com.otmj.otmjapp.Helper.FirestoreCollections;
 import com.otmj.otmjapp.Helper.FirestoreDB;
 import com.otmj.otmjapp.Helper.MoodHistoryFilter;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.DatabaseObject;
+import com.otmj.otmjapp.Models.Entity;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.User;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -39,17 +41,17 @@ public class MoodEventController {
     /**
      * Holds its own reference to the mood events db collection
      */
-    private final FirestoreDB<MoodEvent> db;
+    private final FirestoreDB db;
     /**
      * Observable object that callers can observe to get notified of changes
      */
-    private final MutableLiveData<ArrayList<DatabaseObject<MoodEvent>>> moodHistory;
+    private final MutableLiveData<ArrayList<MoodEvent>> moodHistory;
 
     public MoodEventController(ArrayList<String> userIDs) {
         assert !userIDs.isEmpty();
 
         this.userIDs = userIDs;
-        this.db = new FirestoreDB<>(FirestoreCollections.MoodEvents.name);
+        this.db = new FirestoreDB(FirestoreCollections.MoodEvents.name);
 
         moodHistory = new MutableLiveData<>(new ArrayList<>());
         getMoodEvents(null); // Populate mood history
@@ -60,7 +62,7 @@ public class MoodEventController {
      * @return An observable value that returns all the mood events.
      * @see #getMoodEvents(MoodHistoryFilter)
      */
-    public LiveData<ArrayList<DatabaseObject<MoodEvent>>> getMoodEvents() {
+    public LiveData<ArrayList<MoodEvent>> getMoodEvents() {
         // Assume that mood history has been populated (see constructor)
         return moodHistory;
     }
@@ -71,11 +73,11 @@ public class MoodEventController {
      * @param customFilter A filter specifies the condition for the mood event to be returned
      * @return An observable that returns the filtered mood events
      */
-    public LiveData<ArrayList<DatabaseObject<MoodEvent>>> getMoodEvents(MoodHistoryFilter customFilter) {
+    public LiveData<ArrayList<MoodEvent>> getMoodEvents(MoodHistoryFilter customFilter) {
         // We need the users associated with each mood event
         UserManager.getInstance().getUsers(userIDs, new UserManager.AuthenticationCallback() {
             @Override
-            public void onAuthenticated(ArrayList<DatabaseObject<User>> authenticatedUsers) {
+            public void onAuthenticated(ArrayList<User> authenticatedUsers) {
                 // Specify to return only mood events where the 'user' property is one of `users`
                 Filter filter = Filter.inArray("userID", userIDs);
                 // If a custom filter is specified, AND it to `filter`
@@ -84,23 +86,29 @@ public class MoodEventController {
                 }
 
                 // Get all mood events from specified users
-                db.getDocuments(filter, new FirestoreDB.DBCallback<>() {
+                db.getDocuments(filter, new FirestoreDB.DBCallback() {
                     @Override
-                    public void onSuccess(ArrayList<DatabaseObject<MoodEvent>> result) {
+                    public void onSuccess(ArrayList<Entity> result) {
+                        ArrayList<MoodEvent> moodEvents = new ArrayList<>();
+
                         // For each mood event
-                        for (DatabaseObject<MoodEvent> m : result) {
-                            MoodEvent moodEvent = m.getObject();
+                        for (Entity e : result) {
+                            MoodEvent moodEvent = MoodEvent.fromMap(e.objectMap);
+                            moodEvent.setID(e.ID);
+
+                            moodEvents.add(moodEvent);
+
                             // Look through all the users
-                            for (DatabaseObject<User> u : authenticatedUsers) {
+                            for (User u : authenticatedUsers) {
                                 // When we get the user associated with the mood event
                                 if (u.getID().equals(moodEvent.getUserID())) {
-                                    moodEvent.setUser(u.getObject());
+                                    moodEvent.setUser(u);
                                     break;
                                 }
                             }
                         }
 
-                        moodHistory.setValue(result);
+                        moodHistory.setValue(moodEvents);
                     }
 
                     @Override
@@ -124,14 +132,24 @@ public class MoodEventController {
      * @param moodEvent Mood event to insert
      */
     public void addMoodEvent(MoodEvent moodEvent) {
-        db.addDocument(moodEvent, new FirestoreDB.DBCallback<>() {
+        db.addDocument(moodEvent, new FirestoreDB.DBCallback() {
             @Override
-            public void onSuccess(ArrayList<DatabaseObject<MoodEvent>> result) {
-                ArrayList<DatabaseObject<MoodEvent>> arr =
-                    Objects.requireNonNull(moodHistory.getValue());
-                arr.add(result.get(0));
+            public void onSuccess(ArrayList<Entity> result) {
+                if (!result.isEmpty()) {
+                    Entity e = result.get(0);
+                    MoodEvent m = MoodEvent.fromMap(e.objectMap);
+                    m.setID(e.ID);
 
-                moodHistory.notifyAll(); // Notify observers
+                    if (moodHistory.getValue() == null) {
+                        moodHistory.setValue(new ArrayList<>(List.of(m)));
+                    } else {
+                        moodHistory.getValue().add(m);
+                    }
+
+                    moodHistory.notifyAll(); // Notify observers
+                } else {
+                    // TODO: Handle this
+                }
             }
 
             @Override

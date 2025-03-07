@@ -12,7 +12,7 @@ import java.util.Objects;
 
 // TODO: Create initial activity
 
-public class MoodEvent extends Entity {
+public class MoodEvent extends DatabaseObject {
     private final String userID;
     /**
      * Will be set when mood event is retrieved from database
@@ -142,9 +142,7 @@ public class MoodEvent extends Entity {
     }
 
     /**
-     * Mood Event's class implementation. This static method creates a MoodEvent
-     * from a map.
-     * @see Entity#fromMap(Map)
+     * This static method creates a MoodEvent from a map.
      */
     public static MoodEvent fromMap(Map<String, Object> map) {
         return new MoodEvent(
@@ -160,10 +158,9 @@ public class MoodEvent extends Entity {
     }
 
     /**
-     * Custom implementation for storing MoodEvent in database.
      * This static method creates a map from a MoodEvent.
-     * @see Entity#toMap()
      */
+    @Override
     public Map<String, Object> toMap() {
        return Map.of(
                "userID", userID,

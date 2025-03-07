@@ -1,5 +1,7 @@
 package com.otmj.otmjapp.Helper;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -13,26 +15,25 @@ import com.otmj.otmjapp.Models.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
- * A generic class for managing Firestore database operations for entities extending {@link Entity}.
+ * A generic class for managing Firestore database operations.
  *
- * @param <T> The type of entity that extends {@link Entity}.
  */
-public class FirestoreDB<T extends Entity> {
+public class FirestoreDB {
+
     /**
      * Interface for handling asynchronous Firestore operations.
-     *
-     * @param <T> The type of entity being handled.
      */
-    public interface DBCallback<T extends Entity> {
+    public interface DBCallback {
         /**
          * Called when the Firestore operation is successful.
          *
-         * @param result The list of retrieved {@link DatabaseObject} instances.
+         * @param result The list of retrieved {@link Entity} instances.
          */
-        void onSuccess(ArrayList<DatabaseObject<T>> result);
+        void onSuccess(ArrayList<Entity> result);
 
         /**
          * Called when the Firestore operation fails.
@@ -55,7 +56,7 @@ public class FirestoreDB<T extends Entity> {
      *
      * @param callback The callback to handle the operation result.
      */
-    public void getDocuments(DBCallback<T> callback) {
+    public void getDocuments(DBCallback callback) {
         getDocuments(null, callback);
     }
 
@@ -65,7 +66,7 @@ public class FirestoreDB<T extends Entity> {
      * @param filter   The filter criteria for querying documents.
      * @param callback The callback to handle the operation result.
      */
-    public void getDocuments(Filter filter, DBCallback<T> callback) {
+    public void getDocuments(Filter filter, DBCallback callback) {
         CollectionReference collectionRef = db.collection(collection);
 
         Task<QuerySnapshot> result;
@@ -77,13 +78,9 @@ public class FirestoreDB<T extends Entity> {
 
         result.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                ArrayList<DatabaseObject<T>> documents = new ArrayList<>();
+                ArrayList<Entity> documents = new ArrayList<>();
                 for (DocumentSnapshot doc : task.getResult()) {
-                    DatabaseObject<T> object = new DatabaseObject<>(doc.getId(),
-                            (T) T.fromMap(doc.getData()),
-                            this);
-
-                    documents.add(object);
+                    documents.add(new Entity(doc.getId(), doc.getData()));
                 }
 
                 callback.onSuccess(documents);
@@ -98,11 +95,11 @@ public class FirestoreDB<T extends Entity> {
      *
      * @param document The document to be updated.
      */
-    public void updateDocument(DatabaseObject<T> document) {
+    public <T extends DatabaseObject> void updateDocument(T document) {
         CollectionReference collectionRef = db.collection(collection);
         DocumentReference docRef = collectionRef.document(document.getID());
 
-        docRef.set(document.getObject());
+        docRef.set(document);
     }
 
     /**
@@ -111,26 +108,17 @@ public class FirestoreDB<T extends Entity> {
      * @param object   The entity object to be added to Firestore.
      * @param callback The callback to handle the operation result.
      */
-    public void addDocument(T object, DBCallback<T> callback) {
+    public <T extends DatabaseObject> void addDocument(T object, DBCallback callback) {
         CollectionReference collectionRef = db.collection(collection);
 
-        Task<DocumentReference> returnedRef = null;
-        try {
-            // Try to use `toMap` function (implemented in `MoodEvent` model class)
-            returnedRef = collectionRef.add(object.toMap());
-        } catch (UnsupportedOperationException e) {
-            // If it is not implemented, just pass in the object
-            returnedRef = collectionRef.add(object);
-        } finally {
-            Objects.requireNonNull(returnedRef).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DatabaseObject<T> dob = new DatabaseObject<>(task.getResult().getId(), object, this);
-                    callback.onSuccess(new ArrayList<>(List.of(dob)));
-                } else {
-                    callback.onFailure(task.getException());
-                }
-            });
-        }
+        collectionRef.add(object).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Entity entity = new Entity(task.getResult().getId(), object.toMap());
+                callback.onSuccess(new ArrayList<>(List.of(entity)));
+            } else {
+                callback.onFailure(task.getException());
+            }
+        });
     }
 
     /**
@@ -138,7 +126,7 @@ public class FirestoreDB<T extends Entity> {
      *
      * @param document The document to be deleted.
      */
-    public void deleteDocument(DatabaseObject<T> document) {
+    public void deleteDocument(DatabaseObject document) {
         CollectionReference collectionRef = db.collection(collection);
         DocumentReference docRef = collectionRef.document(document.getID());
 

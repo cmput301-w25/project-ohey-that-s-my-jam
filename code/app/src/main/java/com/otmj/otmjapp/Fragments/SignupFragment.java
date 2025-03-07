@@ -1,5 +1,6 @@
 package com.otmj.otmjapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.otmj.otmjapp.MainActivity;
 import com.otmj.otmjapp.Models.DatabaseObject;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
@@ -94,7 +96,7 @@ public class SignupFragment extends Fragment {
         UserManager userManager = UserManager.getInstance();
         userManager.signup(newUser, new UserManager.AuthenticationCallback() {
             @Override
-            public void onAuthenticated(ArrayList<DatabaseObject<User>> authenticatedUsers) {
+            public void onAuthenticated(ArrayList<User> authenticatedUsers) {
                 NavHostFragment.findNavController(SignupFragment.this)
                         .navigate(R.id.action_registerSucess);
             }

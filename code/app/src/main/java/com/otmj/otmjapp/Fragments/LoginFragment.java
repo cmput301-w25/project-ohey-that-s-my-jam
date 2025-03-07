@@ -1,6 +1,8 @@
 package com.otmj.otmjapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.otmj.otmjapp.Helper.UserManager;
+import com.otmj.otmjapp.MainActivity;
 import com.otmj.otmjapp.Models.DatabaseObject;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
@@ -44,8 +47,8 @@ public class LoginFragment extends Fragment {
     private boolean validateFields() {
         EditText username = binding.loginEditUsername,
                 password = binding.loginEditPassword;
-        String usernameText = username.toString(),
-                passwordText = password.toString();
+        String usernameText = username.getText().toString(),
+                passwordText = password.getText().toString();
 
         if (usernameText.isBlank()) {
             username.setError("This field cannot be blank");
@@ -63,15 +66,15 @@ public class LoginFragment extends Fragment {
             return;
         }
 
-        String usernameText = binding.loginEditUsername.toString(),
-                passwordText = binding.loginEditPassword.toString();
+        String usernameText = binding.loginEditUsername.getText().toString(),
+                passwordText = binding.loginEditPassword.getText().toString();
 
         setButtonStatus(true);
 
         UserManager userManager = UserManager.getInstance();
         userManager.login(usernameText, passwordText, new UserManager.AuthenticationCallback() {
             @Override
-            public void onAuthenticated(ArrayList<DatabaseObject<User>> authenticatedUsers) {
+            public void onAuthenticated(ArrayList<User> authenticatedUsers) {
                 NavHostFragment.findNavController(LoginFragment.this)
                         .navigate(R.id.action_loginSuccess);
             }
