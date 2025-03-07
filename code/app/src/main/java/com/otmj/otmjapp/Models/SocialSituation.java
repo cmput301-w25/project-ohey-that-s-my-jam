@@ -9,8 +9,8 @@ import java.io.Serializable;
  */
 public enum SocialSituation implements Serializable {
     Alone,
-    With_One_Other_Person,
-    With_Two_Or_Several_People,
+    With_1_Other,
+    With_2_Others,
     With_A_Crowd;
 
     /**

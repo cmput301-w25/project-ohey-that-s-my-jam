@@ -2,13 +2,14 @@ package com.otmj.otmjapp.Models;
 
 import androidx.annotation.NonNull;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
  * User class extends Entity class
  * This class stores the user's details
  */
-public class User extends Entity {
+public class User extends DatabaseObject {
     private String username;
     private String emailAddress;
     private String password;
@@ -122,7 +123,6 @@ public class User extends Entity {
     /**
      * User's class implementation. This static method creates a User
      * from a map.
-     * @see Entity#fromMap(Map)
      */
     public static User fromMap(Map<String, Object> map) {
         return new User(
@@ -130,6 +130,16 @@ public class User extends Entity {
                 (String) map.get("emailAddress"),
                 (String) map.get("password"),
                 (String) map.get("profilePictureLink")
+        );
+    }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return Map.of(
+            "username", username,
+            "emailAddress", emailAddress,
+            "password", password,
+            "profilePictureLink", profilePictureLink
         );
     }
 
@@ -148,4 +158,5 @@ public class User extends Entity {
                 ", password='" + password + '\'' +
                 '}';
     }
+
 }

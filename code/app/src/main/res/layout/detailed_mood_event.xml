@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="5dp"
+    android:orientation="vertical">
+
+    <!-- Top Bar -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@android:color/transparent"
+        android:elevation="3dp"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <!-- REMOVED Edit Button -->
+
+        <!-- REMOVED Delete Button -->
+
+        <!-- Back Button -->
+        <ImageButton
+            android:id="@+id/moodswing_logo"
+            android:layout_width="18dp"
+            android:layout_height="22dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
+            android:elevation="5dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/back" />
+
+
+    </RelativeLayout>
+
+    <!-- Mood Event Preview -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="620dp">
+
+        <!-- Location -->
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="31dp"
+            android:layout_marginBottom="150dp"
+            android:drawableLeft="@drawable/ic_location_small"
+            android:text="@string/location_text" />
+
+        <!-- Date and Time -->
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="100dp"
+            android:layout_marginBottom="150dp"
+            android:text="@string/date_and_time_text" />
+
+        <!-- Profile Pic -->
+        <ImageButton
+            android:id="@+id/imageButton11"
+            android:layout_width="89dp"
+            android:layout_height="81dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="29dp"
+            android:layout_marginTop="140dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/profile_placeholder" />
+
+        <!-- Follow Button -->
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="167dp"
+            android:layout_marginEnd="194dp"
+            android:backgroundTint="#4D193F80"
+            android:scaleType="centerCrop"
+            android:text="@string/following"
+            android:textSize="8sp" />
+
+        <!-- User's Added Photo -->
+        <ImageButton
+            android:id="@+id/imageButtonAddImage"
+            android:layout_width="130dp"
+            android:layout_height="134dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="242dp"
+            android:layout_marginBottom="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:scaleType="fitXY"
+            android:src="@drawable/add_photo" />
+
+        <!-- Username -->
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="141dp"
+            android:layout_marginEnd="208dp"
+            android:text="@string/username_text"
+            android:textSize="16sp" />
+
+        <!-- Post Content -->
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="281dp"
+            android:layout_height="46dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="391dp"
+            android:layout_marginEnd="100dp"
+            android:text="@string/example_post" />
+    </RelativeLayout>
+
+    <!-- Bottom Navigation Bar -->
+    <include layout="@layout/bottom_navigation_bar"/>
+
+</LinearLayout>

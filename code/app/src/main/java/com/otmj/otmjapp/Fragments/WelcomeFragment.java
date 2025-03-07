@@ -1,4 +1,4 @@
-package com.otmj.otmjapp;
+package com.otmj.otmjapp.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,11 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.otmj.otmjapp.databinding.FragmentFirstBinding;
+import com.otmj.otmjapp.R;
+import com.otmj.otmjapp.databinding.FragmentWelcomeBinding;
 
-public class FirstFragment extends Fragment {
+public class WelcomeFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private FragmentWelcomeBinding binding;
 
     @Override
     public View onCreateView(
@@ -21,7 +22,7 @@ public class FirstFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentWelcomeBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -29,6 +30,14 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        binding.welcomeLoginButton.setOnClickListener(v ->
+                NavHostFragment.findNavController(WelcomeFragment.this)
+                        .navigate(R.id.action_welcomeToLogin)
+        );
+
+        binding.welcomeSignupButton.setOnClickListener(v ->
+                NavHostFragment.findNavController(WelcomeFragment.this)
+                        .navigate(R.id.action_welcomeToSignup));
     }
 
     @Override

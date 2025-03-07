@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.otmj.otmjapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
 
     implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation(libs.annotation)
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 
 
