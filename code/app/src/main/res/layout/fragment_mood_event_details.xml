@@ -17,7 +17,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_back"
-        app:tint="@color/black" />
+        app:tint="@color/black"
+        />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -94,7 +95,8 @@
         android:id="@+id/combined_reason_why_trigger_and_social_situation_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/example_post"
+        android:text="@string/mood_event_example_with_full_details"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reason_why_image" />
