@@ -43,7 +43,7 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         // Build description text (incorporates emotional state, social situation and trigger)
         StringBuilder desc = new StringBuilder(m.getEmotionalState().toString());
         if (m.getSocialSituation() != null) {
-            desc.append(' ').append(m.getSocialSituation().toLowerCase());
+            desc.append(' ').append(m.getSocialSituation().toString());
         }
         if (m.getTrigger() != null && m.getTrigger().isBlank()) {
             desc.append("\nbecause of ").append(m.getTrigger());
@@ -55,23 +55,24 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         description.setText(finalDescription);
 
         // Change date string depending on how far away the event occurred
-        String date;
-        Duration diff = Duration.between(LocalDateTime.now(), m.getCreatedDate());
-        if (diff.toDays() > 14) {
-            date = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.CANADA)
-                    .format(m.getCreatedDate());
-        } else if (diff.toDays() > 7) {
-            date = "two weeks ago";
-        } else if (diff.toDays() > 1) {
-            date = "less than a week ago";
-        } else if (diff.toHours() > 1) {
-            date = diff.toHours() + " hrs ago";
-        } else {
-            date = "recently";
-        }
-
-        TextView createDate = view.findViewById(R.id.timeline_mood_event_date);
-        createDate.setText(date);
+        // TODO: Fix
+//        String date;
+//        Duration diff = Duration.between(LocalDateTime.now(), m.getCreatedDate());
+//        if (diff.toDays() > 14) {
+//            date = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.CANADA)
+//                    .format(m.getCreatedDate());
+//        } else if (diff.toDays() > 7) {
+//            date = "two weeks ago";
+//        } else if (diff.toDays() > 1) {
+//            date = "less than a week ago";
+//        } else if (diff.toHours() > 1) {
+//            date = diff.toHours() + " hrs ago";
+//        } else {
+//            date = "recently";
+//        }
+//
+//        TextView createDate = view.findViewById(R.id.timeline_mood_event_date);
+//        createDate.setText(date);
 
         // TODO: Set location
 

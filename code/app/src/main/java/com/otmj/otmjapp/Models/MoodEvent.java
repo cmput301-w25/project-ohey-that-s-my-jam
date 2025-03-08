@@ -4,8 +4,10 @@ import android.location.Location;
 
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
+import com.google.type.DateTime;
 
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
@@ -25,7 +27,7 @@ public class MoodEvent extends DatabaseObject {
      * the model was added to the database
      */
     @ServerTimestamp
-    private LocalDateTime createdDate;
+    private Date createdDate;
     private EmotionalState emotionalState;
     private String trigger;
     private SocialSituation socialSituation;
@@ -34,16 +36,16 @@ public class MoodEvent extends DatabaseObject {
     private String imageLink;
 
     public MoodEvent(String userID,
-                     int emotionColor,
+                     EmotionalState emotionalState,
                      String trigger,
-                     String socialSituation,
+                     SocialSituation socialSituation,
                      boolean includeLocation,
                      String reason,
                      String imageLink) {
         this.userID = userID;
-        this.emotionalState = EmotionalState.fromColor(emotionColor);
+        this.emotionalState = emotionalState;
         this.trigger = trigger;
-        this.socialSituation = SocialSituation.fromText(socialSituation);
+        this.socialSituation = socialSituation;
         this.reason = reason;
         this.imageLink = imageLink;
 
@@ -53,7 +55,7 @@ public class MoodEvent extends DatabaseObject {
     }
 
     public MoodEvent(String userID,
-                      LocalDateTime createdDate,
+                      Date createdDate,
                       EmotionalState emotionalState,
                       String trigger,
                       SocialSituation socialSituation,
@@ -64,7 +66,7 @@ public class MoodEvent extends DatabaseObject {
         // TODO: Ensure reason is at most 3 words
 
         this.userID = userID;
-        this.createdDate = createdDate;
+        this.createdDate = Calendar.getInstance().getTime();
         this.emotionalState = emotionalState;
         this.trigger = trigger;
         this.socialSituation = socialSituation;
@@ -73,7 +75,7 @@ public class MoodEvent extends DatabaseObject {
         this.imageLink = imageLink;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
@@ -97,8 +99,8 @@ public class MoodEvent extends DatabaseObject {
         this.user = user;
     }
 
-    public void setEmotionalState(int color) {
-        this.emotionalState = EmotionalState.fromColor(color);
+    public void setEmotionalState(EmotionalState emotionalState) {
+        this.emotionalState = emotionalState;
     }
 
     public String getTrigger() {
@@ -109,12 +111,12 @@ public class MoodEvent extends DatabaseObject {
         this.trigger = trigger;
     }
 
-    public String getSocialSituation() {
-        return socialSituation.toString();
+    public SocialSituation getSocialSituation() {
+        return socialSituation;
     }
 
-    public void setSocialSituation(String socialSituation) {
-        this.socialSituation = SocialSituation.fromText(socialSituation);
+    public void setSocialSituation(SocialSituation socialSituation) {
+        this.socialSituation = socialSituation;
     }
 
     public Location getLocation() {
@@ -147,7 +149,7 @@ public class MoodEvent extends DatabaseObject {
     public static MoodEvent fromMap(Map<String, Object> map) {
         return new MoodEvent(
                 (String) map.get("userID"),
-                (LocalDateTime) map.get("createdDate"),
+                (Date) map.get("createdDate"),
                 EmotionalState.fromColor((int) Objects.requireNonNull(map.get("emotionalState"))),
                 (String) map.get("trigger"),
                 SocialSituation.fromText((String) map.get("socialSituation")),
@@ -172,5 +174,19 @@ public class MoodEvent extends DatabaseObject {
                "reason", reason,
                "imageLink", imageLink
        );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MoodEvent moodEvent = (MoodEvent) o;
+        return Objects.equals(userID, moodEvent.userID)
+                && Objects.equals(createdDate, moodEvent.createdDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userID, createdDate);
     }
 }

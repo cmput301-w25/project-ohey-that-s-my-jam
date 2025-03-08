@@ -10,15 +10,12 @@ import com.otmj.otmjapp.Helper.FirestoreCollections;
 import com.otmj.otmjapp.Helper.FirestoreDB;
 import com.otmj.otmjapp.Helper.MoodHistoryFilter;
 import com.otmj.otmjapp.Helper.UserManager;
-import com.otmj.otmjapp.Models.DatabaseObject;
 import com.otmj.otmjapp.Models.Entity;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Helper class to work with database in retrieving mood events
@@ -47,10 +44,10 @@ public class MoodEventController {
      */
     private final MutableLiveData<ArrayList<MoodEvent>> moodHistory;
 
-    public MoodEventController(ArrayList<String> userIDs) {
+    public MoodEventController(List<String> userIDs) {
         assert !userIDs.isEmpty();
 
-        this.userIDs = userIDs;
+        this.userIDs = new ArrayList<>(userIDs);
         this.db = new FirestoreDB(FirestoreCollections.MoodEvents.name);
 
         moodHistory = new MutableLiveData<>(new ArrayList<>());
@@ -157,6 +154,16 @@ public class MoodEventController {
                 // TODO: Show error message
             }
         });
+    }
+
+    public void updateMoodEvent(MoodEvent moodEvent) {
+        db.updateDocument(moodEvent);
+
+        ArrayList<MoodEvent> moodEvents = moodHistory.getValue();
+        if (moodEvents != null) {
+            int index = moodEvents.indexOf(moodEvent);
+            moodEvents.set(index, moodEvent);
+        }
     }
 
     /**

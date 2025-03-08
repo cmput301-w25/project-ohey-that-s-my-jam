@@ -36,13 +36,12 @@
         app:chipSpacingVertical="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:singleSelection="true"
-        app:selectionRequired="true">
-
+        app:singleSelection="true">
         <com.google.android.material.chip.Chip
             android:id="@+id/anger_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="true"
             android:text="@string/anger_text"
             android:textColor="@color/anger"
             android:textStyle="bold"
@@ -65,6 +64,7 @@
             android:id="@+id/fear_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="true"
             android:text="@string/fear_text"
             android:textColor="@color/fear"
             android:textStyle="bold"
@@ -87,6 +87,7 @@
             android:id="@+id/sad_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="true"
             android:text="@string/sad_text"
             android:textColor="@color/sad"
             android:textStyle="bold"
@@ -109,6 +110,7 @@
             android:id="@+id/confuse_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="true"
             android:text="@string/confuse_text"
             android:textColor="@color/confuse"
             android:textStyle="bold"
@@ -127,11 +129,11 @@
             app:textStartPadding="0dp"
             tools:fontFamily="@font/roboto_medium" />
 
-
         <com.google.android.material.chip.Chip
             android:id="@+id/surprise_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="true"
             android:text="@string/surprise_text"
             android:textColor="@color/surprise"
             android:textStyle="bold"
@@ -155,6 +157,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/shame_text"
+            android:checkable="true"
             android:textColor="@color/shame"
             android:textStyle="bold"
             app:chipBackgroundColor="#4D964B00"
@@ -176,6 +179,7 @@
             android:id="@+id/disgust_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="true"
             android:text="@string/disgust_text"
             android:textColor="@color/disgust"
             android:textStyle="bold"
@@ -198,6 +202,7 @@
             android:id="@+id/happy_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="true"
             android:text="@string/happy_text"
             android:textColor="@color/happy"
             android:textStyle="bold"
