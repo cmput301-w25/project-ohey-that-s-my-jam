@@ -1,12 +1,13 @@
 package com.otmj.otmjapp.Models;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
  * Follow class extends Entity class
  * Follow class for storing the following userId and the followed userId
  */
-public class Follow extends Entity {
+public class Follow extends DatabaseObject {
     private final String followerID;
     private final String followeeID;
 
@@ -41,14 +42,20 @@ public class Follow extends Entity {
     }
 
     /**
-     * Follow's class implementation. This static method creates a Follow
-     * from a map.
-     * @see Entity#fromMap(Map)
+     * This static method creates a Follow from a map.
      */
     public static Follow fromMap(Map<String, Object> map){
         return new Follow(
                 (String) map.get("followerID"),
                 (String) map.get("followeeID")
         );
+    }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return Map.of(
+                "followerID", followerID,
+                "followeeID", followeeID
+                );
     }
 }

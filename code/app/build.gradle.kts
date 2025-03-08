@@ -3,6 +3,9 @@ plugins {
 
     // Firebase
     id("com.google.gms.google-services")
+
+    // SafeArgs
+    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -11,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.otmj.otmjapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -47,6 +50,14 @@ dependencies {
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.9.0"))
     implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.legacy.support.v4)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
+
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation(libs.annotation)
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

@@ -2,21 +2,30 @@ package com.otmj.otmjapp.Models;
 
 import android.location.Location;
 
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class MoodEvent extends Entity {
+// TODO: Create initial activity
+
+public class MoodEvent extends DatabaseObject {
     private final String userID;
+    /**
+     * Will be set when mood event is retrieved from database
+     * Should not be saved directly in database
+     */
+    @Exclude // from database
+    private User user = null;
     /**
      * ServerTimestamp annotation automatically grabs the date and time
      * the model was added to the database
      */
     @ServerTimestamp
-    private Date createdDate;
+    private LocalDateTime createdDate;
     private EmotionalState emotionalState;
     private String trigger;
     private SocialSituation socialSituation;
@@ -43,8 +52,8 @@ public class MoodEvent extends Entity {
         }
     }
 
-    private MoodEvent(String userID,
-                      Date createdDate,
+    public MoodEvent(String userID,
+                      LocalDateTime createdDate,
                       EmotionalState emotionalState,
                       String trigger,
                       SocialSituation socialSituation,
@@ -64,12 +73,28 @@ public class MoodEvent extends Entity {
         this.imageLink = imageLink;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
     public EmotionalState getEmotionalState() {
         return emotionalState;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    /**
+     * Get user associated with mood event
+     * @return A constant `User` object
+     */
+    public final User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setEmotionalState(int color) {
@@ -117,14 +142,12 @@ public class MoodEvent extends Entity {
     }
 
     /**
-     * Mood Event's class implementation. This static method creates a MoodEvent
-     * from a map.
-     * @see Entity#fromMap(Map)
+     * This static method creates a MoodEvent from a map.
      */
     public static MoodEvent fromMap(Map<String, Object> map) {
         return new MoodEvent(
                 (String) map.get("userID"),
-                (Date) map.get("createdDate"),
+                (LocalDateTime) map.get("createdDate"),
                 EmotionalState.fromColor((int) Objects.requireNonNull(map.get("emotionalState"))),
                 (String) map.get("trigger"),
                 SocialSituation.fromText((String) map.get("socialSituation")),
@@ -135,10 +158,9 @@ public class MoodEvent extends Entity {
     }
 
     /**
-     * Custom implementation for storing MoodEvent in database.
      * This static method creates a map from a MoodEvent.
-     * @see Entity#toMap()
      */
+    @Override
     public Map<String, Object> toMap() {
        return Map.of(
                "userID", userID,

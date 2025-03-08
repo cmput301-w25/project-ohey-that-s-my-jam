@@ -1,249 +1,380 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:backgroundTintMode="src_atop"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="15dp"
     android:scaleX="1"
-    android:scaleY="1">
+    android:scaleY="1"
+    android:gravity="center">
 
     <!-- Close Button  -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true">
+        android:layout_height="wrap_content">
 
         <ImageButton
-            android:id="@+id/closeButton"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:id="@+id/ExitCreateMoodEvent"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:background="?android:attr/selectableItemBackground"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_close" />
+            android:src="@drawable/ic_close"
+            android:contentDescription="@string/ic_close_desc"/>
     </RelativeLayout>
 
-    <!-- Mood Selection -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/emotional_state_chip_group"
+        android:layout_width="310dp"
+        android:layout_height="180dp"
+        android:padding="10dp"
+        app:chipSpacingHorizontal="10dp"
+        app:chipSpacingVertical="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:singleSelection="true"
+        app:selectionRequired="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Select Mood"
-        android:textSize="16sp" />
-
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none">
-
-        <LinearLayout
+        <com.google.android.material.chip.Chip
+            android:id="@+id/anger_chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:text="@string/anger_text"
+            android:textColor="@color/anger"
+            android:textStyle="bold"
+            android:checkable="false"
+            app:checkedIconVisible="false"
+            app:chipBackgroundColor="#4DFF0004"
+            app:chipCornerRadius="20dp"
+            app:chipEndPadding="0dp"
+            app:chipIcon="@drawable/anger"
+            app:chipIconSize="40dp"
+            app:chipIconTint="@null"
+            app:chipMinHeight="32dp"
+            app:chipStartPadding="0dp"
+            app:chipStrokeWidth="0dp"
+            app:ensureMinTouchTargetSize="false"
+            app:iconEndPadding="0dp"
+            app:iconStartPadding="0dp"
+            app:textStartPadding="0dp"
+            tools:fontFamily="@font/roboto_medium" />
 
-            <!-- Buttons for Mood Selection -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/chipAnger"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:backgroundTint="@color/BackgroundColorAnger"
-                android:text="@string/anger_text"
-                android:textColor="@color/TextColorAnger" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/fear_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fear_text"
+            android:textColor="@color/fear"
+            android:textStyle="bold"
+            android:checkable="false"
+            app:checkedIconVisible="false"
+            app:chipBackgroundColor="#4D673AB7"
+            app:chipCornerRadius="20dp"
+            app:chipEndPadding="4dp"
+            app:chipIcon="@drawable/fear"
+            app:chipIconSize="40dp"
+            app:chipIconTint="@null"
+            app:chipMinHeight="32dp"
+            app:chipStartPadding="4dp"
+            app:chipStrokeWidth="0dp"
+            app:ensureMinTouchTargetSize="false"
+            app:iconEndPadding="0dp"
+            app:iconStartPadding="0dp"
+            app:textStartPadding="0dp"
+            tools:fontFamily="@font/roboto_medium" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/chipDisgust"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/disgust_text"
-                android:backgroundTint="@color/BackgroundColorDisgust"
-                android:textColor="@color/TextColorDisgust" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/sad_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sad_text"
+            android:textColor="@color/sad"
+            android:textStyle="bold"
+            android:checkable="false"
+            app:checkedIconVisible="false"
+            app:chipBackgroundColor="#4D3F51B5"
+            app:chipCornerRadius="20dp"
+            app:chipEndPadding="4dp"
+            app:chipIcon="@drawable/sad"
+            app:chipIconSize="40dp"
+            app:chipIconTint="@null"
+            app:chipMinHeight="32dp"
+            app:chipStartPadding="4dp"
+            app:chipStrokeWidth="0dp"
+            app:ensureMinTouchTargetSize="false"
+            app:iconEndPadding="0dp"
+            app:iconStartPadding="0dp"
+            app:textStartPadding="0dp"
+            tools:fontFamily="@font/roboto_medium" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/chipHappy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/happy_text"
-                android:textColor="@color/TextColorHappy"
-                android:backgroundTint="@color/BackgroundColorHappy" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/confuse_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confuse_text"
+            android:textColor="@color/confuse"
+            android:textStyle="bold"
+            android:checkable="false"
+            app:checkedIconVisible="false"
+            app:chipBackgroundColor="#4DFFEB3B"
+            app:chipCornerRadius="20dp"
+            app:chipEndPadding="4dp"
+            app:chipIcon="@drawable/confuse"
+            app:chipIconSize="40dp"
+            app:chipIconTint="@null"
+            app:chipMinHeight="32dp"
+            app:chipStartPadding="4dp"
+            app:chipStrokeWidth="0dp"
+            app:ensureMinTouchTargetSize="false"
+            app:iconEndPadding="0dp"
+            app:iconStartPadding="0dp"
+            app:textStartPadding="0dp"
+            tools:fontFamily="@font/roboto_medium" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/chipFear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/fear_text"
-                android:textColor="@color/TextColorFear"
-                android:backgroundTint="@color/BackgroundColorFear" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/chipSad"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/sad_text"
-                android:textColor="@color/TextColorSad"
-                android:backgroundTint="@color/BackgroundColorSad" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/surprise_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/surprise_text"
+            android:textColor="@color/surprise"
+            android:textStyle="bold"
+            android:checkable="false"
+            app:checkedIconVisible="false"
+            app:chipBackgroundColor="#4DFFA500"
+            app:chipCornerRadius="20dp"
+            app:chipEndPadding="4dp"
+            app:chipIcon="@drawable/surprise"
+            app:chipIconSize="40dp"
+            app:chipIconTint="@null"
+            app:chipMinHeight="32dp"
+            app:chipStartPadding="4dp"
+            app:chipStrokeWidth="0dp"
+            app:ensureMinTouchTargetSize="false"
+            app:iconEndPadding="0dp"
+            app:iconStartPadding="0dp"
+            app:textStartPadding="0dp"
+            tools:fontFamily="@font/roboto_medium" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/chipShame"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/shame_text"
-                android:textColor="@color/TextColorShame"
-                android:backgroundTint="@color/BackgroundColorShame" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/shame_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/shame_text"
+            android:textColor="@color/shame"
+            android:textStyle="bold"
+            android:checkable="false"
+            app:checkedIconVisible="false"
+            app:chipBackgroundColor="#4D964B00"
+            app:chipCornerRadius="20dp"
+            app:chipEndPadding="4dp"
+            app:chipIcon="@drawable/shame"
+            app:chipIconSize="40dp"
+            app:chipIconTint="@null"
+            app:chipMinHeight="32dp"
+            app:chipStartPadding="4dp"
+            app:chipStrokeWidth="0dp"
+            app:ensureMinTouchTargetSize="false"
+            app:iconEndPadding="0dp"
+            app:iconStartPadding="0dp"
+            app:textStartPadding="0dp"
+            tools:fontFamily="@font/roboto_medium" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/chipConfuse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:backgroundTint="@color/BackgroundColorConfusion"
-                android:text="@string/confuse_text"
-                android:textColor="@color/TextColorConfusion" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/disgust_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/disgust_text"
+            android:textColor="@color/disgust"
+            android:textStyle="bold"
+            android:checkable="false"
+            app:checkedIconVisible="false"
+            app:chipBackgroundColor="#4D09851D"
+            app:chipCornerRadius="20dp"
+            app:chipEndPadding="4dp"
+            app:chipIcon="@drawable/disgust"
+            app:chipIconSize="40dp"
+            app:chipIconTint="@null"
+            app:chipMinHeight="32dp"
+            app:chipStartPadding="4dp"
+            app:chipStrokeWidth="0dp"
+            app:ensureMinTouchTargetSize="false"
+            app:iconEndPadding="0dp"
+            app:iconStartPadding="0dp"
+            app:textStartPadding="0dp"
+            tools:fontFamily="@font/roboto_medium" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/chipSurprise"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="@string/surprise_text"
-                android:textColor="@color/TextColorSurprise"
-                android:backgroundTint="@color/BackgroundColorSurprise" />
-        </LinearLayout>
-    </HorizontalScrollView>
+        <com.google.android.material.chip.Chip
+            android:id="@+id/happy_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/happy_text"
+            android:textColor="@color/happy"
+            android:textStyle="bold"
+            android:checkable="false"
+            app:checkedIconVisible="false"
+            app:chipBackgroundColor="#33FF1D89"
+            app:chipCornerRadius="20dp"
+            app:chipEndPadding="4dp"
+            app:chipIcon="@drawable/happy"
+            app:chipIconSize="40dp"
+            app:chipIconTint="@null"
+            app:chipMinHeight="32dp"
+            app:chipStartPadding="4dp"
+            app:chipStrokeWidth="0dp"
+            app:ensureMinTouchTargetSize="false"
+            app:iconEndPadding="0dp"
+            app:iconStartPadding="0dp"
+            app:textStartPadding="0dp"
+            tools:fontFamily="@font/roboto_medium" />
 
-    <!-- Reason TextBox -->
+    </com.google.android.material.chip.ChipGroup>
 
-    <EditText
-        android:id="@+id/reasonEditText"
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/reason_why_input_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:hint="Reason Why"
-        android:inputType="textMultiLine"
-        android:maxLines="4" />
+        app:counterEnabled="true"
+        app:counterMaxLength="20"
+        app:boxBackgroundMode="filled"
+        app:boxStrokeColor="@color/blue_nav_bar"> <!-- Changes bottom line color -->
 
-    <!-- Trigger TextBox -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/reason_why_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/reason_why_hint_text"
+            android:inputType="textMultiLine"
+            android:maxLines="4" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/triggerEditText"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/trigger_input_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:hint="Trigger"
-        android:inputType="textMultiLine"
-        android:maxLines="4" />
+        app:boxBackgroundMode="filled"
+        app:boxStrokeColor="@color/blue_nav_bar"> <!-- Changes bottom line color -->
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/trigger_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/trigger_hint_text"
+            android:inputType="textMultiLine"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <!-- Social Situation Buttons -->
 
-    <TextView
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/social_situation_chip_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Social Situation"
-        android:textSize="16sp" />
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        app:singleSelection="true">
 
-    <LinearLayout
-        android:id="@+id/buttonGroupMoodOptions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/buttonAlone"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipAlone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#4D193F80"
-            android:text="Alone"
-            android:textColor="#193F80" />
+            android:text="@string/alone_text"
+            android:backgroundTint="#26193F80"
+            app:chipStrokeWidth="0dp"
+            android:textColor="@color/SocialSituationTextColor"
+            android:checkable="true"
+            app:chipCornerRadius="20dp"/>
 
-        <Button
-            android:id="@+id/button1"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipOnePerson"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#4D193F80"
-            android:text="1"
-            android:textColor="#193F80" />
+            android:text="@string/with_one_person_text"
+            android:backgroundTint="#26193F80"
+            app:chipStrokeWidth="0dp"
+            android:textColor="@color/SocialSituationTextColor"
+            android:checkable="true"
+            app:chipCornerRadius="20dp"/>
 
-        <Button
-            android:id="@+id/button2plus"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipTwoPeople"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#4D193F80"
-            android:text="2+"
-            android:textColor="#193F80" />
+            android:text="@string/with_more_than_two_people_text"
+            android:backgroundTint="#26193F80"
+            app:chipStrokeWidth="0dp"
+            android:textColor="@color/SocialSituationTextColor"
+            android:checkable="true"
+            app:chipCornerRadius="20dp"/>
 
-        <Button
-            android:id="@+id/buttonCrowd"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipCrowd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#4D193F80"
-            android:text="Crowd"
-            android:textColor="#193F80" />
-    </LinearLayout>
+            android:text="@string/crowd_text"
+            app:chipStrokeWidth="0dp"
+            android:checkable="true"
+            android:backgroundTint="#26193F80"
+            app:chipCornerRadius="20dp"/>
 
-    <!-- Add Photo and Add Location -->
+    </com.google.android.material.chip.ChipGroup>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"/>
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:padding="8dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView2"
+        <!-- Container for Add Image & Add Location buttons -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/add_photo_text"
-            android:clickable="true"
-            android:focusable="true" />
-    </LinearLayout>
+            android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="@string/add_location_text" />
+            <ImageButton
+                android:id="@+id/add_image_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="#00FAFAFA"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/add_photo"
+                android:contentDescription="@string/ic_add_image_desc"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/add_location_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:padding="2dp"
+                app:srcCompat="@drawable/ic_add_location"
+                android:contentDescription="@string/ic_add_location_desc"/>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="1dp"
+        </LinearLayout>
+
+        <!-- Spacer to push the Submit Post button to the right -->
+        <View
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="37dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
+        <!-- Submit Post Button -->
         <Button
-            android:id="@+id/submitButton"
+            android:id="@+id/SubmitPostButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#4D193F80"
+            android:elevation="20dp"
             android:text="@string/post_button"
-            android:textColor="#193F80" />
+            android:textColor="@color/white"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded" />
     </LinearLayout>
+
 
 </LinearLayout>

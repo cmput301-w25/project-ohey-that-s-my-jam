@@ -11,4 +11,15 @@
 </style><style name="ShapeAppearanceOverlay.MyApp.Button.Circle" parent="">
     <item name="cornerFamily">rounded</item>
     <item name="cornerSize">50%</item>
-</style></resources>
+</style><style name="ShapeAppearanceOverlay.MyApp.Button.Rounded" parent="">
+    <item name="cornerFamily">rounded</item>
+    <item name="cornerSizeTopLeft">7dp</item>
+    <item name="cornerSizeBottomLeft">7dp</item>
+    <item name="cornerSizeTopRight">7dp</item>
+    <item name="cornerSizeBottomRight">7dp</item>
+</style>
+
+    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">4dp</item>
+    </style></resources>
