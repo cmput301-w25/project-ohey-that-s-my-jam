@@ -132,7 +132,4 @@
             android:text="@string/example_post" />
     </RelativeLayout>
 
-    <!-- Bottom Navigation Bar -->
-    <include layout="@layout/bottom_navigation_bar"/>
-
 </LinearLayout>
