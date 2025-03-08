@@ -1,16 +1,19 @@
 package com.otmj.otmjapp;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.chip.Chip;
@@ -26,11 +29,13 @@ import java.util.Map;
 public class MoodEventAddEditDialogFragment extends DialogFragment {
     private TextInputEditText reasonWhyInputText, triggerInputText;
     private TextInputLayout reasonWhyInputLayout, triggerInputLayout;
+    private TextView selectMoodStatus;
     private ChipGroup moodChipGroup, socialSituationChipGroup;
     private int selectedEmotionalState;
     private String selectedSocialSituation;
 
     private MoodEventController moodEventController;
+
     private MoodEvent moodEvent;
 
     // Will be implemented in project part 4
@@ -58,6 +63,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    @SuppressLint("ResourceAsColor")
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -70,6 +76,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         triggerInputText = view.findViewById(R.id.trigger_edit_text);
         moodChipGroup = view.findViewById(R.id.emotional_state_chip_group);
         socialSituationChipGroup = view.findViewById(R.id.social_situation_chip_group);
+        selectMoodStatus = view.findViewById(R.id.selected_chip_text);
         ImageButton closeFragmentButton = view.findViewById(R.id.ExitCreateMoodEvent);
         Button submitPostButton = view.findViewById(R.id.SubmitPostButton);
 
@@ -81,7 +88,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
 
             if (moodEvent != null) {
                 selectedEmotionalState = moodEvent.getEmotionalState().color;
-                setSelectedChip(selectedEmotionalState);
+                setSelectedMoodChip(selectedEmotionalState);
                 reasonWhyInputText.setText(moodEvent.getReason());
                 if (moodEvent.getTrigger() != null) {
                     triggerInputText.setText(moodEvent.getTrigger());
@@ -89,7 +96,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 if (moodEvent.getSocialSituation() != null) {
                     setSelectedSocialSituationChip(moodEvent.getSocialSituation());
                 }
-                // setting boolean location and string imageLink will be added in project part 4
+                // setting boolean location and
+                // string imageLink will be added in project part 4
             }
         } else {
             moodEvent = null; // new mood event
@@ -132,22 +140,29 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             }
         });
 
-        // mood chip selection
         moodChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (!checkedIds.isEmpty()) {
-                int selectedChipId = checkedIds.get(0);
-                Chip selectedChip = view.findViewById(selectedChipId);
+                moodChipGroup.setBackgroundColor(Color.TRANSPARENT);
+                int selectedChipId = moodChipGroup.getCheckedChipId();
+
+                Chip selectedChip = group.findViewById(selectedChipId);
                 if (selectedChip != null) {
                     String moodText = selectedChip.getText().toString();
-                    selectedEmotionalState = getColorFromMoodText(getContext(), moodText);
+                    selectMoodStatus.setText(String.format("✔ %s", moodText));
+                    selectMoodStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.chip_selected));
                 }
+            } else {
+                String moodSelectionRequired = "Please select a mood";
+                selectMoodStatus.setText(moodSelectionRequired);
+                selectMoodStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.chip_selection_required));
             }
         });
 
         // social situation selection (optional)
         socialSituationChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
             selectedSocialSituation = checkedIds.isEmpty() ? null :
-                    ((Chip) view.findViewById(checkedIds.get(0))).getText().toString();
+                    ((Chip) view.findViewById(socialSituationChipGroup.getCheckedChipId()))
+                                                .getText().toString();
         });
 
         // close button
@@ -156,22 +171,33 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         // submit post button
         submitPostButton.setOnClickListener(v -> {
             if (!validInput()) return;
-
             String reasonWhy = reasonWhyInputText.getText().toString().trim();
-            String trigger = triggerInputText.getText().toString().trim();
+            String trigger;
+            if (triggerInputText.getText() != null) {
+                trigger = triggerInputText.getText().toString().trim();
+            } else {
+                trigger = null;
+            }
 
             if (moodEvent != null) {
+                submitPostButton.setText(R.string.edit_button_text);
                 moodEvent.setEmotionalState(selectedEmotionalState);
                 moodEvent.setReason(reasonWhy);
-                moodEvent.setTrigger(trigger);
-                moodEvent.setSocialSituation(selectedSocialSituation);
+                if (trigger != null) {
+                    moodEvent.setTrigger(trigger);
+                }
+                if (selectedSocialSituation != null) {
+                    moodEvent.setSocialSituation(selectedSocialSituation);
+                }
                 // moodEventController.updateMoodEvent(moodEvent);
                 // I don't think editing/updating a mood event is implemented yet in the controller
             } else {
                 // I haven't figured out the logic to find the userID yet
                 // includeLocation is set to false by default
                 // imageLink is set to null by default
-                MoodEvent newMoodEvent = new MoodEvent("", selectedEmotionalState, trigger, selectedSocialSituation, false, reasonWhy, null);
+                MoodEvent newMoodEvent = new MoodEvent("", selectedEmotionalState,
+                                                        trigger, selectedSocialSituation,
+                                                        false, reasonWhy, null);
                 moodEventController.addMoodEvent(newMoodEvent);
             }
 
@@ -181,29 +207,27 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         AlertDialog dialog = builder.setView(view).create();
 
-        dialog.setOnShowListener(d -> {
-            submitPostButton.setEnabled(false);
-            moodChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
-                submitPostButton.setEnabled(!checkedIds.isEmpty());
-            });
-        });
+        dialog.show();
 
         return dialog;
     }
 
     private boolean validInput() {
         if (moodChipGroup.getCheckedChipIds().isEmpty()) {
-            Toast.makeText(getContext(), "Please select an emotional state", Toast.LENGTH_SHORT).show();
+            moodChipGroup.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.error_background));
+            String moodSelectionRequired = "Please select a mood";
+            selectMoodStatus.setText(moodSelectionRequired);
+            selectMoodStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.chip_selection_required));
             return false;
         }
         if (reasonWhyInputText.getText().toString().trim().isEmpty()) {
-            reasonWhyInputText.setError("Reason cannot be empty");
+            reasonWhyInputLayout.setError("Reason cannot be empty");
             return false;
         }
         return true;
     }
 
-    private void setSelectedChip(int color) {
+    private void setSelectedMoodChip(int color) {
         for (int i = 0; i < moodChipGroup.getChildCount(); i++) {
             Chip chip = (Chip) moodChipGroup.getChildAt(i);
             if (getColorFromMoodText(getContext(), chip.getText().toString()) == color) {

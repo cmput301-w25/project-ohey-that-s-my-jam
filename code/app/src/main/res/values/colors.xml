@@ -45,6 +45,10 @@
     <!-- Text Colors -->
     <color name="SocialSituationTextColor">#A6000000</color>     <!-- Social Situation -->
 
+    <color name="chip_selected">#228B22</color>
+    <color name="chip_selection_required">#C21E56</color>
+    <color name="error_background">#4DFFD6D6</color>
+
 
 
 
