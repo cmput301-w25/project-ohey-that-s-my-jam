@@ -34,6 +34,9 @@ public class TimelineFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        binding.BNBar.imageButton7.setOnClickListener(v -> NavHostFragment.findNavController(TimelineFragment.this)
+                .navigate(R.id.action_timelineFragment_to_userProfileFragment)
+        );
 
     }
 
