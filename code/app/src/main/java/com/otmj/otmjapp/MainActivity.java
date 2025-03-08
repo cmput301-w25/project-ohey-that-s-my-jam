@@ -2,11 +2,7 @@ package com.otmj.otmjapp;
 
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.view.View;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -69,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
 
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if(getSupportActionBar() != null) {
+                getSupportActionBar().setTitle("");
+            }
+        });
+
     }
 
     @Override

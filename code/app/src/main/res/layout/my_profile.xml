@@ -50,53 +50,87 @@
                 </LinearLayout>
 
                 <!-- Follow Buttons -->
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:orientation="horizontal">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/followers_button"
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="34dp"
-                        android:backgroundTint="#D0D5DF"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="4dp"
-                        android:text="@string/followers"
-                        android:textColor="@android:color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="12dp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/following_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="34dp"
-                        android:layout_marginStart="6dp"
-                        android:backgroundTint="#D0D5DF"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="4dp"
-                        android:text="@string/following"
-                        android:textColor="@android:color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="12dp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/followers_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="34dp"
+                            android:backgroundTint="#D0D5DF"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="4dp"
+                            android:text="@string/followers"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/requests_button"
+                        <TextView
+                            android:id="@+id/numFollowers_textView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="0" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="34dp"
-                        android:layout_marginStart="6dp"
-                        android:backgroundTint="#D0D5DF"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="4dp"
-                        android:text="@string/requests"
-                        android:textColor="@android:color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="12dp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/following_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_marginStart="6dp"
+                            android:backgroundTint="#D0D5DF"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="4dp"
+                            android:text="@string/following"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp" />
+
+                        <TextView
+                            android:id="@+id/numFollowing_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="0" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/requests_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_marginStart="6dp"
+                            android:backgroundTint="#D0D5DF"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="4dp"
+                            android:text="@string/requests"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp" />
+
+                        <TextView
+                            android:id="@+id/requestPlaceHolder_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -131,41 +165,14 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recent_events_recycler"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="350dp"
                     android:layout_marginTop="4dp"
                     android:nestedScrollingEnabled="false"
                     android:scrollbars="vertical" />
 
             </LinearLayout>
         </ScrollView>
+
     </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/button_add_mood_event"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="0dp"
-        android:layout_marginBottom="30dp"
-        android:clickable="true"
-        android:contentDescription="@string/add_icon_desc"
-        android:focusable="true"
-        android:tint="@color/black"
-        app:backgroundTint="@color/white"
-        app:layout_anchor="@+id/bottom_navigation"
-        app:layout_anchorGravity="center"
-        app:maxImageSize="28dp"
-        app:srcCompat="@drawable/ic_add" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:animationCache="true"
-        android:background="@color/blue_nav_bar"
-        app:itemIconSize="36dp"
-        app:itemIconTint="@color/black"
-        app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

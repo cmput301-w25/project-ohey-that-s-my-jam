@@ -46,6 +46,7 @@ public enum EmotionalState implements Serializable {
             }
         }
 
+
         throw new InvalidParameterException("Only use colors defined in 'colors.xml'");
     }
 
