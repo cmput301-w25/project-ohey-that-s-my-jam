@@ -14,19 +14,38 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.otmj.otmjapp.Models.Follow;
 import com.otmj.otmjapp.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
+    // Create list of followers
+    private ArrayList<Follow> FollowersList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Set Adapter and ListView
+        FollowersListAdapter adapter = new FollowersListAdapter(getApplicationContext(), R.layout.user_block, followersList);
+
+        // Create ListView
+        ListView listview = findViewById(R.id.FollowersListViewAdapter);
+        listview.setAdapter(adapter);
+
+        // Create Custom Adapter...
+
+
+        // intialize followerslist
 
         // code for Adapter for followers list  (branch 162)
         //ReyclerView recyclerView = findViewById(R.id.FollowersRecycleViewAdapter);
