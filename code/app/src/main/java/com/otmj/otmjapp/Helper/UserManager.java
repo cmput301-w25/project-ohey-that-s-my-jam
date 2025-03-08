@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.Filter;
 import com.otmj.otmjapp.Models.DatabaseObject;
+import com.otmj.otmjapp.Models.Follow;
 import com.otmj.otmjapp.Models.User;
 import java.util.ArrayList;
 
