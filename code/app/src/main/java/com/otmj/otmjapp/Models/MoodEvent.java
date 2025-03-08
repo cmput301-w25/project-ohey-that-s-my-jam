@@ -4,9 +4,7 @@ import android.location.Location;
 
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
-import com.google.type.DateTime;
 
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -66,7 +64,7 @@ public class MoodEvent extends DatabaseObject {
         // TODO: Ensure reason is at most 3 words
 
         this.userID = userID;
-        this.createdDate = Calendar.getInstance().getTime();
+        this.createdDate = createdDate;
         this.emotionalState = emotionalState;
         this.trigger = trigger;
         this.socialSituation = socialSituation;
@@ -150,7 +148,7 @@ public class MoodEvent extends DatabaseObject {
         return new MoodEvent(
                 (String) map.get("userID"),
                 (Date) map.get("createdDate"),
-                EmotionalState.fromColor((int) Objects.requireNonNull(map.get("emotionalState"))),
+                EmotionalState.fromColor(Integer.parseInt((String) map.get("emotionalState"))),
                 (String) map.get("trigger"),
                 SocialSituation.fromText((String) map.get("socialSituation")),
                 (Location) map.get("location"),
@@ -158,6 +156,8 @@ public class MoodEvent extends DatabaseObject {
                 (String) map.get("imageLink")
         );
     }
+
+    // TODO: Don't use null values, switch to empty strings
 
     /**
      * This static method creates a map from a MoodEvent.

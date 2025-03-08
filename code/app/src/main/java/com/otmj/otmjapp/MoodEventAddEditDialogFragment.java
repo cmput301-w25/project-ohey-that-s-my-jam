@@ -201,7 +201,6 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     reason,
                     null
             ));
-            Log.d("moodevent", moodEvent.toMap().toString());
         }
     }
 
