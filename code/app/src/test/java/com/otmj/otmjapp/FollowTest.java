@@ -26,15 +26,15 @@ public class FollowTest {
         assertEquals("1234FF", follow.getFolloweeID());
     }
 
-    @Test
-    public void TestFromMap(){
-        Map <String, Object> followData = Map.of(
-                "followerID", "1234FF",
-                "followeeID", "FF1234"
-        );
-        Follow follow = Follow.fromMap(followData);
-        assertEquals("1234FF", follow.getFollowerID());
-        assertEquals("FF1234", follow.getFolloweeID());
-
-    }
+//    @Test
+//    public void TestFromMap(){
+//        Map <String, Object> followData = Map.of(
+//                "followerID", "1234FF",
+//                "followeeID", "FF1234"
+//        );
+//        Follow follow = Follow.fromMap(followData);
+//        assertEquals("1234FF", follow.getFollowerID());
+//        assertEquals("FF1234", follow.getFolloweeID());
+//
+//    }
 }

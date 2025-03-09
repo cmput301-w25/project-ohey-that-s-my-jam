@@ -114,20 +114,12 @@ public class UserProfileFragment extends Fragment {
         }
 
         //get follower count and follwee count
-        followHandler = new FollowHandler(user_manager);
-        followHandler.getFollowCount(FollowHandler.FollowType.Followers, new FollowHandler.FollowCallback() {
-            @Override
-            public void result(int amount) {
-                binding.numFollowersTextView.setText(String.valueOf(amount));
-            }
-        });
+        followHandler = new FollowHandler();
+        followHandler.getFollowCount(user.getID(), FollowHandler.FollowType.Followers,
+                amount -> binding.numFollowersTextView.setText(String.valueOf(amount)));
 
-        followHandler.getFollowCount(FollowHandler.FollowType.Following, new FollowHandler.FollowCallback() {
-            @Override
-            public void result(int amount) {
-                binding.numFollowingTextview.setText(String.valueOf(amount));
-            }
-        });
+        followHandler.getFollowCount(user.getID(), FollowHandler.FollowType.Following,
+                amount -> binding.numFollowingTextview.setText(String.valueOf(amount)));
 
         // Set data to views using binding.
         //binding.profileImage.setImageBitmap(bitmapProfileImage);

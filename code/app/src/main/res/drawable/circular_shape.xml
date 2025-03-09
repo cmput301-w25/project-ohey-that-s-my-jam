@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@android:color/white"/>  <!-- Optional: You can set any background color -->
+    <corners android:radius="40dp"/>  <!-- Radius should be half of the ImageView width/height for a circle -->
+</shape>
