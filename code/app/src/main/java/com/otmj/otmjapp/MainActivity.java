@@ -11,6 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.otmj.otmjapp.Models.Follow;
 import com.otmj.otmjapp.databinding.ActivityMainBinding;
 
@@ -49,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        BottomNavigationView bottomNavigationView = binding.bottomNavigation;
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+
+        binding.addMoodEventButton.setOnClickListener(v -> {
+            new MoodEventAddEditDialogFragment().show(getSupportFragmentManager(), null);
+        });
     }
 
     @Override
