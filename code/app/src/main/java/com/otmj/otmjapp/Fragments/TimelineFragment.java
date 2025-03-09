@@ -8,8 +8,12 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.otmj.otmjapp.MoodEventAddEditDialogFragment;
 import com.otmj.otmjapp.R;
@@ -36,21 +40,7 @@ public class TimelineFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        binding.bottomNavigation.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.nav_profile) {
-                NavHostFragment.findNavController(TimelineFragment.this)
-                        .navigate(R.id.action_timelineFragment_to_userProfileFragment);
-            } else if (item.getItemId() == R.id.nav_location) {
-                // TODO: Handle later
-            }
-
-            return true;
-        });
-
-        binding.addMoodEventButton.setOnClickListener(v -> {
-            new MoodEventAddEditDialogFragment().show(getParentFragmentManager(), null);
-        });
+        
     }
 
     @Override

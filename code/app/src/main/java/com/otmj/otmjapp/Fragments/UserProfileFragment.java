@@ -30,9 +30,8 @@ import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.databinding.MyProfileBinding;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 public class UserProfileFragment extends Fragment {
     private MyProfileBinding binding;
