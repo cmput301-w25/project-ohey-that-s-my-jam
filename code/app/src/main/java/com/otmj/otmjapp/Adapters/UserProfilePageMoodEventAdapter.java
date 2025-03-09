@@ -50,7 +50,9 @@ public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         textView_feeling.setText("Feeling: " + Objects.toString(m.getEmotionalState().getDescription(), ""));
         textView_reason.setText("Reason: " + Objects.toString(m.getReason(), ""));
         textView_trigger.setText("Trigger: " + Objects.toString(m.getTrigger(), ""));
-        textView_socialStatus.setText("Social Situation: " + Objects.toString(m.getSocialSituation().toString(), ""));
+        if (m.getSocialSituation() != null) {
+            textView_socialStatus.setText("Social Situation: " + m.getSocialSituation().toString());
+        }
         return view;
     }
 }
