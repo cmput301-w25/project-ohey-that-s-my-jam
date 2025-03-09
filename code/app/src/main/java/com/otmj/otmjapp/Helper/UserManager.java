@@ -95,7 +95,7 @@ public class UserManager {
                     Entity e = result.get(0);
                     User u = User.fromMap(e.objectMap);
                     u.setID(e.ID);
-
+                    db.updateDocument(u);
                     currentUser = u;
                     callback.onAuthenticated(new ArrayList<>(List.of(u)));
                 } else {

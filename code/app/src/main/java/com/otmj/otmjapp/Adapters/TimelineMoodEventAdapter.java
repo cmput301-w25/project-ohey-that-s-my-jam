@@ -17,6 +17,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 
@@ -55,11 +56,13 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         description.setText(finalDescription);
 
         // Change date string depending on how far away the event occurred
+        /*
         String date;
-        Duration diff = Duration.between(LocalDateTime.now(), m.getCreatedDate());
-        if (diff.toDays() > 14) {
+        Date now = new Date();
+        long diff = now.getTime() - m.getCreatedDate().getTime();
+        if (diff/86400000 > 14) {
             date = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.CANADA)
-                    .format(m.getCreatedDate());
+                    .format(m.getCreatedDate().getTime());
         } else if (diff.toDays() > 7) {
             date = "two weeks ago";
         } else if (diff.toDays() > 1) {
@@ -72,6 +75,8 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
 
         TextView createDate = view.findViewById(R.id.timeline_mood_event_date);
         createDate.setText(date);
+
+         */
 
         // TODO: Set location
 

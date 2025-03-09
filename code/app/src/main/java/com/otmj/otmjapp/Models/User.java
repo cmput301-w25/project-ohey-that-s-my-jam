@@ -3,6 +3,7 @@ package com.otmj.otmjapp.Models;
 import androidx.annotation.NonNull;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -135,12 +136,12 @@ public class User extends DatabaseObject {
 
     @Override
     public Map<String, Object> toMap() {
-        return Map.of(
-            "username", username,
-            "emailAddress", emailAddress,
-            "password", password,
-            "profilePictureLink", profilePictureLink
-        );
+        Map<String, Object> map = new HashMap<>();
+        map.put("username", username);
+        map.put("emailAddress", emailAddress);
+        map.put("password", password);
+        map.put("profilePictureLink", profilePictureLink);
+        return map;
     }
 
     /**

@@ -37,7 +37,7 @@
 
     <!-- Reason Why -->
     <TextView
-        android:id="@+id/reason_why"
+        android:id="@+id/textview_feeling"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/reason_why_text"
