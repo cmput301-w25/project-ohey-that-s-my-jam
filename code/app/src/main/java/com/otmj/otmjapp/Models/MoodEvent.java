@@ -2,11 +2,13 @@ package com.otmj.otmjapp.Models;
 
 import android.location.Location;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -25,7 +27,7 @@ public class MoodEvent extends DatabaseObject {
      * the model was added to the database
      */
     @ServerTimestamp
-    private LocalDateTime createdDate;
+    private Timestamp createdDate;
     private EmotionalState emotionalState;
     private String trigger;
     private SocialSituation socialSituation;
@@ -53,7 +55,7 @@ public class MoodEvent extends DatabaseObject {
     }
 
     public MoodEvent(String userID,
-                      LocalDateTime createdDate,
+                      Timestamp createdDate,
                       EmotionalState emotionalState,
                       String trigger,
                       SocialSituation socialSituation,
@@ -73,7 +75,7 @@ public class MoodEvent extends DatabaseObject {
         this.imageLink = imageLink;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
@@ -147,8 +149,8 @@ public class MoodEvent extends DatabaseObject {
     public static MoodEvent fromMap(Map<String, Object> map) {
         return new MoodEvent(
                 (String) map.get("userID"),
-                (LocalDateTime) map.get("createdDate"),
-                EmotionalState.fromColor((int) Objects.requireNonNull(map.get("emotionalState"))),
+                (Timestamp) map.get("createdDate"),
+                EmotionalState.fromColor(((Number) Objects.requireNonNull(map.get("emotionalState"))).intValue()),
                 (String) map.get("trigger"),
                 SocialSituation.fromText((String) map.get("socialSituation")),
                 (Location) map.get("location"),
@@ -162,15 +164,15 @@ public class MoodEvent extends DatabaseObject {
      */
     @Override
     public Map<String, Object> toMap() {
-       return Map.of(
-               "userID", userID,
-               "createdDate", createdDate,
-               "emotionalState", emotionalState.color, // Store enum with only its color
-               "trigger", trigger,
-               "socialSituation", socialSituation.toString(), // Store enum with its string
-               "location", location,
-               "reason", reason,
-               "imageLink", imageLink
-       );
+        Map<String, Object> map = new HashMap<>();
+        map.put("userID", userID);
+        map.put("createdDate", createdDate);
+        map.put("emotionalState", emotionalState != null ? emotionalState.color : null); // Store enum with only its color
+        map.put("trigger", trigger);
+        map.put("socialSituation", socialSituation != null ? socialSituation.toString() : null); // Store enum as string
+        map.put("location", location);
+        map.put("reason", reason);
+        map.put("imageLink", imageLink);
+        return map;
     }
 }
