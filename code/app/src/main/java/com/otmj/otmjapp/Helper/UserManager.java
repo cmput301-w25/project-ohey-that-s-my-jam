@@ -1,7 +1,5 @@
 package com.otmj.otmjapp.Helper;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.FieldPath;
@@ -87,32 +85,29 @@ public class UserManager {
      */
     public void signup(User user, @NonNull AuthenticationCallback callback) {
         // Check that username doesn't already exist
-        checkUsername(user.getUsername(), new CheckCallback() {
-            @Override
-            public void answer(boolean correct) {
-                // If username doesn't doesn't exist
-                if (!correct) {
-                    db.addDocument(user, new FirestoreDB.DBCallback<>() {
-                        @Override
-                        public void onSuccess(ArrayList<User> result) {
-                            if (!result.isEmpty()) {
-                                User u = result.get(0);
+        checkIfUserExists(user, correct -> {
+            // If user doesn't exist
+            if (!correct) {
+                db.addDocument(user, new FirestoreDB.DBCallback<>() {
+                    @Override
+                    public void onSuccess(ArrayList<User> result) {
+                        if (!result.isEmpty()) {
+                            User u = result.get(0);
 
-                                currentUser = u;
-                                callback.onAuthenticated(new ArrayList<>(List.of(u)));
-                            } else {
-                                callback.onAuthenticationFailure("Unable to access server");
-                            }
+                            currentUser = u;
+                            callback.onAuthenticated(new ArrayList<>(List.of(u)));
+                        } else {
+                            callback.onAuthenticationFailure("Unable to access server");
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Exception e) {
-                            callback.onAuthenticationFailure(e.getMessage());
-                        }
-                    });
-                } else {
-                    callback.onAuthenticationFailure("User already exists");
-                }
+                    @Override
+                    public void onFailure(Exception e) {
+                        callback.onAuthenticationFailure(e.getMessage());
+                    }
+                });
+            } else {
+                callback.onAuthenticationFailure("User already exists");
             }
         });
     }
@@ -138,14 +133,18 @@ public class UserManager {
     }
 
     /**
-     * Checks if a given username is already in use.
+     * Checks if a given user exists in DB
      *
-     * @param enteredUsername the username to check for availability
+     * @param user            The user's details
      * @param callback        Handles database response
      */
-    public void checkUsername(String enteredUsername, CheckCallback callback) {
-        Filter byUsername = Filter.equalTo("username", enteredUsername);
-        db.getDocuments(byUsername, User.class, new FirestoreDB.DBCallback<>() {
+    public void checkIfUserExists(User user, CheckCallback callback) {
+        Filter byUsernameOrEmail = Filter.or(
+                Filter.equalTo("username", user.getUsername()),
+                Filter.equalTo("emailAddress", user.getEmailAddress())
+        );
+
+        db.getDocuments(byUsernameOrEmail, User.class, new FirestoreDB.DBCallback<>() {
             @Override
             public void onSuccess(ArrayList<User> result) {
                 boolean userExists = !result.isEmpty();
