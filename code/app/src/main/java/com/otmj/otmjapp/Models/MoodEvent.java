@@ -2,17 +2,12 @@ package com.otmj.otmjapp.Models;
 
 import android.location.Location;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.PropertyName;
 import com.google.firebase.firestore.ServerTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-
-// TODO: Create initial activity
 
 public class MoodEvent extends DatabaseObject {
     private final String userID;
@@ -27,55 +22,73 @@ public class MoodEvent extends DatabaseObject {
      * the model was added to the database
      */
     @ServerTimestamp
-    private Timestamp createdDate;
+    private Date createdDate;
+    @Exclude
     private EmotionalState emotionalState;
+    /**
+     * Dummy variable to help with deserialization of `EmotionalState` from database
+     */
+    @PropertyName("emotionalState")
+    private String emotionalStateText;
     private String trigger;
+    @Exclude
     private SocialSituation socialSituation;
+    /**
+     * Dummy variable to help with deserialization of `SocialSituation` from database
+     */
+    @PropertyName("socialSituation")
+    private String socialSituationText;
     private Location location;
     private String reason;
     private String imageLink;
 
+    MoodEvent() {
+        userID = "";
+    }
+
     public MoodEvent(String userID,
-                     int emotionColor,
+                     EmotionalState emotionalState,
+                     String trigger,
+                     SocialSituation socialSituation,
+                     boolean includeLocation,
+                     String reason,
+                     String imageLink) {
+        this.userID = userID;
+        setEmotionalState(emotionalState);
+        this.trigger = trigger;
+        setSocialSituation(socialSituation);
+        this.reason = reason;
+        this.imageLink = imageLink;
+
+//        if (includeLocation) {
+//            // TODO: Get device's location
+//        }
+    }
+
+    /**
+     * Constructor used by database.
+     * @param emotionalState String representation of EmotionalState enum
+     * @param socialSituation String representation of SocialSituation enum
+     */
+    public MoodEvent(String userID,
+                     String emotionalState,
                      String trigger,
                      String socialSituation,
                      boolean includeLocation,
                      String reason,
                      String imageLink) {
-        this.userID = userID;
-        this.emotionalState = EmotionalState.fromColor(emotionColor);
-        this.trigger = trigger;
-        this.socialSituation = SocialSituation.fromText(socialSituation);
-        this.reason = reason;
-        this.imageLink = imageLink;
-
-        if (includeLocation) {
-            // TODO: Get device's location
-        }
+        this(
+                userID,
+                EmotionalState.fromString(emotionalState),
+                trigger,
+                SocialSituation.fromText(socialSituation),
+                includeLocation,
+                reason,
+                imageLink
+        );
     }
 
-    public MoodEvent(String userID,
-                      Timestamp createdDate,
-                      EmotionalState emotionalState,
-                      String trigger,
-                      SocialSituation socialSituation,
-                      Location location,
-                      String reason,
-                      String imageLink) {
-        // TODO: Ensure trigger is at most 1 word
-        // TODO: Ensure reason is at most 3 words
-
-        this.userID = userID;
-        this.createdDate = createdDate;
-        this.emotionalState = emotionalState;
-        this.trigger = trigger;
-        this.socialSituation = socialSituation;
-        this.location = location;
-        this.reason = reason;
-        this.imageLink = imageLink;
-    }
-
-    public Timestamp getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
@@ -99,8 +112,9 @@ public class MoodEvent extends DatabaseObject {
         this.user = user;
     }
 
-    public void setEmotionalState(int color) {
-        this.emotionalState = EmotionalState.fromColor(color);
+    public void setEmotionalState(EmotionalState emotionalState) {
+        this.emotionalState = emotionalState;
+        this.emotionalStateText = emotionalState.name();
     }
 
     public String getTrigger() {
@@ -111,12 +125,15 @@ public class MoodEvent extends DatabaseObject {
         this.trigger = trigger;
     }
 
-    public String getSocialSituation() {
-        return socialSituation.toString();
+    public SocialSituation getSocialSituation() {
+        return socialSituation;
     }
 
-    public void setSocialSituation(String socialSituation) {
-        this.socialSituation = SocialSituation.fromText(socialSituation);
+    public void setSocialSituation(SocialSituation socialSituation) {
+        this.socialSituation = socialSituation;
+        if (socialSituation != null) {
+            this.socialSituationText = socialSituation.name();
+        }
     }
 
     public Location getLocation() {
@@ -143,36 +160,17 @@ public class MoodEvent extends DatabaseObject {
         this.imageLink = link;
     }
 
-    /**
-     * This static method creates a MoodEvent from a map.
-     */
-    public static MoodEvent fromMap(Map<String, Object> map) {
-        return new MoodEvent(
-                (String) map.get("userID"),
-                (Timestamp) map.get("createdDate"),
-                EmotionalState.fromColor(((Number) Objects.requireNonNull(map.get("emotionalState"))).intValue()),
-                (String) map.get("trigger"),
-                SocialSituation.fromText((String) map.get("socialSituation")),
-                (Location) map.get("location"),
-                (String) map.get("reason"),
-                (String) map.get("imageLink")
-        );
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MoodEvent moodEvent = (MoodEvent) o;
+        return Objects.equals(userID, moodEvent.userID)
+                && Objects.equals(createdDate, moodEvent.createdDate);
     }
 
-    /**
-     * This static method creates a map from a MoodEvent.
-     */
     @Override
-    public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("userID", userID);
-        map.put("createdDate", createdDate);
-        map.put("emotionalState", emotionalState != null ? emotionalState.color : null); // Store enum with only its color
-        map.put("trigger", trigger);
-        map.put("socialSituation", socialSituation != null ? socialSituation.toString() : null); // Store enum as string
-        map.put("location", location);
-        map.put("reason", reason);
-        map.put("imageLink", imageLink);
-        return map;
+    public int hashCode() {
+        return Objects.hash(userID, createdDate);
     }
 }

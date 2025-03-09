@@ -1,7 +1,5 @@
 package com.otmj.otmjapp.Helper;
 
-import android.util.Log;
-
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -11,29 +9,26 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.firebase.firestore.QuerySnapshot;
 import com.otmj.otmjapp.Models.DatabaseObject;
-import com.otmj.otmjapp.Models.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * A generic class for managing Firestore database operations.
  *
  */
-public class FirestoreDB {
+public class FirestoreDB<T extends DatabaseObject> {
 
     /**
      * Interface for handling asynchronous Firestore operations.
      */
-    public interface DBCallback {
+    public interface DBCallback<T> {
         /**
          * Called when the Firestore operation is successful.
          *
          * @param result The list of retrieved {@link Entity} instances.
          */
-        void onSuccess(ArrayList<Entity> result);
+        void onSuccess(ArrayList<T> result);
 
         /**
          * Called when the Firestore operation fails.
@@ -56,8 +51,8 @@ public class FirestoreDB {
      *
      * @param callback The callback to handle the operation result.
      */
-    public void getDocuments(DBCallback callback) {
-        getDocuments(null, callback);
+    public void getDocuments(Class<T> objectClass, DBCallback<T> callback) {
+        getDocuments(null, objectClass, callback);
     }
 
     /**
@@ -66,7 +61,7 @@ public class FirestoreDB {
      * @param filter   The filter criteria for querying documents.
      * @param callback The callback to handle the operation result.
      */
-    public void getDocuments(Filter filter, DBCallback callback) {
+    public void getDocuments(Filter filter, Class<T> objectClass, DBCallback<T> callback) {
         CollectionReference collectionRef = db.collection(collection);
 
         Task<QuerySnapshot> result;
@@ -78,14 +73,22 @@ public class FirestoreDB {
 
         result.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                ArrayList<Entity> documents = new ArrayList<>();
+                ArrayList<T> documents = new ArrayList<>();
                 for (DocumentSnapshot doc : task.getResult()) {
-                    documents.add(new Entity(doc.getId(), doc.getData()));
+                    T obj = doc.toObject(objectClass);
+                    assert obj != null;
+                    obj.setID(doc.getId());
+
+                    documents.add(obj);
                 }
 
-                callback.onSuccess(documents);
+                if (callback != null) {
+                    callback.onSuccess(documents);
+                }
             } else {
-                callback.onFailure(task.getException());
+                if (callback != null) {
+                    callback.onFailure(task.getException());
+                }
             }
         });
     }
@@ -95,7 +98,7 @@ public class FirestoreDB {
      *
      * @param document The document to be updated.
      */
-    public <T extends DatabaseObject> void updateDocument(T document) {
+    public void updateDocument(T document) {
         CollectionReference collectionRef = db.collection(collection);
         DocumentReference docRef = collectionRef.document(document.getID());
 
@@ -108,15 +111,19 @@ public class FirestoreDB {
      * @param object   The entity object to be added to Firestore.
      * @param callback The callback to handle the operation result.
      */
-    public <T extends DatabaseObject> void addDocument(T object, DBCallback callback) {
+    public void addDocument(T object, DBCallback<T> callback) {
         CollectionReference collectionRef = db.collection(collection);
 
         collectionRef.add(object).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Entity entity = new Entity(task.getResult().getId(), object.toMap());
-                callback.onSuccess(new ArrayList<>(List.of(entity)));
+                object.setID(task.getResult().getId());
+                if (callback != null) {
+                    callback.onSuccess(new ArrayList<>(List.of(object)));
+                }
             } else {
-                callback.onFailure(task.getException());
+                if (callback != null) {
+                    callback.onFailure(task.getException());
+                }
             }
         });
     }

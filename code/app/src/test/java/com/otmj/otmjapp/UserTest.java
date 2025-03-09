@@ -73,20 +73,20 @@ public class UserTest {
         assertEquals("http://example.com/profile.png", user.getProfilePictureLink());
     }
 
-    @Test
-    public void TestFromMap(){
-        Map<String, Object> userData = Map.of(
-                "username", "john",
-                "emailAddress", "john@example.com",
-                "password", "123456",
-                "profilePictureLink", "http://example.com/profile.jpg"
-        );
-
-        User user = User.fromMap(userData);
-        assertEquals("john", user.getUsername());
-        assertEquals("john@example.com", user.getEmailAddress());
-        assertEquals("123456", user.getPassword());
-        assertEquals("http://example.com/profile.jpg", user.getProfilePictureLink());
-    }
+//    @Test
+//    public void TestFromMap(){
+//        Map<String, Object> userData = Map.of(
+//                "username", "john",
+//                "emailAddress", "john@example.com",
+//                "password", "123456",
+//                "profilePictureLink", "http://example.com/profile.jpg"
+//        );
+//
+//        User user = User.fromMap(userData);
+//        assertEquals("john", user.getUsername());
+//        assertEquals("john@example.com", user.getEmailAddress());
+//        assertEquals("123456", user.getPassword());
+//        assertEquals("http://example.com/profile.jpg", user.getProfilePictureLink());
+//    }
 
 }

@@ -3,7 +3,6 @@ package com.otmj.otmjapp.Models;
 import androidx.annotation.NonNull;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,6 +14,9 @@ public class User extends DatabaseObject {
     private String emailAddress;
     private String password;
     private String profilePictureLink;
+
+    // Need an empty constructor for Firebase
+    User() {}
 
     /**
      * User class constructor
@@ -120,29 +122,29 @@ public class User extends DatabaseObject {
     public void setProfilePictureLink(String profilePictureLink) {
         this.profilePictureLink = profilePictureLink;
     }
-
-    /**
-     * User's class implementation. This static method creates a User
-     * from a map.
-     */
-    public static User fromMap(Map<String, Object> map) {
-        return new User(
-                (String) map.get("username"),
-                (String) map.get("emailAddress"),
-                (String) map.get("password"),
-                (String) map.get("profilePictureLink")
-        );
-    }
-
-    @Override
-    public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("username", username);
-        map.put("emailAddress", emailAddress);
-        map.put("password", password);
-        map.put("profilePictureLink", profilePictureLink);
-        return map;
-    }
+//
+//    /**
+//     * User's class implementation. This static method creates a User
+//     * from a map.
+//     */
+//    public static User fromMap(Map<String, Object> map) {
+//        return new User(
+//                (String) map.get("username"),
+//                (String) map.get("emailAddress"),
+//                (String) map.get("password"),
+//                (String) map.get("profilePictureLink")
+//        );
+//    }
+//
+//    @Override
+//    public Map<String, Object> toMap() {
+//        return Map.of(
+//            "username", username,
+//            "emailAddress", emailAddress,
+//            "password", password,
+//            "profilePictureLink", profilePictureLink
+//        );
+//    }
 
     /**
      * return the string of username
