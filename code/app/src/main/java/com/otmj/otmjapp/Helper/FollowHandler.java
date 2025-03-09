@@ -102,7 +102,6 @@ public class FollowHandler {
         });
     }
 
-    // TODO: Might be a better way to do these functions
     /**
      * Fetches the list of followers for the specified user.
      *

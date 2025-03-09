@@ -10,20 +10,11 @@ import java.util.Map;
  * This class stores the user's details
  */
 public class User extends DatabaseObject {
-    private String id; // For query purposes on followerslist
+    private String id;
     private String username;
     private String emailAddress;
     private String password;
     private String profilePictureLink;
-
-    // Getter and Setter for ID
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     /**
      * User class constructor
@@ -36,10 +27,12 @@ public class User extends DatabaseObject {
      * @param profilePictureLink
      *              optional profile picture of a user, if don't have one please input null
      */
-    public User(String username,
+    public User(String id,
+                String username,
                 String emailAddress,
                 String password,
                 String profilePictureLink) {
+        this.id = id;
         this.username = username;
         this.emailAddress = emailAddress;
         this.password = password;
@@ -131,11 +124,31 @@ public class User extends DatabaseObject {
     }
 
     /**
+     * return id
+     * @return  id
+     *      String of the id
+     */
+    // Getter and Setter for ID
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * set id
+     * @param id
+     *                  String of the id
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
      * User's class implementation. This static method creates a User
      * from a map.
      */
     public static User fromMap(Map<String, Object> map) {
         return new User(
+                (String) map.get("id"),
                 (String) map.get("username"),
                 (String) map.get("emailAddress"),
                 (String) map.get("password"),

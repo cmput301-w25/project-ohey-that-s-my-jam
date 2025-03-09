@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.otmj.otmjapp.Adapters.FollowersListViewAdapter;
+import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 
@@ -46,16 +47,17 @@ public class FollowersListFragment extends Fragment {
     // Queries the DB and creates a list of ids of the followers - followerIDs
     public void fetchFollowersFromFirestore(View rootView) {
 
-        // Todo: Hard coded current user value as getCurrentUser() doesn't return proper data yet
         // Get the instance of UserManager (singleton)
-        // UserManager userManager = UserManager.getInstance();
+         UserManager userManager = UserManager.getInstance();
         // Get the current user using the instance
-        // User currentUser = userManager.getCurrentUser();
+        String currentUser = userManager.getCurrentUser().getId();
+
+        Log.d("Firestore", "Fetched currentUser: " + currentUser);
 
 
         // Fetch the followers for the current user using their userID
         db.collection("follows")
-                .whereEqualTo("followeeID", "1") // Query for followers based on the current user's ID
+                .whereEqualTo("followeeID", currentUser) // Query for followers based on the current user's ID
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     ArrayList<String> followerIDs = new ArrayList<>(); // List of followerIDs that follow current user

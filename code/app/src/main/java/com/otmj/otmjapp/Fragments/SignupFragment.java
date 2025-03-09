@@ -91,7 +91,7 @@ public class SignupFragment extends Fragment {
         // Disable button while process is ongoing
         setButtonStatus(true);
 
-        User newUser = new User(username, email, password, null);
+        User newUser = new User(null, username, email, password, null);
 
         UserManager userManager = UserManager.getInstance();
         userManager.signup(newUser, new UserManager.AuthenticationCallback() {

@@ -36,26 +36,6 @@ public class UserProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Disable the buttons.
-        //binding.followersButton.setClickable(false);
-        binding.followingButton.setClickable(false);
-
-        // Get UserID
-        UserManager user_manager = UserManager.getInstance();
-
-        // Dummy data
-        User user = new User("Kai", "kaiiscool@example.com", "123456", "https://exampleImageLink");
-        Bitmap bitmapProfileImage = BitmapFactory.decodeResource(getResources(), R.drawable.dummy_profile_image);
-        int numFollowers = 5;
-        int numFollowing = 10;
-
-        // Set data to views using binding.
-        String placeholder = " ";
-        binding.profileImage.setImageBitmap(bitmapProfileImage);
-        binding.username.setText(user.getUsername());
-        binding.numFollowersTextView.setText(String.valueOf(numFollowers));
-        binding.numFollowingTextview.setText(String.valueOf(numFollowing));
-
         // Connecting Followers Button on Profile Page
         Button followersButton = binding.followersButton;
         followersButton.setVisibility(View.VISIBLE); // Make sure it's visible
