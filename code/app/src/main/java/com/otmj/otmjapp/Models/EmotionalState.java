@@ -60,11 +60,34 @@ public enum EmotionalState implements Serializable {
     }
 
     /**
+     * Create emotional state from mood
+     * @param mood
+     * @return
+     */
+    public static EmotionalState fromMood(String mood){
+        for (EmotionalState e : values()) {
+            if (mood.equals(e.name())) {
+                return e;
+            }
+        }
+
+        throw new InvalidParameterException("Only use mood defined in user stories");
+    }
+
+    /**
      * Alias function for in-built name() function
      * @return String equivalent of enum
      */
     public String getDescription() {
         return name();
+    }
+
+    /**
+     * return emoji
+     * @return
+     */
+    public int getEmoji(){
+        return this.emoji;
     }
 
     @NonNull
