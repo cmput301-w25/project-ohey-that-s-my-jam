@@ -6,9 +6,7 @@ import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.PropertyName;
 import com.google.firebase.firestore.ServerTimestamp;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
 
 public class MoodEvent extends DatabaseObject {
@@ -27,9 +25,19 @@ public class MoodEvent extends DatabaseObject {
     private Date createdDate;
     @Exclude
     private EmotionalState emotionalState;
+    /**
+     * Dummy variable to help with deserialization of `EmotionalState` from database
+     */
+    @PropertyName("emotionalState")
+    private String emotionalStateText;
     private String trigger;
     @Exclude
     private SocialSituation socialSituation;
+    /**
+     * Dummy variable to help with deserialization of `SocialSituation` from database
+     */
+    @PropertyName("socialSituation")
+    private String socialSituationText;
     private Location location;
     private String reason;
     private String imageLink;
@@ -46,9 +54,9 @@ public class MoodEvent extends DatabaseObject {
                      String reason,
                      String imageLink) {
         this.userID = userID;
-        this.emotionalState = emotionalState;
+        setEmotionalState(emotionalState);
         this.trigger = trigger;
-        this.socialSituation = socialSituation;
+        setSocialSituation(socialSituation);
         this.reason = reason;
         this.imageLink = imageLink;
 
@@ -57,28 +65,28 @@ public class MoodEvent extends DatabaseObject {
 //        }
     }
 
-
-
-//    public MoodEvent(String userID,
-//                      Date createdDate,
-//                      EmotionalState emotionalState,
-//                      String trigger,
-//                      SocialSituation socialSituation,
-////                      Location location,
-//                      String reason,
-//                      String imageLink) {
-//        // TODO: Ensure trigger is at most 1 word
-//        // TODO: Ensure reason is at most 3 words
-//
-//        this.userID = userID;
-//        this.createdDate = createdDate;
-//        this.emotionalState = emotionalState;
-//        this.trigger = trigger;
-//        this.socialSituation = socialSituation;
-////        this.location = location;
-//        this.reason = reason;
-//        this.imageLink = imageLink;
-//    }
+    /**
+     * Constructor used by database.
+     * @param emotionalState String representation of EmotionalState enum
+     * @param socialSituation String representation of SocialSituation enum
+     */
+    public MoodEvent(String userID,
+                     String emotionalState,
+                     String trigger,
+                     String socialSituation,
+                     boolean includeLocation,
+                     String reason,
+                     String imageLink) {
+        this(
+                userID,
+                EmotionalState.fromString(emotionalState),
+                trigger,
+                SocialSituation.fromText(socialSituation),
+                includeLocation,
+                reason,
+                imageLink
+        );
+    }
 
     public Date getCreatedDate() {
         return createdDate;
@@ -106,6 +114,7 @@ public class MoodEvent extends DatabaseObject {
 
     public void setEmotionalState(EmotionalState emotionalState) {
         this.emotionalState = emotionalState;
+        this.emotionalStateText = emotionalState.name();
     }
 
     public String getTrigger() {
@@ -122,6 +131,9 @@ public class MoodEvent extends DatabaseObject {
 
     public void setSocialSituation(SocialSituation socialSituation) {
         this.socialSituation = socialSituation;
+        if (socialSituation != null) {
+            this.socialSituationText = socialSituation.name();
+        }
     }
 
     public Location getLocation() {
@@ -147,71 +159,6 @@ public class MoodEvent extends DatabaseObject {
     public void setImageLink(String link) {
         this.imageLink = link;
     }
-
-//    /**
-//     * This static method creates a MoodEvent from a map.
-//     */
-//    public static MoodEvent fromMap(Map<String, Object> map) {
-//        String reasonText = (String) map.get("reason"),
-//                imageLinkText = (String) map.get("imageLink"),
-//                socialSituation = (String) map.get("socialSituation");
-//
-//        int emotionColor = (int) map.get("emotionalState");
-//
-//        return new MoodEvent(
-//                (String) map.get("userID"),
-//                (Date) map.get("createdDate"),
-//                EmotionalState.fromColor(emotionColor),
-//                (String) map.get("trigger"),
-//                SocialSituation.fromText((String) map.get("socialSituation")),
-////                (Location) map.get("location"),
-//                (String) map.get("reason"),
-//                (String) map.get("imageLink")
-//        );
-//    }
-//
-//    /**
-//     * Don't use null values, switch to empty strings
-//     * @param string String that might be null
-//     * @return Empty string or original string
-//     */
-//    @NonNull
-//    private String nonNullString(String string) {
-//        if (string == null) {
-//            return "";
-//        }
-//        return string;
-//    }
-//
-//    /**
-//     * This static method creates a map from a MoodEvent.
-//     */
-//    @Override
-//    public Map<String, Object> toMap() {
-//        // Map.of does not allow null values, so set strings to be empty if the
-//
-//        String socialSituationText = "";
-//        if (socialSituation != null) {
-//            socialSituationText = socialSituation.toString();
-//        }
-//
-//        Log.d("moodevent", String.format(
-//                "new MoodEvent(%s, %s, %d, %s, %s, %s, %s)",
-//                userID, createdDate.toString(), emotionalState.color,
-//                nonNullString(trigger), socialSituationText,
-//                nonNullString(reason), nonNullString(imageLink)));
-//
-//       return Map.of(
-//               "userID", userID,
-//               "createdDate", createdDate,
-//               "emotionalState", emotionalState.color, // Store enum with only its color
-//               "trigger", nonNullString(trigger),
-//               "socialSituation", socialSituationText, // Store enum with its string
-////               "location", location,
-//               "reason", nonNullString(reason),
-//               "imageLink", nonNullString(imageLink)
-//       );
-//    }
 
     @Override
     public boolean equals(Object o) {
