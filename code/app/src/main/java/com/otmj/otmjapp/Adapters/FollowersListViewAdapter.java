@@ -20,15 +20,11 @@ import com.squareup.picasso.Picasso;  // Import Picasso
 
 public class FollowersListViewAdapter extends ArrayAdapter<User> {
 
-    private Context mContext;
-    private ArrayList<User> followersList;
-
     public FollowersListViewAdapter(Context context, ArrayList<User> followersList) {
         super(context, 0, followersList); // Pass context, layout resource, and the data
-        this.mContext = context;
-        this.followersList = followersList;
     }
 
+    @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View listItemView = convertView;
@@ -37,7 +33,8 @@ public class FollowersListViewAdapter extends ArrayAdapter<User> {
         }
 
         // Get the User object for the current position
-        User user = followersList.get(position);
+        User user = getItem(position);
+        assert user != null;
 
         // Set the username
         TextView userNameTextView = listItemView.findViewById(R.id.username);

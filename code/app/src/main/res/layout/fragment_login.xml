@@ -52,7 +52,7 @@
         android:background="@drawable/ic_edittext"
         android:fontFamily="@font/roboto_medium"
         android:layout_marginTop="20dp"
-        android:inputType="textVisiblePassword"
+        android:inputType="textPassword"
         android:autofillHints="password"
         android:hint="@string/password_cap"
         android:paddingHorizontal="20dp"

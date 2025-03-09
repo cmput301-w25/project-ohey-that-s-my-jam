@@ -1,5 +1,6 @@
 package com.otmj.otmjapp.Models;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -9,6 +10,12 @@ import java.util.Map;
 public class Follow extends DatabaseObject {
     private final String followerID;
     private final String followeeID;
+
+    // Need an empty constructor for Firebase
+    Follow() {
+        this.followerID = "";
+        this.followeeID = "";
+    }
 
     /**
      * constructor for follow class
@@ -24,6 +31,8 @@ public class Follow extends DatabaseObject {
 
     /**
      * return the UserId following
+     * @return follower
+     *              the UserId following
      */
     public String getFollowerID() {
         return followerID;
@@ -31,26 +40,10 @@ public class Follow extends DatabaseObject {
 
     /**
      * return userId being followed
+     * @return  followee
+     *               userId being followed
      */
     public String getFolloweeID() {
         return followeeID;
-    }
-
-    /**
-     * This static method creates a Follow from a map.
-     */
-    public static Follow fromMap(Map<String, Object> map){
-        return new Follow(
-                (String) map.get("followerID"),
-                (String) map.get("followeeID")
-        );
-    }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return Map.of(
-                "followerID", followerID,
-                "followeeID", followeeID
-        );
     }
 }

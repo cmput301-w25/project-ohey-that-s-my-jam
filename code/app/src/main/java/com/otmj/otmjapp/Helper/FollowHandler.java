@@ -1,30 +1,24 @@
 package com.otmj.otmjapp.Helper;
 
-import android.util.Log;
-
 import com.google.firebase.firestore.Filter;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.otmj.otmjapp.Models.DatabaseObject;
-import com.otmj.otmjapp.Models.Entity;
 import com.otmj.otmjapp.Models.Follow;
 import com.otmj.otmjapp.Models.FollowRequest;
 import com.otmj.otmjapp.Models.User;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Manages follow requests and follow relationships between users.
  */
 public class FollowHandler {
     private final User currentUser;
-    private final FirestoreDB requestDB;
-    private final FirestoreDB followDB;
+    private final FirestoreDB<FollowRequest> requestDB;
+    private final FirestoreDB<Follow> followDB;
 
     public enum FollowType {Followers, Following}
 
-    public interface FollowCallback {
+    public interface FollowCountCallback {
         /**
          * Provides access to the 'followers' or 'following' counts of the user
          *
@@ -33,10 +27,15 @@ public class FollowHandler {
         void result(int amount);
     }
 
-    public FollowHandler(UserManager userManager) {
-        this.currentUser = userManager.getCurrentUser();
-        requestDB = new FirestoreDB(FirestoreCollections.FollowRequests.name);
-        followDB = new FirestoreDB(FirestoreCollections.Follows.name);
+    public interface FollowCallback {
+        void onSuccess(ArrayList<User> followList);
+        void onFailure(Exception e);
+    }
+
+    public FollowHandler() {
+        this.currentUser = UserManager.getInstance().getCurrentUser();
+        requestDB = new FirestoreDB<>(FirestoreCollections.FollowRequests.name);
+        followDB = new FirestoreDB<>(FirestoreCollections.Follows.name);
     }
 
     /**
@@ -55,15 +54,15 @@ public class FollowHandler {
      * @param followerID the ID of the user who sends the request
      */
     public void acceptFollowRequest(String followerID) {
-        Filter getFollowRequest = Filter.and(Filter.equalTo("followerID", followerID), Filter.equalTo("followeeID", currentUser.getID()));
+        Filter getFollowRequest = Filter.and(
+                Filter.equalTo("followerID", followerID),
+                Filter.equalTo("followeeID", currentUser.getID())
+        );
 
-        requestDB.getDocuments(getFollowRequest, new FirestoreDB.DBCallback() {
+        requestDB.getDocuments(getFollowRequest, FollowRequest.class, new FirestoreDB.DBCallback<>() {
             @Override
-            public void onSuccess(ArrayList<Entity> result) {
-                Entity request = result.get(0);
-
-                FollowRequest follower = (FollowRequest) Follow.fromMap(request.objectMap);
-                follower.setID(request.ID);
+            public void onSuccess(ArrayList<FollowRequest> result) {
+                FollowRequest follower = result.get(0);
 
                 Follow newFollow = new Follow(follower.getFollowerID(), currentUser.getID());
                 followDB.addDocument(newFollow, null); // callback can be implemented later
@@ -76,25 +75,40 @@ public class FollowHandler {
         });
     }
 
-    /**
-     * Gets the number of followers or following the user.
-     *
-     * @param followType either 'followers' or 'following'
-     * @param callback the callback to handle the result
-     */
-    public void getFollowCount(FollowType followType, FollowCallback callback) {
-        Filter getFollowAmount;
-
-        if(followType == FollowType.Followers) {
-            getFollowAmount = Filter.equalTo("followeeID", currentUser.getID());
+    private void getFollows(String userID, FollowType followType, FollowCallback callback) {
+        Filter filter;
+        if (followType == FollowType.Followers) {
+            filter = Filter.equalTo("followeeID", userID);
         } else {
-            getFollowAmount = Filter.equalTo("followerID", currentUser.getID());
+            filter = Filter.equalTo("followerID", userID);
         }
 
-        followDB.getDocuments(getFollowAmount, new FirestoreDB.DBCallback() {
+        // First get the follows
+        followDB.getDocuments(filter, Follow.class, new FirestoreDB.DBCallback<>() {
             @Override
-            public void onSuccess(ArrayList<Entity> result) {
-                callback.result(result.size());
+            public void onSuccess(ArrayList<Follow> result) {
+                ArrayList<String> ids = new ArrayList<>();
+                for (Follow f : result) {
+                    if (followType == FollowType.Followers) {
+                        ids.add(f.getFollowerID());
+                    } else {
+                        ids.add(f.getFolloweeID());
+                    }
+                }
+
+                UserManager userManager = UserManager.getInstance();
+                // Then get the users
+                userManager.getUsers(ids, new UserManager.AuthenticationCallback() {
+                    @Override
+                    public void onAuthenticated(ArrayList<User> authenticatedUsers) {
+                        callback.onSuccess(authenticatedUsers);
+                    }
+
+                    @Override
+                    public void onAuthenticationFailure(String reason) {
+                        callback.onFailure(new Exception(reason));
+                    }
+                });
             }
 
             @Override
@@ -103,93 +117,48 @@ public class FollowHandler {
     }
 
     /**
-     * Fetches the list of followers for the specified user.
+     * Gets the number of followers or following the user.
      *
-     * This method queries the Firestore database for all documents where
-     * the `followeeID` matches the `currentUserID`. The follower IDs are
-     * extracted from these documents and used to fetch user data.
-     *
-     * @param currentUserID the ID of the current user whose followers are being fetched
-     * @param callback the callback to handle the result, passing the list of followers or an error
+     * @param followType either 'followers' or 'following'
+     * @param callback   the callback to handle the result
      */
-    public void fetchFollowers(String currentUserID, final FollowerCallback callback) {
-        // Step 1: Get all follow documents where followeeID == currentUserID
-        Filter filter = Filter.equalTo("followeeID", currentUserID);
-        followDB.getDocuments(filter, new FirestoreDB.DBCallback() {
-            @Override
-            public void onSuccess(ArrayList<Entity> followEntities) {
-                // Step 2: Extract followerIDs
-                ArrayList<String> followerIDs = new ArrayList<>();
-                for (Entity followEntity : followEntities) {
-                    String followerID = (String) followEntity.objectMap.get("followerID");
-                    if (followerID != null) {
-                        followerIDs.add(followerID);
-                    }
-                }
+    public void getFollowCount(String userID, FollowType followType, FollowCountCallback callback) {
+        Filter getFollowAmount;
+        if (followType == FollowType.Followers) {
+            getFollowAmount = Filter.equalTo("followeeID", userID);
+        } else {
+            getFollowAmount = Filter.equalTo("followerID", userID);
+        }
 
-                // Step 3: Fetch user data for each followerID
-                fetchUsers(followerIDs, callback);
+        followDB.getDocuments(getFollowAmount, Follow.class, new FirestoreDB.DBCallback<>() {
+            @Override
+            public void onSuccess(ArrayList<Follow> result) {
+                callback.result(result.size());
             }
 
             @Override
-            public void onFailure(Exception e) {
-                Log.e("FollowHandler", "Failed to fetch followers", e);
-                callback.onFailure(e);
-            }
+            public void onFailure(Exception e) {/*can be implemented later*/}
         });
     }
 
+
     /**
-     * Fetches user data for a list of follower IDs.
+     * Fetches the list of followers for the specified user.
      *
-     * This method queries the Firestore database for each user ID in the
-     * `followerIDs` list and collects the corresponding user data.
-     *
-     * @param followerIDs the list of follower IDs to fetch user data for
-     * @param callback the callback to handle the result, passing the list of users or an error
+     * @param userID        the ID of the user whose followers are being fetched
+     * @param callback      the callback to handle the result, passing the list of followers or an error
      */
-    private void fetchUsers(ArrayList<String> followerIDs, final FollowerCallback callback) {
-        ArrayList<User> users = new ArrayList<>();
-        for (String followerID : followerIDs) {
-            Filter filter = Filter.equalTo("id", followerID);
-            followDB.getDocuments(filter, new FirestoreDB.DBCallback() {
-                @Override
-                public void onSuccess(ArrayList<Entity> userEntities) {
-                    for (Entity userEntity : userEntities) {
-                        User user = User.fromMap(userEntity.objectMap);
-                        users.add(user);
-                    }
-
-                    // Once all users are fetched, pass the list to the callback
-                    callback.onFollowersFetched(users);
-                }
-
-                @Override
-                public void onFailure(Exception e) {
-                    Log.e("FollowHandler", "Failed to fetch user data", e);
-                    callback.onFailure(e);
-                }
-            });
-        }
+    public void fetchFollowers(String userID, FollowCallback callback) {
+        getFollows(userID, FollowType.Followers, callback);
     }
+
     /**
-     * Callback interface for handling follower data.
+     * Fetches the list of user the specified user is following
      *
-     * This interface defines the methods to handle successful fetching of followers
-     * or failure during the process.
+     * @param userID        the ID of the user whose followers are being fetched
+     * @param callback      the callback to handle the result, passing the list of followers or an error
      */
-    public interface FollowerCallback {
-        /**
-         * Called when the list of followers has been successfully fetched.
-         *
-         * @param followers the list of User objects representing the followers
-         */
-        void onFollowersFetched(ArrayList<User> followers);  // Pass the list of User objects
-        /**
-         * Called if there is an error during the fetching process.
-         *
-         * @param e the exception that occurred during the fetch operation
-         */
-        void onFailure(Exception e);
+    public void fetchFollowing(String userID, FollowCallback callback) {
+        getFollows(userID, FollowType.Following, callback);
     }
 }

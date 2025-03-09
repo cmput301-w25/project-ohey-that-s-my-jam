@@ -10,11 +10,13 @@ import java.util.Map;
  * This class stores the user's details
  */
 public class User extends DatabaseObject {
-    private String id;
     private String username;
     private String emailAddress;
     private String password;
     private String profilePictureLink;
+
+    // Need an empty constructor for Firebase
+    User() {}
 
     /**
      * User class constructor
@@ -27,12 +29,10 @@ public class User extends DatabaseObject {
      * @param profilePictureLink
      *              optional profile picture of a user, if don't have one please input null
      */
-    public User(String id,
-                String username,
+    public User(String username,
                 String emailAddress,
                 String password,
                 String profilePictureLink) {
-        this.id = id;
         this.username = username;
         this.emailAddress = emailAddress;
         this.password = password;
@@ -122,49 +122,29 @@ public class User extends DatabaseObject {
     public void setProfilePictureLink(String profilePictureLink) {
         this.profilePictureLink = profilePictureLink;
     }
-
-    /**
-     * return id
-     * @return  id
-     *      String of the id
-     */
-    // Getter and Setter for ID
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * set id
-     * @param id
-     *                  String of the id
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /**
-     * User's class implementation. This static method creates a User
-     * from a map.
-     */
-    public static User fromMap(Map<String, Object> map) {
-        return new User(
-                (String) map.get("id"),
-                (String) map.get("username"),
-                (String) map.get("emailAddress"),
-                (String) map.get("password"),
-                (String) map.get("profilePictureLink")
-        );
-    }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return Map.of(
-                "username", username,
-                "emailAddress", emailAddress,
-                "password", password,
-                "profilePictureLink", profilePictureLink
-        );
-    }
+//
+//    /**
+//     * User's class implementation. This static method creates a User
+//     * from a map.
+//     */
+//    public static User fromMap(Map<String, Object> map) {
+//        return new User(
+//                (String) map.get("username"),
+//                (String) map.get("emailAddress"),
+//                (String) map.get("password"),
+//                (String) map.get("profilePictureLink")
+//        );
+//    }
+//
+//    @Override
+//    public Map<String, Object> toMap() {
+//        return Map.of(
+//            "username", username,
+//            "emailAddress", emailAddress,
+//            "password", password,
+//            "profilePictureLink", profilePictureLink
+//        );
+//    }
 
     /**
      * return the string of username

@@ -19,9 +19,9 @@ public class MoodEventTest {
 
     private MoodEvent mockMoodEvent(){
         MoodEvent moodEvent = new MoodEvent("FF1234",
-                                            R.color.surprise,
+                                            EmotionalState.Surprise,
                                             "The weather is good",
-                                            "Alone",
+                                            SocialSituation.Alone,
                                             false,
                                             "I am happy",
                                             "http://example.com/profile.jpg");
@@ -37,7 +37,7 @@ public class MoodEventTest {
     @Test
     public void TestSetEmotionalState(){
         MoodEvent moodEvent = mockMoodEvent();
-        moodEvent.setEmotionalState(R.color.sad);
+        moodEvent.setEmotionalState(EmotionalState.Sad);
         assertEquals(EmotionalState.Sad, moodEvent.getEmotionalState());
     }
 
@@ -57,14 +57,14 @@ public class MoodEventTest {
     @Test
     public void TestGetSocialSituation(){
         MoodEvent moodEvent = mockMoodEvent();
-        assertEquals("Alone", moodEvent.getSocialSituation());
+        assertEquals(SocialSituation.Alone, moodEvent.getSocialSituation());
     }
 
     @Test
     public void TestSetSocialSituation(){
         MoodEvent moodEvent = mockMoodEvent();
-        moodEvent.setSocialSituation("With One Other Person");
-        assertEquals("With One Other Person", moodEvent.getSocialSituation());
+        moodEvent.setSocialSituation(SocialSituation.With_1_Other);
+        assertEquals(SocialSituation.With_1_Other, moodEvent.getSocialSituation());
     }
 
     @Test
