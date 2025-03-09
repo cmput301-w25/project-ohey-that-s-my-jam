@@ -190,7 +190,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             moodEvent.setSocialSituation(selectedSocialSituation);
 
             moodEventController.updateMoodEvent(moodEvent);
-            Log.d("moodevent", moodEvent.toMap().toString());
+            Log.d("moodevent", moodEvent.toString());
         } else {
             moodEventController.addMoodEvent(new MoodEvent(
                     user.getID(),

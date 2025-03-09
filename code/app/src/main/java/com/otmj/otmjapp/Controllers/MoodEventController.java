@@ -10,7 +10,6 @@ import com.otmj.otmjapp.Helper.FirestoreCollections;
 import com.otmj.otmjapp.Helper.FirestoreDB;
 import com.otmj.otmjapp.Helper.MoodHistoryFilter;
 import com.otmj.otmjapp.Helper.UserManager;
-import com.otmj.otmjapp.Models.Entity;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.User;
 
@@ -38,7 +37,7 @@ public class MoodEventController {
     /**
      * Holds its own reference to the mood events db collection
      */
-    private final FirestoreDB db;
+    private final FirestoreDB<MoodEvent> db;
     /**
      * Observable object that callers can observe to get notified of changes
      */
@@ -48,7 +47,7 @@ public class MoodEventController {
         assert !userIDs.isEmpty();
 
         this.userIDs = new ArrayList<>(userIDs);
-        this.db = new FirestoreDB(FirestoreCollections.MoodEvents.name);
+        this.db = new FirestoreDB<>(FirestoreCollections.MoodEvents.name);
 
         moodHistory = new MutableLiveData<>(new ArrayList<>());
         getMoodEvents(null); // Populate mood history
@@ -83,16 +82,12 @@ public class MoodEventController {
                 }
 
                 // Get all mood events from specified users
-                db.getDocuments(filter, new FirestoreDB.DBCallback() {
+                db.getDocuments(filter, MoodEvent.class, new FirestoreDB.DBCallback<>() {
                     @Override
-                    public void onSuccess(ArrayList<Entity> result) {
+                    public void onSuccess(ArrayList<MoodEvent> result) {
                         ArrayList<MoodEvent> moodEvents = new ArrayList<>();
-
                         // For each mood event
-                        for (Entity e : result) {
-                            MoodEvent moodEvent = MoodEvent.fromMap(e.objectMap);
-                            moodEvent.setID(e.ID);
-
+                        for (MoodEvent moodEvent : result) {
                             moodEvents.add(moodEvent);
 
                             // Look through all the users
@@ -129,21 +124,17 @@ public class MoodEventController {
      * @param moodEvent Mood event to insert
      */
     public void addMoodEvent(MoodEvent moodEvent) {
-        db.addDocument(moodEvent, new FirestoreDB.DBCallback() {
+        db.addDocument(moodEvent, new FirestoreDB.DBCallback<>() {
             @Override
-            public void onSuccess(ArrayList<Entity> result) {
+            public void onSuccess(ArrayList<MoodEvent> result) {
                 if (!result.isEmpty()) {
-                    Entity e = result.get(0);
-                    MoodEvent m = MoodEvent.fromMap(e.objectMap);
-                    m.setID(e.ID);
+                    MoodEvent m = result.get(0);
 
                     if (moodHistory.getValue() == null) {
                         moodHistory.setValue(new ArrayList<>(List.of(m)));
                     } else {
                         moodHistory.getValue().add(m);
                     }
-
-                    moodHistory.notifyAll(); // Notify observers
                 } else {
                     // TODO: Handle this
                 }
