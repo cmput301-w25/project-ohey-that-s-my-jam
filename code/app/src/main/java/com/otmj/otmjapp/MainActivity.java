@@ -32,29 +32,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Set Adapter and ListView
-        //FollowersListAdapter adapter = new FollowersListAdapter(getApplicationContext(), R.layout.user_block, followersList);
-
-        // Create ListView
-        //ListView listview = findViewById(R.id.FollowersListViewAdapter);
-        //listview.setAdapter(adapter);
-
-        // Create Custom Adapter...
-
-
-        // intialize followerslist
-
-        // code for Adapter for followers list  (branch 162)
-        //ReyclerView recyclerView = findViewById(R.id.FollowersRecycleViewAdapter);
-        // setUpFollowersTestList();
-        // Create adapter AFTER you create models (data)
-
-        //FollowersRecyclerViewAdapter adapter = new FollowersRecyclerViewAdapter(this, FollowersTestList);
-
-        //recyclerView.setAdapter(adapter);
-        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

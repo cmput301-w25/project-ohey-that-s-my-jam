@@ -1,6 +1,5 @@
 package com.otmj.otmjapp.Models;
 
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -25,8 +24,6 @@ public class Follow extends DatabaseObject {
 
     /**
      * return the UserId following
-     * @return follower
-     *              the UserId following
      */
     public String getFollowerID() {
         return followerID;
@@ -34,8 +31,6 @@ public class Follow extends DatabaseObject {
 
     /**
      * return userId being followed
-     * @return  followee
-     *               userId being followed
      */
     public String getFolloweeID() {
         return followeeID;
@@ -56,6 +51,6 @@ public class Follow extends DatabaseObject {
         return Map.of(
                 "followerID", followerID,
                 "followeeID", followeeID
-                );
+        );
     }
 }

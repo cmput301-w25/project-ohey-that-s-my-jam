@@ -33,4 +33,10 @@
         android:name="com.otmj.otmjapp.Fragments.UserProfileFragment"
         android:label="fragment_UserProfile"
         tools:layout="@layout/my_profile" />
+
+    <fragment
+        android:id="@+id/followersListFragment"
+        android:name="com.otmj.otmjapp.Fragments.FollowersListFragment"
+        android:label="fragment_followers_list"
+        tools:layout="@layout/list_screen" />
 </navigation>

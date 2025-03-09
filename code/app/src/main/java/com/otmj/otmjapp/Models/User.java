@@ -10,10 +10,20 @@ import java.util.Map;
  * This class stores the user's details
  */
 public class User extends DatabaseObject {
+    private String id; // For query purposes on followerslist
     private String username;
     private String emailAddress;
     private String password;
     private String profilePictureLink;
+
+    // Getter and Setter for ID
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /**
      * User class constructor
@@ -136,10 +146,10 @@ public class User extends DatabaseObject {
     @Override
     public Map<String, Object> toMap() {
         return Map.of(
-            "username", username,
-            "emailAddress", emailAddress,
-            "password", password,
-            "profilePictureLink", profilePictureLink
+                "username", username,
+                "emailAddress", emailAddress,
+                "password", password,
+                "profilePictureLink", profilePictureLink
         );
     }
 
