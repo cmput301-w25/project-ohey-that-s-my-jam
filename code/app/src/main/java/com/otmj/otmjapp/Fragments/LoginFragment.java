@@ -22,6 +22,10 @@ import com.otmj.otmjapp.databinding.FragmentLoginBinding;
 
 import java.util.ArrayList;
 
+/**
+ * Handles the user login functionality (input validation and autnentication)
+ * and navigation to the appropriate screen upon successful login.
+ */
 public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;
@@ -44,6 +48,11 @@ public class LoginFragment extends Fragment {
                         .navigate(R.id.action_loginToSignup));
     }
 
+    /**
+     * Validates the input fields for username and password.
+     *
+     * @return {@code true} if both fields are valid (non-blank), {@code false} otherwise.
+     */
     private boolean validateFields() {
         EditText username = binding.loginEditUsername,
                 password = binding.loginEditPassword;
@@ -61,6 +70,11 @@ public class LoginFragment extends Fragment {
         return true;
     }
 
+    /**
+     * Validates username and password, then attempts to authenticate the user.
+     *
+     * @param view The view associated with the fragment, used to display error messages.
+     */
     private void login(View view) {
         if (!validateFields()) {
             return;

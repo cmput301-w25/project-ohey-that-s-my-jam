@@ -29,6 +29,12 @@ import com.otmj.otmjapp.Helper.TextValidator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A dialog fragment for adding or editing a MoodEvent.
+ * This fragment allows users to select an emotional state, provide a reason, specify a trigger,
+ * and optionally select a social situation. If an existing MoodEvent is passed, it allows editing
+ * the event details.
+ */
 public class MoodEventAddEditDialogFragment extends DialogFragment {
     private EmotionalState selectedEmotionalState;
     private SocialSituation selectedSocialSituation;
@@ -39,6 +45,12 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
     // private String ImageLink
     // private boolean addLocation
 
+    /**
+     * Creates a new instance of the dialog fragment with a given MoodEvent.
+     *
+     * @param moodEvent The MoodEvent to be edited.
+     * @return A new instance of MoodEventAddEditDialogFragment.
+     */
     public static MoodEventAddEditDialogFragment newInstance(MoodEvent moodEvent) {
         Bundle args = new Bundle();
         args.putSerializable("moodEvent", moodEvent);
@@ -48,19 +60,25 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    /**
+     * Called when the dialog is created, setting up the UI elements and initializing event handlers.
+     *
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The created Dialog.
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.create_mood_event, null);
 
         socialSituationMapping = Map.of(
-            getString(R.string.alone_text), SocialSituation.Alone,
-            getString(R.string.with_one_person_text), SocialSituation.With_1_Other,
-            getString(R.string.with_more_than_two_people_text), SocialSituation.With_2_Others,
-            getString(R.string.crowd_text), SocialSituation.With_A_Crowd
+                getString(R.string.alone_text), SocialSituation.Alone,
+                getString(R.string.with_one_person_text), SocialSituation.With_1_Other,
+                getString(R.string.with_more_than_two_people_text), SocialSituation.With_2_Others,
+                getString(R.string.crowd_text), SocialSituation.With_A_Crowd
         );
 
-        // Initialize everything in the fragment
+        // Initialize UI components
         TextInputLayout reasonWhyInputLayout = view.findViewById(R.id.reason_why_input_box),
                 triggerInputLayout = view.findViewById(R.id.trigger_input_box);
         TextInputEditText reasonWhyInputText = view.findViewById(R.id.reason_why_edit_text),
@@ -118,9 +136,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
 
             @Override
             public void validateAfterTyping(TextInputEditText textInputEditText, TextInputLayout textInputLayout) {
-//                if (textInputEditText.getText().toString().isBlank()) {
-//                    textInputLayout.setError("This field cannot be empty");
-//                }
+                // not needed
             }
         });
 
@@ -232,14 +248,30 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Sets the selected emotional state based on user selection.
+     *
+     * @param emotionalState The emotional state as a string.
+     */
     private void setEmotionalState(String emotionalState) {
         selectedEmotionalState = EmotionalState.fromString(emotionalState);
     }
 
+    /**
+     * Sets the selected social situation based on user selection.
+     *
+     * @param text The social situation as a string.
+     */
     private void setSocialSituation(String text) {
         selectedSocialSituation = socialSituationMapping.get(text);
     }
 
+    /**
+     * Marks the correct chip in a ChipGroup based on the selected emotional state.
+     *
+     * @param chipGroup The ChipGroup containing emotion chips.
+     * @param emotionalState The selected emotional state.
+     */
     private void setSelectedChip(ChipGroup chipGroup, EmotionalState emotionalState) {
         for (int i = 0; i < chipGroup.getChildCount(); i++) {
             Chip chip = (Chip) chipGroup.getChildAt(i);
@@ -251,6 +283,12 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Marks the correct chip in a ChipGroup based on the selected social situation.
+     *
+     * @param chipGroup The ChipGroup containing social situation chips.
+     * @param socialSituation The selected social situation.
+     */
     private void setSelectedChip(ChipGroup chipGroup, SocialSituation socialSituation) {
         for (int i = 0; i < chipGroup.getChildCount(); i++) {
             Chip chip = (Chip) chipGroup.getChildAt(i);
@@ -261,4 +299,5 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             }
         }
     }
+
 }

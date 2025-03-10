@@ -23,6 +23,9 @@ import com.otmj.otmjapp.databinding.FragmentSignupBinding;
 
 import java.util.ArrayList;
 
+/**
+ * Handles the user signup functionality (input validation and user registration).
+ */
 public class SignupFragment extends Fragment {
 
     private FragmentSignupBinding binding;
@@ -79,6 +82,12 @@ public class SignupFragment extends Fragment {
         return true;
     }
 
+    /**
+     * Validates the input fields for username, email, and password.
+     * Ensures that the fields are not blank, meet length requirements, and that the email is valid.
+     *
+     * @return {@code true} if all fields are valid, {@code false} otherwise.
+     */
     private void signup(View view) {
         if (!validateFields()) {
             return;
