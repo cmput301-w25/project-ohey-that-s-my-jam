@@ -63,6 +63,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/followers_button"
+                            android:clickable="true"
                             android:layout_width="wrap_content"
                             android:layout_height="34dp"
                             android:backgroundTint="#D0D5DF"
@@ -88,6 +89,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/following_button"
+                            android:clickable="true"
                             android:layout_width="match_parent"
                             android:layout_height="34dp"
                             android:layout_marginStart="6dp"
