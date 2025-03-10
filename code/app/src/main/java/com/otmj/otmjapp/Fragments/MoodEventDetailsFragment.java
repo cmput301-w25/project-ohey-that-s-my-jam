@@ -25,10 +25,22 @@ import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.databinding.FragmentMoodEventDetailsBinding;
 
+/**
+ * A Fragment that displays details of a MoodEvent, including user information, timestamp, location,
+ * and an optional image associated with the event.
+ */
 public class MoodEventDetailsFragment extends Fragment {
 
     private FragmentMoodEventDetailsBinding binding;
 
+    /**
+     * Inflates the fragment's layout using ViewBinding.
+     *
+     * @param inflater  The LayoutInflater object that can be used to inflate views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The root view of the fragment.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -36,6 +48,13 @@ public class MoodEventDetailsFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /**
+     * Called immediately after onCreateView().
+     * Initializes UI elements and sets up the MoodEvent data in the view.
+     *
+     * @param view The view returned by onCreateView().
+     * @param savedInstanceState The saved state of the fragment if it was previously created.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -53,29 +72,27 @@ public class MoodEventDetailsFragment extends Fragment {
         MoodEvent moodEvent = args.getMoodEvent();
         assert moodEvent != null;
 
-        // set the username text
-         usernameText.setText(moodEvent.getUser().getUsername());
+        // Set the username text
+        usernameText.setText(moodEvent.getUser().getUsername());
 
-        // load profile image
-//        if (moodEvent.getUser().getProfilePictureLink() != null) {
-            // Glide.with(requireContext()).load(event.user.getProfilePictureLink()).into(profileImage);
-//        }
-
-        // set time stamp text
+        // Set timestamp text
         eventTimestampText.setText(moodEvent.getCreatedDate().toString());
 
-        // set all the available text of a mood event
+        // Set all the available text of a mood event
         setMoodEventDescription(eventDescription, moodEvent);
 
-        // set location text
-//        eventLocationText.setText(moodEvent.getLocation().toString());
-
-        // load the reason why image (I'm not sure if this is right yet)
+        // Load mood event image if available
         if (moodEvent.getImageLink() != null) {
             Glide.with(requireContext()).load(moodEvent.getImageLink()).into(moodEventImage);
         }
     }
 
+    /**
+     * Sets the mood event description with appropriate formatting, colors, and an emoji representing the mood.
+     *
+     * @param textView The TextView to display the mood event description.
+     * @param event The MoodEvent object containing details about the event.
+     */
     public void setMoodEventDescription(TextView textView, MoodEvent event) {
         // Construct the beginning of the sentence
         StringBuilder combined = new StringBuilder(String.format("Feeling %s 😊 because of %s",
