@@ -1,4 +1,4 @@
-package com.otmj.otmjapp;
+package com.otmj.otmjapp.Fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -17,12 +17,14 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.otmj.otmjapp.Controllers.MoodEventController;
+import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
+import com.otmj.otmjapp.R;
+import com.otmj.otmjapp.Helper.TextValidator;
 
 import java.util.List;
 import java.util.Map;
@@ -181,8 +183,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         }
 
         User user = UserManager.getInstance().getCurrentUser();
-        MoodEventController moodEventController =
-                new MoodEventController(List.of(user.getID()));
+        MoodEventsManager moodEventsManager =
+                new MoodEventsManager(List.of(user.getID()));
 
         if (moodEvent != null) {
             moodEvent.setEmotionalState(selectedEmotionalState);
@@ -190,10 +192,10 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             moodEvent.setTrigger(trigger);
             moodEvent.setSocialSituation(selectedSocialSituation);
 
-            moodEventController.updateMoodEvent(moodEvent);
+            moodEventsManager.updateMoodEvent(moodEvent);
             Log.d("moodevent", moodEvent.toString());
         } else {
-            moodEventController.addMoodEvent(new MoodEvent(
+            moodEventsManager.addMoodEvent(new MoodEvent(
                     user.getID(),
                     selectedEmotionalState,
                     trigger,

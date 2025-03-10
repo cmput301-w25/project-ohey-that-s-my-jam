@@ -1,4 +1,4 @@
-package com.otmj.otmjapp;
+package com.otmj.otmjapp.Helper;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

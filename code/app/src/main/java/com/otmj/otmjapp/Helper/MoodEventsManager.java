@@ -1,4 +1,4 @@
-package com.otmj.otmjapp.Controllers;
+package com.otmj.otmjapp.Helper;
 
 import android.graphics.Bitmap;
 
@@ -6,10 +6,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.firestore.Filter;
-import com.otmj.otmjapp.Helper.FirestoreCollections;
-import com.otmj.otmjapp.Helper.FirestoreDB;
-import com.otmj.otmjapp.Helper.MoodHistoryFilter;
-import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.User;
 
@@ -23,7 +19,7 @@ import java.util.List;
  * data from a database happens asynchronously, we use LiveData
  * to be able to observe when its value is set.
  */
-public class MoodEventController {
+public class MoodEventsManager {
 
     public interface ImageDownloadCallback {
         public void onSuccess(Bitmap image);
@@ -43,7 +39,7 @@ public class MoodEventController {
      */
     private final MutableLiveData<ArrayList<MoodEvent>> moodHistory;
 
-    public MoodEventController(List<String> userIDs) {
+    public MoodEventsManager(List<String> userIDs) {
         assert !userIDs.isEmpty();
 
         this.userIDs = new ArrayList<>(userIDs);
