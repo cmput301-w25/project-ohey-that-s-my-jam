@@ -107,5 +107,6 @@
     <string name="nav_location_text">Location</string>
     <string name="select_mood_status">Select A Mood</string>
     <string name="edit_button_text">EDIT</string>
+    <string name="ic_delete_detail">Deletes the mood event</string>
 
 </resources>

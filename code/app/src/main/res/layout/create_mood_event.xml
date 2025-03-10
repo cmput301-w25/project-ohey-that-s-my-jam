@@ -369,6 +369,16 @@
                 app:srcCompat="@drawable/ic_add_location"
                 android:contentDescription="@string/ic_add_location_desc"/>
 
+            <ImageButton
+                android:id="@+id/DeletePostButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:padding="2dp"
+                app:srcCompat="@drawable/ic_trash"
+                android:contentDescription="@string/ic_delete_detail"/>
+
         </LinearLayout>
 
         <!-- Spacer to push the Submit Post button to the right -->
