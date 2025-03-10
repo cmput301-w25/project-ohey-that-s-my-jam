@@ -52,7 +52,6 @@ public class TimelineFragment extends Fragment {
         moodEventAdapter = new TimelineMoodEventAdapter(requireContext(), allMoodEvents);
         moodEventListView.setAdapter(moodEventAdapter);
 
-
         moodEventListView.setOnItemClickListener(((adapterView, view1, i, l) -> {
             // Add mood event argument
             TimelineFragmentDirections.ActionTimelineFragmentToMoodEventDetailsFragment toDetails =
