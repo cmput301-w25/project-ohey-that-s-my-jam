@@ -18,10 +18,16 @@ import com.otmj.otmjapp.R;
 
 import java.util.ArrayList;
 
+/**
+ * Displays a list of the user's followers.
+ */
 public class FollowersListFragment extends Fragment {
 
     private final FollowHandler followHandler;
 
+    /**
+     * Initializes the {@link FollowHandler} instance.
+     */
     public FollowersListFragment() {
         followHandler = new FollowHandler();  // Initialize the FollowHandler
     }
@@ -98,6 +104,12 @@ public class FollowersListFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Sets up the {@link ListView} with the provided list of followers or users that the current user is following.
+     *
+     * @param rootView                 The root view of the fragment.
+     * @param followersorfollowingList The list of followers or users that the current user is following.
+     */
     // Set up the ListView with the followers data
     private void setUpFollowersList(View rootView, ArrayList<User> followersorfollowingList) {
         ListView listView = rootView.findViewById(R.id.user_list_view);

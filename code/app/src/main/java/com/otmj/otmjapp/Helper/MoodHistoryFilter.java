@@ -5,6 +5,9 @@ import com.google.firebase.firestore.Query;
 
 import java.util.List;
 
+/**
+ * Represents a filter for mood history data and can be used to define criteria for filtering mood events.
+ */
 public class MoodHistoryFilter {
     private final Filter filter;
     private final DBSortOption sortOption;
