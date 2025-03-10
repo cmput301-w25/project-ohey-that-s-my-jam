@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MoodEventAddEditDialogFragment extends DialogFragment {
-    private EmotionalState selectedEmotionalState = null;
+    private EmotionalState selectedEmotionalState;
     private SocialSituation selectedSocialSituation;
     private MoodEvent moodEvent;
     private Map<String, SocialSituation> socialSituationMapping;
@@ -78,6 +78,9 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         if (tag != null && tag.equals("edit") && bundle != null) {
             moodEvent = (MoodEvent) bundle.getSerializable("moodEvent");
             if (moodEvent != null) {
+                selectedEmotionalState = moodEvent.getEmotionalState();
+                selectedSocialSituation = moodEvent.getSocialSituation();
+
                 submitPostButton.setText(R.string.edit_button_text);
                 setSelectedChip(moodChipGroup, moodEvent.getEmotionalState());
                 if (moodEvent.getReason() != null) {
@@ -150,18 +153,17 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             String reason = reasonWhyInputText.getText().toString().trim();
             String trigger = triggerInputText.getText().toString().trim();
 
-            setupMoodEvent(reason, trigger);
-            dismiss();
+            if (selectedEmotionalState != null) {
+                setupMoodEvent(reason, trigger);
+                dismiss();
+            }
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         AlertDialog dialog = builder.setView(view).create();
 
         dialog.setOnShowListener(d -> {
-            submitPostButton.setEnabled(false);
             moodChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
-                submitPostButton.setEnabled(!checkedIds.isEmpty());
-
                 if (!checkedIds.isEmpty()) {
                     Chip selectedChip = group.findViewById(checkedIds.get(0));
                     String moodText = selectedChip.getText().toString();
@@ -193,7 +195,6 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             moodEvent.setSocialSituation(selectedSocialSituation);
 
             moodEventsManager.updateMoodEvent(moodEvent);
-            Log.d("moodevent", moodEvent.toString());
         } else {
             moodEventsManager.addMoodEvent(new MoodEvent(
                     user.getID(),
@@ -209,12 +210,10 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
 
     private void setEmotionalState(String emotionalState) {
         selectedEmotionalState = EmotionalState.fromString(emotionalState);
-        Log.d("moodevent", selectedEmotionalState.toString());
     }
 
     private void setSocialSituation(String text) {
         selectedSocialSituation = socialSituationMapping.get(text);
-        Log.d("moodevent", selectedSocialSituation.toString());
     }
 
     private void setSelectedChip(ChipGroup chipGroup, EmotionalState emotionalState) {
