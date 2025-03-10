@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.format.DateUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
@@ -50,25 +51,12 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         TextView description = view.findViewById(R.id.timeline_mood_event_desc);
         setMoodEventDescription(description, m);
 
-        // Change date string depending on how far away the event occurred
-        // TODO: Fix
-//        String date;
-//        Duration diff = Duration.between(LocalDateTime.now(), m.getCreatedDate());
-//        if (diff.toDays() > 14) {
-//            date = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.CANADA)
-//                    .format(m.getCreatedDate());
-//        } else if (diff.toDays() > 7) {
-//            date = "two weeks ago";
-//        } else if (diff.toDays() > 1) {
-//            date = "less than a week ago";
-//        } else if (diff.toHours() > 1) {
-//            date = diff.toHours() + " hrs ago";
-//        } else {
-//            date = "recently";
-//        }
-//
-//        TextView createDate = view.findViewById(R.id.timeline_mood_event_date);
-//        createDate.setText(date);
+        long createdTimeMillis = m.getCreatedDate() != null ? m.getCreatedDate().getTime() : System.currentTimeMillis();
+        String timeAgo = getTimeAgo(createdTimeMillis);
+
+        TextView timeAgoText = view.findViewById(R.id.timeline_mood_event_date);
+        timeAgoText.setText(timeAgo);
+
 
         // TODO: Set location
 
@@ -123,5 +111,28 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         // Set the final SpannableString to TextView
         textView.setText(spannableString);
     }
+
+    public String getTimeAgo(long timestamp) {
+        long now = System.currentTimeMillis();
+        long diff = now - timestamp;
+
+        if (diff < DateUtils.MINUTE_IN_MILLIS) {
+            long sec = diff / 1000;
+            return sec + (sec == 1 ? " sec ago" : " secs ago");
+        } else if (diff < DateUtils.HOUR_IN_MILLIS) {
+            long min = diff / DateUtils.MINUTE_IN_MILLIS;
+            return min + (min == 1 ? " min ago" : " mins ago");
+        } else if (diff < DateUtils.DAY_IN_MILLIS) {
+            long hr = diff / DateUtils.HOUR_IN_MILLIS;
+            return hr + (hr == 1 ? " hr ago" : " hrs ago");
+        } else if (diff < 2 * DateUtils.DAY_IN_MILLIS) {
+            return "Yesterday";
+        } else {
+            long days = diff / DateUtils.DAY_IN_MILLIS;
+            return days + " days ago";
+        }
+    }
+
+
 
 }
