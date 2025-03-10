@@ -52,12 +52,18 @@ public class TimelineFragment extends Fragment {
         moodEventAdapter = new TimelineMoodEventAdapter(requireContext(), allMoodEvents);
         moodEventListView.setAdapter(moodEventAdapter);
 
-        moodEventListView.setOnItemClickListener(((adapterView, view1, i, l) ->
-                NavHostFragment.findNavController(TimelineFragment.this)
-                        .navigate(R.id.action_timelineFragment_to_moodEventDetailsFragment)));
+
+        moodEventListView.setOnItemClickListener(((adapterView, view1, i, l) -> {
+            // Add mood event argument
+            TimelineFragmentDirections.ActionTimelineFragmentToMoodEventDetailsFragment toDetails =
+                    TimelineFragmentDirections.actionTimelineFragmentToMoodEventDetailsFragment();
+            toDetails.setMoodEvent(allMoodEvents.get(i));
+
+            // Go to details view
+            NavHostFragment.findNavController(TimelineFragment.this).navigate(toDetails);
+        }));
 
         return binding.getRoot();
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -76,7 +82,6 @@ public class TimelineFragment extends Fragment {
             moodEventsManager.getMoodEvents().observe(getViewLifecycleOwner(), moodEvents -> {
                 allMoodEvents.clear();
                 allMoodEvents.addAll(moodEvents);
-                Log.d("timeline", "Mood events updated");
 
                 if (moodEventAdapter != null) {
                     moodEventAdapter.notifyDataSetChanged();
