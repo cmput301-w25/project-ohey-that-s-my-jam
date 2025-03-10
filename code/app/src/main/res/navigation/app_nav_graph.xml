@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/moodEventDetailsFragment"
-        android:name="com.otmj.otmjapp.MoodEventDetailsFragment"
+        android:name="com.otmj.otmjapp.Fragments.MoodEventDetailsFragment"
         android:label="fragment_mood_event_details"
         tools:layout="@layout/fragment_mood_event_details" >
         <argument

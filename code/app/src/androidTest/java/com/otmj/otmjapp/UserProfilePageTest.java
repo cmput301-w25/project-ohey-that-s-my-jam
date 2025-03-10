@@ -15,7 +15,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.otmj.otmjapp.Controllers.MoodEventController;
+import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.User;
@@ -39,7 +39,7 @@ public class UserProfilePageTest {
     private User user;
     private String userId;
     //private UserManager userManager;
-    private MoodEventController moodEventController;
+    private MoodEventsManager moodEventsManager;
     private String usermane;
     private String userEmail;
     private String userPassword;
@@ -87,8 +87,8 @@ public class UserProfilePageTest {
         MoodEvent moodEvent = new MoodEvent(userId, "Anger", "not happy", "Alone", false, "Tired", null);
         ArrayList<String> userIdList = new ArrayList<String>();
         userIdList.add(userId);
-        moodEventController = new MoodEventController(userIdList);
-        moodEventController.addMoodEvent(moodEvent);
+        moodEventsManager = new MoodEventsManager(userIdList);
+        moodEventsManager.addMoodEvent(moodEvent);
     }
 
     private void signupMockUser() throws InterruptedException {

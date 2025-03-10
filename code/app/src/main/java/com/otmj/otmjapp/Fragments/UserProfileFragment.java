@@ -1,16 +1,11 @@
 package com.otmj.otmjapp.Fragments;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,14 +13,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
-import com.google.firebase.Timestamp;
 import com.otmj.otmjapp.Adapters.UserProfilePageMoodEventAdapter;
-import com.otmj.otmjapp.Controllers.MoodEventController;
+import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.FollowHandler;
 import com.otmj.otmjapp.Helper.UserManager;
-import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.MoodEvent;
-import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.databinding.MyProfileBinding;
@@ -39,7 +31,7 @@ public class UserProfileFragment extends Fragment {
     private ArrayList<String> UserIDs;
     private UserProfilePageMoodEventAdapter moodEventAdapter;
     private LiveData<ArrayList<MoodEvent>> moodEventsLiveData;
-    private MoodEventController mood_event_controller;
+    private MoodEventsManager mood_event_controller;
     private Handler handler;
     private Runnable runnable;
     private FollowHandler followHandler;
@@ -81,7 +73,7 @@ public class UserProfileFragment extends Fragment {
         // get MoodEvents
         UserIDs = new ArrayList<String>();
         UserIDs.add(user.getID());
-        mood_event_controller = new MoodEventController(UserIDs);
+        mood_event_controller = new MoodEventsManager(UserIDs);
 
         // add dummy data
         //mood_event_controller.addMoodEvent(moodEvent_1);

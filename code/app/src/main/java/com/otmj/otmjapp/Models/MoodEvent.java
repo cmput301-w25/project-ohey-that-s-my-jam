@@ -89,6 +89,9 @@ public class MoodEvent extends DatabaseObject {
     }
 
     public Date getCreatedDate() {
+        if (createdDate == null) {
+            createdDate = new Date();
+        }
         return createdDate;
     }
 
