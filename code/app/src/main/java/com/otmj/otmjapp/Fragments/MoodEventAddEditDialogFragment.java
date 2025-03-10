@@ -70,6 +70,10 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
 
         ImageButton closeFragmentButton = view.findViewById(R.id.ExitCreateMoodEvent);
         Button submitPostButton = view.findViewById(R.id.SubmitPostButton);
+        ImageButton deletePostButton = view.findViewById(R.id.DeletePostButton);
+
+        // Hide delete button by default
+        deletePostButton.setVisibility(View.GONE);
 
         // Retrieve arguments for editing existing event
         String tag = getTag();
@@ -82,6 +86,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 selectedSocialSituation = moodEvent.getSocialSituation();
 
                 submitPostButton.setText(R.string.edit_button_text);
+                deletePostButton.setVisibility(View.VISIBLE); // Show delete button in edit mode
+
                 setSelectedChip(moodChipGroup, moodEvent.getEmotionalState());
                 if (moodEvent.getReason() != null) {
                     reasonWhyInputText.setText(moodEvent.getReason());
@@ -156,6 +162,24 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             if (selectedEmotionalState != null) {
                 setupMoodEvent(reason, trigger);
                 dismiss();
+            }
+        });
+
+        // Delete button (Only in Edit Mode)
+        deletePostButton.setOnClickListener(v -> {
+            if (moodEvent != null) {
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Delete Mood Event")
+                        .setMessage("Are you sure you want to delete this mood event?")
+                        .setPositiveButton("Delete", (dialog, which) -> {
+                            MoodEventsManager moodEventsManager =
+                                    new MoodEventsManager(List.of(UserManager.getInstance().getCurrentUser().getID()));
+
+                            moodEventsManager.deleteMoodEvent(moodEvent);
+                            dismiss();
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                        .show();
             }
         });
 

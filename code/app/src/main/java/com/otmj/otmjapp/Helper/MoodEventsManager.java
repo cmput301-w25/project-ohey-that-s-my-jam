@@ -171,4 +171,12 @@ public class MoodEventsManager {
         // TODO: Implement downloading
         throw new UnsupportedOperationException("Not yet implemented");
     }
+
+    /**
+     * Deletes mood event
+     * @param moodEvent mood event to delete
+     */
+    public void deleteMoodEvent(MoodEvent moodEvent) {
+        db.deleteDocument(moodEvent);
+    }
 }
