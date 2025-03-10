@@ -1,5 +1,7 @@
 package com.otmj.otmjapp.Helper;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -116,7 +118,6 @@ public class FirestoreDB<T extends DatabaseObject> {
 
         collectionRef.add(object).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                object.setID(task.getResult().getId());
                 if (callback != null) {
                     callback.onSuccess(new ArrayList<>(List.of(object)));
                 }

@@ -1,5 +1,7 @@
 package com.otmj.otmjapp.Helper;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.FieldPath;
@@ -113,12 +115,17 @@ public class UserManager {
     }
 
     public void getUsers(ArrayList<String> userIDs, @NonNull AuthenticationCallback callback) {
+        if (userIDs == null || userIDs.isEmpty()) {
+            callback.onAuthenticated(new ArrayList<>()); // Return an empty list
+            return;
+        }
+
         Filter byID = Filter.inArray(FieldPath.documentId(), userIDs);
         db.getDocuments(byID, User.class, new FirestoreDB.DBCallback<>() {
             @Override
             public void onSuccess(ArrayList<User> result) {
                 // If the number of users returned matches the number of IDs
-                if (result.size() == userIDs.size()) {
+                if (result.size() == userIDs.size() && !result.isEmpty()) {
                     callback.onAuthenticated(result);
                 } else {
                     callback.onAuthenticationFailure("Users not found");
