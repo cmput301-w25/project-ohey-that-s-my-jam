@@ -29,6 +29,10 @@ public class FollowHandler {
         void result(int amount);
     }
 
+    public interface FollowIDCallback {
+        void result(ArrayList<String> ids);
+    }
+
     public interface FollowCallback {
         void onSuccess(ArrayList<User> followList);
         void onFailure(Exception e);
@@ -77,7 +81,7 @@ public class FollowHandler {
         });
     }
 
-    private void getFollows(String userID, FollowType followType, FollowCallback callback) {
+    public void getFollowIDs(String userID, FollowType followType, FollowIDCallback callback) {
         Filter filter;
         if (followType == FollowType.Followers) {
             filter = Filter.equalTo("followeeID", userID);
@@ -85,7 +89,6 @@ public class FollowHandler {
             filter = Filter.equalTo("followerID", userID);
         }
 
-        // First get the follows
         followDB.getDocuments(filter, Follow.class, new FirestoreDB.DBCallback<>() {
             @Override
             public void onSuccess(ArrayList<Follow> result) {
@@ -98,30 +101,31 @@ public class FollowHandler {
                     }
                 }
 
-                // check if the list of IDs is empty
-                if(ids.isEmpty()) {
-                    callback.onSuccess(new ArrayList<>()); // return an empty list
-                    return;
-                }
-
-                UserManager userManager = UserManager.getInstance();
-                // Then get the users
-                userManager.getUsers(ids, new UserManager.AuthenticationCallback() {
-                    @Override
-                    public void onAuthenticated(ArrayList<User> authenticatedUsers) {
-                        callback.onSuccess(authenticatedUsers);
-                    }
-
-                    @Override
-                    public void onAuthenticationFailure(String reason) {
-                        callback.onFailure(new Exception(reason));
-                    }
-                });
+                callback.result(ids);
             }
 
             @Override
-            public void onFailure(Exception e) {/*can be implemented later*/}
+            public void onFailure(Exception e) {
+                callback.result(new ArrayList<>());
+            }
         });
+    }
+
+    private void getFollows(String userID, FollowType followType, FollowCallback callback) {
+       getFollowIDs(userID, followType, ids -> {
+           UserManager userManager = UserManager.getInstance();
+           userManager.getUsers(ids, new UserManager.AuthenticationCallback() {
+               @Override
+               public void onAuthenticated(ArrayList<User> authenticatedUsers) {
+                   callback.onSuccess(authenticatedUsers);
+               }
+
+               @Override
+               public void onAuthenticationFailure(String reason) {
+                   callback.onFailure(new Exception(reason));
+               }
+           });
+       });
     }
 
     /**
@@ -131,22 +135,7 @@ public class FollowHandler {
      * @param callback   the callback to handle the result
      */
     public void getFollowCount(String userID, FollowType followType, FollowCountCallback callback) {
-        Filter getFollowAmount;
-        if (followType == FollowType.Followers) {
-            getFollowAmount = Filter.equalTo("followeeID", userID);
-        } else {
-            getFollowAmount = Filter.equalTo("followerID", userID);
-        }
-
-        followDB.getDocuments(getFollowAmount, Follow.class, new FirestoreDB.DBCallback<>() {
-            @Override
-            public void onSuccess(ArrayList<Follow> result) {
-                callback.result(result.size());
-            }
-
-            @Override
-            public void onFailure(Exception e) {/*can be implemented later*/}
-        });
+        getFollowIDs(userID, followType, ids -> callback.result(ids.size()));
     }
 
     /**

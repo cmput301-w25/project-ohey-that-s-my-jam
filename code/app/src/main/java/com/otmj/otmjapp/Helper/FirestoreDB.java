@@ -28,7 +28,7 @@ public class FirestoreDB<T extends DatabaseObject> {
         /**
          * Called when the Firestore operation is successful.
          *
-         * @param result The list of retrieved {@link Entity} instances.
+         * @param result The list of retrieved objects.
          */
         void onSuccess(ArrayList<T> result);
 
@@ -40,12 +40,20 @@ public class FirestoreDB<T extends DatabaseObject> {
         void onFailure(Exception e);
     }
 
+    public interface DBListener {
+        void onUpdate();
+    }
+
     private final FirebaseFirestore db;
     private final String collection;
 
     public FirestoreDB(String collection) {
         this.collection = collection;
         this.db = FirebaseFirestore.getInstance();
+    }
+
+    public void addCollectionListener(DBListener listener) {
+        db.collection(collection).addSnapshotListener((snapshot, exception) -> listener.onUpdate());
     }
 
     /**

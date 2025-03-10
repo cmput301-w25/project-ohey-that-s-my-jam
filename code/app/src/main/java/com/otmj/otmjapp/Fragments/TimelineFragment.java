@@ -1,6 +1,7 @@
 package com.otmj.otmjapp.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.firebase.firestore.Filter;
@@ -30,7 +32,7 @@ public class TimelineFragment extends Fragment {
 
     private FragmentTimelineBinding binding;
     /** ListView to display the timeline of mood events. */
-    private ArrayList<MoodEvent> allMoodEvents = new ArrayList<>();
+    private final ArrayList<MoodEvent> allMoodEvents = new ArrayList<>();
     /** List of all mood events (current user's events and events from users they follow). */
     private TimelineMoodEventAdapter moodEventAdapter;
 
@@ -58,28 +60,29 @@ public class TimelineFragment extends Fragment {
 
     }
 
-    /**
-     * Populates the timeline with mood events for the current user and the users they follow.
-     */
-    public void populateMoodEvents() {
-        allMoodEvents.clear(); // clear moodEvents so that we don't get duplicates
-
-        UserManager userManager = UserManager.getInstance();
-        User currentUser = userManager.getCurrentUser();
-
-        ArrayList<String> userIds = new ArrayList<>();
-        userIds.add(currentUser.getID());
-
-
-        if (moodEventAdapter != null) {
-            moodEventAdapter.notifyDataSetChanged();
-        }
-    }
-
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        populateMoodEvents();
+        // Populates the timeline with mood events for the current user and the users they follow.
+        UserManager userManager = UserManager.getInstance();
+        User currentUser = userManager.getCurrentUser();
+
+        FollowHandler followHandler = new FollowHandler();
+        followHandler.getFollowIDs(currentUser.getID(), FollowHandler.FollowType.Following, ids ->
+        {
+            ids.add(currentUser.getID()); // Add user's ID to list
+
+            MoodEventsManager moodEventsManager = new MoodEventsManager(ids);
+            moodEventsManager.getMoodEvents().observe(getViewLifecycleOwner(), moodEvents -> {
+                allMoodEvents.clear();
+                allMoodEvents.addAll(moodEvents);
+                Log.d("timeline", "Mood events updated");
+
+                if (moodEventAdapter != null) {
+                    moodEventAdapter.notifyDataSetChanged();
+                }
+            });
+        });
     }
 
     @Override
