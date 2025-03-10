@@ -11,7 +11,7 @@ public abstract class DatabaseObject implements Serializable {
     @DocumentId
     private String ID;
 
-    public DatabaseObject() {}
+    public DatabaseObject() { }
 
     public DatabaseObject(String ID) {
         this.ID = ID;

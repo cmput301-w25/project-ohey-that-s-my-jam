@@ -1,5 +1,7 @@
 package com.otmj.otmjapp.Helper;
 
+import android.util.Log;
+
 import com.google.firebase.firestore.Filter;
 
 import com.otmj.otmjapp.Models.Follow;
@@ -96,6 +98,12 @@ public class FollowHandler {
                     }
                 }
 
+                // check if the list of IDs is empty
+                if(ids.isEmpty()) {
+                    callback.onSuccess(new ArrayList<>()); // return an empty list
+                    return;
+                }
+
                 UserManager userManager = UserManager.getInstance();
                 // Then get the users
                 userManager.getUsers(ids, new UserManager.AuthenticationCallback() {
@@ -141,11 +149,9 @@ public class FollowHandler {
         });
     }
 
-
     /**
      * Fetches the list of followers for the specified user.
      *
-     * @param userID        the ID of the user whose followers are being fetched
      * @param callback      the callback to handle the result, passing the list of followers or an error
      */
     public void fetchFollowers(String userID, FollowCallback callback) {
@@ -155,7 +161,6 @@ public class FollowHandler {
     /**
      * Fetches the list of user the specified user is following
      *
-     * @param userID        the ID of the user whose followers are being fetched
      * @param callback      the callback to handle the result, passing the list of followers or an error
      */
     public void fetchFollowing(String userID, FollowCallback callback) {
