@@ -62,6 +62,11 @@ public class TimelineFragment extends Fragment {
             NavHostFragment.findNavController(TimelineFragment.this).navigate(toDetails);
         }));
 
+        binding.filterButton.setOnClickListener(v -> {
+            FilterFragment filterPopup = new FilterFragment();
+            filterPopup.show(getParentFragmentManager(), null);
+        });
+
         return binding.getRoot();
     }
 
