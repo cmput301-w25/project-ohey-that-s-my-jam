@@ -118,6 +118,7 @@ public class FirestoreDB<T extends DatabaseObject> {
 
         collectionRef.add(object).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                object.setID(task.getResult().getId());
                 if (callback != null) {
                     callback.onSuccess(new ArrayList<>(List.of(object)));
                 }
