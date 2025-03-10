@@ -35,7 +35,9 @@
             android:text="@string/recent_week_filter_text"
             app:chipCornerRadius="10dp"
             app:chipMinHeight="24dp"
-            app:ensureMinTouchTargetSize="false"/>
+            app:ensureMinTouchTargetSize="false"
+            android:checkable="true"
+            app:singleSelection="true"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/anger_chip"
@@ -48,7 +50,10 @@
             app:chipStrokeColor="#00FF0004"
             tools:fontFamily="sans-serif-medium"
             app:chipMinHeight="24dp"
-            app:ensureMinTouchTargetSize="false"/>
+            app:ensureMinTouchTargetSize="false"
+            android:checkable="true"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/disgust_chip"
@@ -61,7 +66,10 @@
             app:chipStrokeColor="#0009851D"
             tools:fontFamily="sans-serif-medium"
             app:chipMinHeight="24dp"
-            app:ensureMinTouchTargetSize="false"/>
+            app:ensureMinTouchTargetSize="false"
+            android:checkable="true"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/fear_chip"
@@ -74,7 +82,10 @@
             app:chipStrokeColor="#00673AB7"
             tools:fontFamily="sans-serif-medium"
             app:chipMinHeight="24dp"
-            app:ensureMinTouchTargetSize="false"/>
+            app:ensureMinTouchTargetSize="false"
+            android:checkable="true"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/sad_chip"
@@ -87,7 +98,10 @@
             app:chipStrokeColor="#003F51B5"
             tools:fontFamily="sans-serif-medium"
             app:chipMinHeight="24dp"
-            app:ensureMinTouchTargetSize="false"/>
+            app:ensureMinTouchTargetSize="false"
+            android:checkable="true"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/confuse_chip"
@@ -101,7 +115,10 @@
             app:chipStrokeColor="#00FFEB3B"
             tools:fontFamily="sans-serif-condensed"
             app:chipMinHeight="24dp"
-            app:ensureMinTouchTargetSize="false"/>
+            app:ensureMinTouchTargetSize="false"
+            android:checkable="true"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/shame_chip"
@@ -114,7 +131,10 @@
             app:chipStrokeColor="#00964B00"
             tools:fontFamily="sans-serif-medium"
             app:chipMinHeight="24dp"
-            app:ensureMinTouchTargetSize="false"/>
+            app:ensureMinTouchTargetSize="false"
+            android:checkable="true"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/happy_chip"
@@ -127,7 +147,10 @@
             app:chipStrokeColor="#00FF1D89"
             tools:fontFamily="sans-serif-medium"
             app:chipMinHeight="24dp"
-            app:ensureMinTouchTargetSize="false"/>
+            app:ensureMinTouchTargetSize="false"
+            android:checkable="true"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/surprise_chip"
@@ -140,7 +163,10 @@
             app:chipStrokeColor="#00FF1D89"
             tools:fontFamily="sans-serif-medium"
             app:chipMinHeight="24dp"
-            app:ensureMinTouchTargetSize="false"/>
+            app:ensureMinTouchTargetSize="false"
+            android:checkable="true"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"/>
     </com.google.android.material.chip.ChipGroup>
 
     <com.google.android.material.textfield.TextInputLayout
