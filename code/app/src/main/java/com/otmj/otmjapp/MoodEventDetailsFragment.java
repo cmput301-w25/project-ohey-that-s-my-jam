@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.otmj.otmjapp.Models.MoodEvent;
+import com.otmj.otmjapp.Models.SocialSituation;
 
 public class MoodEventDetailsFragment extends Fragment {
 
@@ -52,22 +53,15 @@ public class MoodEventDetailsFragment extends Fragment {
         }
 
         // Handle optional social situation
-        String socialSituation = event.getSocialSituation();
-        if (socialSituation != null) {
-            switch (socialSituation) {
-                case "Alone":
-                    combined += String.format(" while %s", socialSituation);
-                    break;
-                case "Crowd":
-                    combined += String.format(" while in a %s", socialSituation);
-                    break;
-                case "2+":
-                    combined += String.format(" with %s others", socialSituation);
-                    break;
-                default:
-                    combined += String.format(" with %s person", socialSituation);
-                    break;
-            }
+        SocialSituation socialSituation = event.getSocialSituation();
+        if (socialSituation == SocialSituation.Alone) {
+            combined += String.format(" while %s", socialSituation);
+        } else if (socialSituation == SocialSituation.With_A_Crowd) {
+            combined += String.format(" while in a %s", socialSituation);
+        } else if (socialSituation == SocialSituation.With_2_Others) {
+            combined += String.format(" with %s others", socialSituation);
+        } else {
+            combined += String.format(" with %s person", socialSituation);
         }
 
         // Convert text to SpannableString for emoji replacement

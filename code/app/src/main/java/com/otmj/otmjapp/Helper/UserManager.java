@@ -2,10 +2,10 @@ package com.otmj.otmjapp.Helper;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.Filter;
-import com.otmj.otmjapp.Models.DatabaseObject;
-import com.otmj.otmjapp.Models.Entity;
 import com.otmj.otmjapp.Models.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +32,11 @@ public class UserManager {
 
     // Singleton pattern
     private static final UserManager instance = new UserManager();
-    private final FirestoreDB db;
+    private final FirestoreDB<User> db;
     private User currentUser = null;
 
     private UserManager() {
-        this.db = new FirestoreDB(FirestoreCollections.Users.name);
+        this.db = new FirestoreDB<>(FirestoreCollections.Users.name);
     }
 
     public static UserManager getInstance() {
@@ -52,17 +52,15 @@ public class UserManager {
      *                        authentication success and failure
      */
 
-    public void login(String enteredUsername, String enteredPassword, AuthenticationCallback callback) {
-        Log.d("user", enteredUsername);
-
+    public void login(String enteredUsername,
+                      String enteredPassword,
+                      @NonNull AuthenticationCallback callback) {
         Filter byUsername = Filter.equalTo("username", enteredUsername);
-        db.getDocuments(byUsername, new FirestoreDB.DBCallback() {
+        db.getDocuments(byUsername, User.class, new FirestoreDB.DBCallback<>() {
             @Override
-            public void onSuccess(ArrayList<Entity> result) {
+            public void onSuccess(ArrayList<User> result) {
                 if (!result.isEmpty()) {
-                    Entity e = result.get(0);
-                    User u = User.fromMap(e.objectMap);
-                    u.setID(e.ID);
+                    User u = result.get(0);
 
                     if (u.isPassword(enteredPassword)) {
                         currentUser = u;
@@ -87,45 +85,48 @@ public class UserManager {
      * Adds a new user to the database and makes them the current user.
      * @param user User to add
      */
-    public void signup(User user, AuthenticationCallback callback) {
-        db.addDocument(user, new FirestoreDB.DBCallback() {
-            @Override
-            public void onSuccess(ArrayList<Entity> result) {
-                if (!result.isEmpty()) {
-                    Entity e = result.get(0);
-                    User u = User.fromMap(e.objectMap);
-                    u.setID(e.ID);
+    public void signup(User user, @NonNull AuthenticationCallback callback) {
+        // Check that username doesn't already exist
+        checkIfUserExists(user, correct -> {
+            // If user doesn't exist
+            if (!correct) {
+                db.addDocument(user, new FirestoreDB.DBCallback<>() {
+                    @Override
+                    public void onSuccess(ArrayList<User> result) {
+                        if (!result.isEmpty()) {
+                            User u = result.get(0);
 
-                    currentUser = u;
-                    callback.onAuthenticated(new ArrayList<>(List.of(u)));
-                } else {
-                    callback.onAuthenticationFailure("Unable to access server");
-                }
-            }
+                            currentUser = u;
+                            callback.onAuthenticated(new ArrayList<>(List.of(u)));
+                        } else {
+                            callback.onAuthenticationFailure("Unable to access server");
+                        }
+                    }
 
-            @Override
-            public void onFailure(Exception e) {
-                callback.onAuthenticationFailure(e.getMessage());
+                    @Override
+                    public void onFailure(Exception e) {
+                        callback.onAuthenticationFailure(e.getMessage());
+                    }
+                });
+            } else {
+                callback.onAuthenticationFailure("User already exists");
             }
         });
     }
 
-    public void getUsers(ArrayList<String> userIDs, AuthenticationCallback callback) {
+    public void getUsers(ArrayList<String> userIDs, @NonNull AuthenticationCallback callback) {
+        if (userIDs == null || userIDs.isEmpty()) {
+            callback.onAuthenticated(new ArrayList<>()); // Return an empty list
+            return;
+        }
+
         Filter byID = Filter.inArray(FieldPath.documentId(), userIDs);
-        db.getDocuments(byID, new FirestoreDB.DBCallback() {
+        db.getDocuments(byID, User.class, new FirestoreDB.DBCallback<>() {
             @Override
-            public void onSuccess(ArrayList<Entity> result) {
+            public void onSuccess(ArrayList<User> result) {
                 // If the number of users returned matches the number of IDs
-                if (result.size() == userIDs.size()) {
-                    ArrayList<User> users = new ArrayList<>();
-                    for (Entity e : result) {
-                        User u = User.fromMap(e.objectMap);
-                        u.setID(e.ID);
-
-                        users.add(u);
-                    }
-
-                    callback.onAuthenticated(users);
+                if (result.size() == userIDs.size() && !result.isEmpty()) {
+                    callback.onAuthenticated(result);
                 } else {
                     callback.onAuthenticationFailure("Users not found");
                 }
@@ -139,16 +140,20 @@ public class UserManager {
     }
 
     /**
-     * Checks if a given username is already in use.
+     * Checks if a given user exists in DB
      *
-     * @param enteredUsername the username to check for availability
+     * @param user            The user's details
      * @param callback        Handles database response
      */
-    public void checkUsername(String enteredUsername, CheckCallback callback) {
-        Filter byUsername = Filter.equalTo("username", enteredUsername);
-        db.getDocuments(byUsername, new FirestoreDB.DBCallback() {
+    public void checkIfUserExists(User user, CheckCallback callback) {
+        Filter byUsernameOrEmail = Filter.or(
+                Filter.equalTo("username", user.getUsername()),
+                Filter.equalTo("emailAddress", user.getEmailAddress())
+        );
+
+        db.getDocuments(byUsernameOrEmail, User.class, new FirestoreDB.DBCallback<>() {
             @Override
-            public void onSuccess(ArrayList<Entity> result) {
+            public void onSuccess(ArrayList<User> result) {
                 boolean userExists = !result.isEmpty();
                 callback.answer(userExists);
             }

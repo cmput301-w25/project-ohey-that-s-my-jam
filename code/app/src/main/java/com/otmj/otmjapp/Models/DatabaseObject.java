@@ -1,15 +1,17 @@
 package com.otmj.otmjapp.Models;
 
+import com.google.firebase.firestore.DocumentId;
+
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * Wrapper class for objects that are retrieved from database
  */
 public abstract class DatabaseObject implements Serializable {
+    @DocumentId
     private String ID;
 
-    public DatabaseObject() {}
+    public DatabaseObject() { }
 
     public DatabaseObject(String ID) {
         this.ID = ID;
@@ -22,6 +24,4 @@ public abstract class DatabaseObject implements Serializable {
     public String getID() {
         return this.ID;
     }
-
-    public abstract Map<String, Object> toMap();
 }

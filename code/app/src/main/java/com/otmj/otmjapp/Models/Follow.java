@@ -11,6 +11,12 @@ public class Follow extends DatabaseObject {
     private final String followerID;
     private final String followeeID;
 
+    // Need an empty constructor for Firebase
+    Follow() {
+        this.followerID = "";
+        this.followeeID = "";
+    }
+
     /**
      * constructor for follow class
      * @param followerID
@@ -39,23 +45,5 @@ public class Follow extends DatabaseObject {
      */
     public String getFolloweeID() {
         return followeeID;
-    }
-
-    /**
-     * This static method creates a Follow from a map.
-     */
-    public static Follow fromMap(Map<String, Object> map){
-        return new Follow(
-                (String) map.get("followerID"),
-                (String) map.get("followeeID")
-        );
-    }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return Map.of(
-                "followerID", followerID,
-                "followeeID", followeeID
-                );
     }
 }

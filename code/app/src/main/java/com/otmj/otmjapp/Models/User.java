@@ -15,6 +15,9 @@ public class User extends DatabaseObject {
     private String password;
     private String profilePictureLink;
 
+    // Need an empty constructor for Firebase
+    User() {}
+
     /**
      * User class constructor
      * @param username
@@ -119,29 +122,29 @@ public class User extends DatabaseObject {
     public void setProfilePictureLink(String profilePictureLink) {
         this.profilePictureLink = profilePictureLink;
     }
-
-    /**
-     * User's class implementation. This static method creates a User
-     * from a map.
-     */
-    public static User fromMap(Map<String, Object> map) {
-        return new User(
-                (String) map.get("username"),
-                (String) map.get("emailAddress"),
-                (String) map.get("password"),
-                (String) map.get("profilePictureLink")
-        );
-    }
-
-    @Override
-    public Map<String, Object> toMap() {
-        return Map.of(
-            "username", username,
-            "emailAddress", emailAddress,
-            "password", password,
-            "profilePictureLink", profilePictureLink
-        );
-    }
+//
+//    /**
+//     * User's class implementation. This static method creates a User
+//     * from a map.
+//     */
+//    public static User fromMap(Map<String, Object> map) {
+//        return new User(
+//                (String) map.get("username"),
+//                (String) map.get("emailAddress"),
+//                (String) map.get("password"),
+//                (String) map.get("profilePictureLink")
+//        );
+//    }
+//
+//    @Override
+//    public Map<String, Object> toMap() {
+//        return Map.of(
+//            "username", username,
+//            "emailAddress", emailAddress,
+//            "password", password,
+//            "profilePictureLink", profilePictureLink
+//        );
+//    }
 
     /**
      * return the string of username

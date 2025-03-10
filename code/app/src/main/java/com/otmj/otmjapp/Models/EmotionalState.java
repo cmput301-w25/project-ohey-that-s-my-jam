@@ -18,7 +18,7 @@ public enum EmotionalState implements Serializable {
     Happy(R.drawable.happy, R.color.happy),
     Disgust(R.drawable.disgust, R.color.disgust),
     Sad(R.drawable.sad, R.color.sad),
-    Confusion(R.drawable.confuse, R.color.confuse);
+    Confuse(R.drawable.confuse, R.color.confuse);
 
     public final int emoji;
     public final int color;
@@ -46,8 +46,32 @@ public enum EmotionalState implements Serializable {
             }
         }
 
-
         throw new InvalidParameterException("Only use colors defined in 'colors.xml'");
+    }
+
+    public static EmotionalState fromString(String text) {
+        for (EmotionalState e : values()) {
+            if (text.equalsIgnoreCase(e.name())) {
+                return e;
+            }
+        }
+
+        throw new InvalidParameterException("Unknown text string");
+    }
+
+    /**
+     * Create emotional state from mood
+     * @param mood
+     * @return
+     */
+    public static EmotionalState fromMood(String mood){
+        for (EmotionalState e : values()) {
+            if (mood.equals(e.name())) {
+                return e;
+            }
+        }
+
+        throw new InvalidParameterException("Only use mood defined in user stories");
     }
 
     /**
@@ -58,9 +82,17 @@ public enum EmotionalState implements Serializable {
         return name();
     }
 
+    /**
+     * return emoji
+     * @return
+     */
+    public int getEmoji(){
+        return this.emoji;
+    }
+
     @NonNull
     @Override
     public String toString() {
-        return name().toLowerCase() + " " + emoji;
+        return name().toUpperCase();
     }
 }

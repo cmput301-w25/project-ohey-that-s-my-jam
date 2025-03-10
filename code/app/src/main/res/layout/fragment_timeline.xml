@@ -68,7 +68,7 @@
             android:fillViewport="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </LinearLayout>
-
+    <!---
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_mood_event_button"
         android:layout_width="62dp"
@@ -97,5 +97,6 @@
         app:itemIconTint="@color/black"
         app:labelVisibilityMode="unlabeled"
         app:menu="@menu/for_you_bottom_nav_menu" />
+    -->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
