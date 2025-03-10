@@ -69,7 +69,7 @@ public class SignupFragment extends Fragment {
             email.setError("Invalid email address");
             return false;
         } else if (passwordText.isBlank()) {
-            password.setError("This filed cannot be blank");
+            password.setError("This field cannot be blank");
             return false;
         } else if (passwordText.length() < 8) {
             password.setError("Password must be at least 8 characters long");

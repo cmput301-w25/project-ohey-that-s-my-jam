@@ -54,7 +54,7 @@ public class LoginFragment extends Fragment {
             username.setError("This field cannot be blank");
             return false;
         } else if (passwordText.isBlank()) {
-            password.setError("This filed cannot be blank");
+            password.setError("This field cannot be blank");
             return false;
         }
 
