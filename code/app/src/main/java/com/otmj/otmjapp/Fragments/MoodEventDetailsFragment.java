@@ -1,7 +1,15 @@
-package com.otmj.otmjapp.Adapters;
+package com.otmj.otmjapp.Fragments;
 
-import android.content.Context;
+import androidx.core.content.ContextCompat;
+
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -9,70 +17,63 @@ import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-
+import com.bumptech.glide.Glide;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
-import com.otmj.otmjapp.R;
+import com.otmj.otmjapp.databinding.FragmentMoodEventDetailsBinding;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Locale;
+public class MoodEventDetailsFragment extends Fragment {
 
+    private FragmentMoodEventDetailsBinding binding;
 
-public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
-
-    public TimelineMoodEventAdapter(@NonNull Context context, @NonNull ArrayList<MoodEvent> objects) {
-        super(context,0, objects);
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        binding = FragmentMoodEventDetailsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View view = convertView;
-        if (view == null) {
-            view = LayoutInflater.from(getContext()).inflate(R.layout.timeline_mood_event, parent, false);
-        }
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        MoodEvent m = getItem(position);
-        assert m != null;
+        // Initialize UI elements
+        ImageView profileImage = binding.detailsProfilePicture;
+        TextView usernameText = binding.detailsUsername;
+        TextView eventTimestampText = binding.detailsEventTimestamp;
+        ImageView moodEventImage = binding.detailsMoodImage;
+        TextView eventDescription = binding.detailsEventDescription;
+        TextView eventLocationText = binding.detailsEventLocation;
 
-        TextView usernameText = view.findViewById(R.id.timeline_mood_event_username);
-        usernameText.setText(m.getUser().getUsername());
+        // Get the passed arguments using Safe Args
+        MoodEventDetailsFragmentArgs args = MoodEventDetailsFragmentArgs.fromBundle(getArguments());
+        MoodEvent moodEvent = args.getMoodEvent();
+        assert moodEvent != null;
 
-        TextView description = view.findViewById(R.id.timeline_mood_event_desc);
-        setMoodEventDescription(description, m);
+        // set the username text
+         usernameText.setText(moodEvent.getUser().getUsername());
 
-        // Change date string depending on how far away the event occurred
-        // TODO: Fix
-//        String date;
-//        Duration diff = Duration.between(LocalDateTime.now(), m.getCreatedDate());
-//        if (diff.toDays() > 14) {
-//            date = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.CANADA)
-//                    .format(m.getCreatedDate());
-//        } else if (diff.toDays() > 7) {
-//            date = "two weeks ago";
-//        } else if (diff.toDays() > 1) {
-//            date = "less than a week ago";
-//        } else if (diff.toHours() > 1) {
-//            date = diff.toHours() + " hrs ago";
-//        } else {
-//            date = "recently";
+        // load profile image
+//        if (moodEvent.getUser().getProfilePictureLink() != null) {
+            // Glide.with(requireContext()).load(event.user.getProfilePictureLink()).into(profileImage);
 //        }
-//
-//        TextView createDate = view.findViewById(R.id.timeline_mood_event_date);
-//        createDate.setText(date);
 
-        // TODO: Set location
+        // set time stamp text
+        eventTimestampText.setText(moodEvent.getCreatedDate().toString());
 
-        return view;
+        // set all the available text of a mood event
+        setMoodEventDescription(eventDescription, moodEvent);
+
+        // set location text
+//        eventLocationText.setText(moodEvent.getLocation().toString());
+
+        // load the reason why image (I'm not sure if this is right yet)
+        if (moodEvent.getImageLink() != null) {
+            Glide.with(requireContext()).load(moodEvent.getImageLink()).into(moodEventImage);
+        }
     }
 
     public void setMoodEventDescription(TextView textView, MoodEvent event) {
@@ -123,5 +124,4 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         // Set the final SpannableString to TextView
         textView.setText(spannableString);
     }
-
 }

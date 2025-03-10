@@ -1,4 +1,4 @@
-package com.otmj.otmjapp.Controllers;
+package com.otmj.otmjapp.Helper;
 
 import android.graphics.Bitmap;
 
@@ -6,10 +6,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.firestore.Filter;
-import com.otmj.otmjapp.Helper.FirestoreCollections;
-import com.otmj.otmjapp.Helper.FirestoreDB;
-import com.otmj.otmjapp.Helper.MoodHistoryFilter;
-import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.User;
 
@@ -23,7 +19,7 @@ import java.util.List;
  * data from a database happens asynchronously, we use LiveData
  * to be able to observe when its value is set.
  */
-public class MoodEventController {
+public class MoodEventsManager {
 
     public interface ImageDownloadCallback {
         public void onSuccess(Bitmap image);
@@ -42,12 +38,15 @@ public class MoodEventController {
      * Observable object that callers can observe to get notified of changes
      */
     private final MutableLiveData<ArrayList<MoodEvent>> moodHistory;
+    private MoodHistoryFilter lastFilter = null;
 
-    public MoodEventController(List<String> userIDs) {
+    public MoodEventsManager(List<String> userIDs) {
         assert !userIDs.isEmpty();
 
         this.userIDs = new ArrayList<>(userIDs);
         this.db = new FirestoreDB<>(FirestoreCollections.MoodEvents.name);
+
+        db.addCollectionListener(() -> getMoodEvents(lastFilter));
 
         moodHistory = new MutableLiveData<>(new ArrayList<>());
         getMoodEvents(null); // Populate mood history
@@ -60,7 +59,13 @@ public class MoodEventController {
      */
     public LiveData<ArrayList<MoodEvent>> getMoodEvents() {
         // Assume that mood history has been populated (see constructor)
-        return moodHistory;
+        if (lastFilter == null) {
+            return moodHistory;
+        } else {
+            // If previously getMoodEvents was called with a filter,
+            // we need to get all mood events again
+            return getMoodEvents(null);
+        }
     }
 
     /**
@@ -85,6 +90,8 @@ public class MoodEventController {
                 db.getDocuments(filter, MoodEvent.class, new FirestoreDB.DBCallback<>() {
                     @Override
                     public void onSuccess(ArrayList<MoodEvent> result) {
+                        lastFilter = customFilter;
+
                         ArrayList<MoodEvent> moodEvents = new ArrayList<>();
                         // For each mood event
                         for (MoodEvent moodEvent : result) {
@@ -149,12 +156,6 @@ public class MoodEventController {
 
     public void updateMoodEvent(MoodEvent moodEvent) {
         db.updateDocument(moodEvent);
-
-        ArrayList<MoodEvent> moodEvents = moodHistory.getValue();
-        if (moodEvents != null) {
-            int index = moodEvents.indexOf(moodEvent);
-            moodEvents.set(index, moodEvent);
-        }
     }
 
     /**

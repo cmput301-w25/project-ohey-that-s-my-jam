@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="2"
-            android:text="@string/mood_event_description"
+            android:text="@string/mood_event_example_with_full_details"
             android:textAlignment="textStart"
             android:textSize="16sp" />
 

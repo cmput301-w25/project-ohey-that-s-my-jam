@@ -1,5 +1,7 @@
 package com.otmj.otmjapp.Helper;
 
+import android.util.Log;
+
 import com.google.firebase.firestore.Filter;
 
 import com.otmj.otmjapp.Models.Follow;
@@ -25,6 +27,10 @@ public class FollowHandler {
          * @param amount the number of followers or following
          */
         void result(int amount);
+    }
+
+    public interface FollowIDCallback {
+        void result(ArrayList<String> ids);
     }
 
     public interface FollowCallback {
@@ -75,7 +81,7 @@ public class FollowHandler {
         });
     }
 
-    private void getFollows(String userID, FollowType followType, FollowCallback callback) {
+    public void getFollowIDs(String userID, FollowType followType, FollowIDCallback callback) {
         Filter filter;
         if (followType == FollowType.Followers) {
             filter = Filter.equalTo("followeeID", userID);
@@ -83,7 +89,6 @@ public class FollowHandler {
             filter = Filter.equalTo("followerID", userID);
         }
 
-        // First get the follows
         followDB.getDocuments(filter, Follow.class, new FirestoreDB.DBCallback<>() {
             @Override
             public void onSuccess(ArrayList<Follow> result) {
@@ -96,24 +101,31 @@ public class FollowHandler {
                     }
                 }
 
-                UserManager userManager = UserManager.getInstance();
-                // Then get the users
-                userManager.getUsers(ids, new UserManager.AuthenticationCallback() {
-                    @Override
-                    public void onAuthenticated(ArrayList<User> authenticatedUsers) {
-                        callback.onSuccess(authenticatedUsers);
-                    }
-
-                    @Override
-                    public void onAuthenticationFailure(String reason) {
-                        callback.onFailure(new Exception(reason));
-                    }
-                });
+                callback.result(ids);
             }
 
             @Override
-            public void onFailure(Exception e) {/*can be implemented later*/}
+            public void onFailure(Exception e) {
+                callback.result(new ArrayList<>());
+            }
         });
+    }
+
+    private void getFollows(String userID, FollowType followType, FollowCallback callback) {
+       getFollowIDs(userID, followType, ids -> {
+           UserManager userManager = UserManager.getInstance();
+           userManager.getUsers(ids, new UserManager.AuthenticationCallback() {
+               @Override
+               public void onAuthenticated(ArrayList<User> authenticatedUsers) {
+                   callback.onSuccess(authenticatedUsers);
+               }
+
+               @Override
+               public void onAuthenticationFailure(String reason) {
+                   callback.onFailure(new Exception(reason));
+               }
+           });
+       });
     }
 
     /**
@@ -123,29 +135,12 @@ public class FollowHandler {
      * @param callback   the callback to handle the result
      */
     public void getFollowCount(String userID, FollowType followType, FollowCountCallback callback) {
-        Filter getFollowAmount;
-        if (followType == FollowType.Followers) {
-            getFollowAmount = Filter.equalTo("followeeID", userID);
-        } else {
-            getFollowAmount = Filter.equalTo("followerID", userID);
-        }
-
-        followDB.getDocuments(getFollowAmount, Follow.class, new FirestoreDB.DBCallback<>() {
-            @Override
-            public void onSuccess(ArrayList<Follow> result) {
-                callback.result(result.size());
-            }
-
-            @Override
-            public void onFailure(Exception e) {/*can be implemented later*/}
-        });
+        getFollowIDs(userID, followType, ids -> callback.result(ids.size()));
     }
-
 
     /**
      * Fetches the list of followers for the specified user.
      *
-     * @param userID        the ID of the user whose followers are being fetched
      * @param callback      the callback to handle the result, passing the list of followers or an error
      */
     public void fetchFollowers(String userID, FollowCallback callback) {
@@ -155,7 +150,6 @@ public class FollowHandler {
     /**
      * Fetches the list of user the specified user is following
      *
-     * @param userID        the ID of the user whose followers are being fetched
      * @param callback      the callback to handle the result, passing the list of followers or an error
      */
     public void fetchFollowing(String userID, FollowCallback callback) {

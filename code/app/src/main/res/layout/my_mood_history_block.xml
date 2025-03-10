@@ -28,7 +28,7 @@
             android:layout_weight="1" />
 
         <ImageButton
-            android:id="@+id/edit_event"
+            android:id="@+id/my_mood_edit_button"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:background="?attr/selectableItemBackgroundBorderless"

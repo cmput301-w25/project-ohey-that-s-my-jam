@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 
-import com.otmj.otmjapp.CircleTransform;
+import com.otmj.otmjapp.Helper.CircleTransform;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 import java.util.ArrayList;
