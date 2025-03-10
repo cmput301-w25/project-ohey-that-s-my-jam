@@ -6,12 +6,14 @@ import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.otmj.otmjapp.Helper.FirestoreCollections;
 import com.otmj.otmjapp.Helper.FirestoreDB;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.User;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,11 +27,20 @@ public class UserManagerTest {
     private UserManager userManager;
     private FirestoreDB<User> firestoreDB;
 
-    @Before
+    @BeforeClass
     public void setUp() {
-        // Initialize FirestoreDB with the emulator
+        String androidLocalhost = "10.0.2.2";
+
+        int portNumber = 8080;
+        FirebaseFirestore.getInstance().useEmulator(androidLocalhost, portNumber);
+
         firestoreDB = new FirestoreDB<>(FirestoreCollections.Users.name);
         userManager = new UserManager(firestoreDB); // Use the constructor that accepts FirestoreDB
+    }
+
+    @Before
+    public void addDummyUser() {
+
     }
 
     @After
@@ -50,5 +61,6 @@ public class UserManagerTest {
 
     @Test
     public void testLoginSuccess() {
+
     }
 }
