@@ -5,6 +5,7 @@
     android:id="@+id/app_nav_graph"
     app:startDestination="@id/timelineFragment">
 
+    <!-- Timeline Fragment -->
     <fragment
         android:id="@+id/timelineFragment"
         android:name="com.otmj.otmjapp.Fragments.TimelineFragment"
@@ -17,6 +18,8 @@
             android:id="@+id/action_timelineFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />
     </fragment>
+
+    <!-- Mood Event Details Fragment -->
     <fragment
         android:id="@+id/moodEventDetailsFragment"
         android:name="com.otmj.otmjapp.MoodEventDetailsFragment"
@@ -28,12 +31,23 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+
+    <!-- User Profile Fragment -->
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.otmj.otmjapp.Fragments.UserProfileFragment"
         android:label="fragment_UserProfile"
-        tools:layout="@layout/my_profile" />
+        tools:layout="@layout/my_profile">
+        <!-- Action to navigate to Followers List -->
+        <action
+            android:id="@+id/action_userProfileFragment_to_followersListFragment"
+            app:destination="@id/followersListFragment" />
+        <action
+            android:id="@+id/action_userProfileFragment_to_followingListFragment"
+            app:destination="@id/followersListFragment" />
+    </fragment>
 
+    <!-- Followers List Fragment -->
     <fragment
         android:id="@+id/followersListFragment"
         android:name="com.otmj.otmjapp.Fragments.FollowersListFragment"

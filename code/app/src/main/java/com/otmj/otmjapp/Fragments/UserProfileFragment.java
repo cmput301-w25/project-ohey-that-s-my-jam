@@ -11,12 +11,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.navigation.Navigation;
 
 import com.google.firebase.Timestamp;
 import com.otmj.otmjapp.Adapters.UserProfilePageMoodEventAdapter;
@@ -58,9 +60,28 @@ public class UserProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Disable the buttons.
-        binding.followersButton.setClickable(false);
-        binding.followingButton.setClickable(false);
+        // Enable the buttons
+        binding.followersButton.setClickable(true);
+        binding.followingButton.setClickable(true);
+
+        // Navigate to Followers List when Followers Button is clicked
+        binding.followersButton.setOnClickListener(v -> {
+            Bundle args = new Bundle();
+            args.putString("buttonClicked", "followers");  // Add an argument indicating which button was clicked
+
+            // Navigate to Followers List using Navigation Component
+            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followersListFragment, args);
+        });
+
+        // Navigate to Followers List when Followers Button is clicked
+        binding.followingButton.setOnClickListener(v -> {
+            Bundle args = new Bundle();
+            args.putString("buttonClicked", "following");  // Add an argument indicating which button was clicked
+
+            // Navigate to Followers List using Navigation Component
+            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followersListFragment, args);
+        });
+
 
         // Get UserID
         UserManager user_manager = UserManager.getInstance();
