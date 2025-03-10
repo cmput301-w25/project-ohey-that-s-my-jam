@@ -1,7 +1,5 @@
 package com.otmj.otmjapp.Helper;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.FieldPath;
@@ -37,6 +35,10 @@ public class UserManager {
 
     private UserManager() {
         this.db = new FirestoreDB<>(FirestoreCollections.Users.name);
+    }
+
+    public UserManager(FirestoreDB<User> db) { // Constructor with custom FirestoreDB instance for testing
+        this.db = db;
     }
 
     public static UserManager getInstance() {

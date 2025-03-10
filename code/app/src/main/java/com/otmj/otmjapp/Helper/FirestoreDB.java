@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.otmj.otmjapp.Models.DatabaseObject;
+import com.otmj.otmjapp.Models.MoodEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,10 +51,14 @@ public class FirestoreDB<T extends DatabaseObject> {
 
     private final FirebaseFirestore db;
     private final String collection;
-
     public FirestoreDB(String collection) {
         this.collection = collection;
         this.db = FirebaseFirestore.getInstance();
+    }
+
+    public FirestoreDB(String collection, FirebaseFirestore db) { // Constructor with custom Firestore instance for testing
+        this.collection = collection;
+        this.db = db;
     }
 
     public void addCollectionListener(DBListener listener) {
