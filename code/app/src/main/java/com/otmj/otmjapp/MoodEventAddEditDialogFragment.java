@@ -76,6 +76,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         if (tag != null && tag.equals("edit") && bundle != null) {
             moodEvent = (MoodEvent) bundle.getSerializable("moodEvent");
             if (moodEvent != null) {
+                submitPostButton.setText(R.string.edit_button_text);
                 setSelectedChip(moodChipGroup, moodEvent.getEmotionalState());
                 if (moodEvent.getReason() != null) {
                     reasonWhyInputText.setText(moodEvent.getReason());
