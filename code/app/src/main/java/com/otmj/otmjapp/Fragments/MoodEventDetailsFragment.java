@@ -12,6 +12,7 @@ import androidx.navigation.Navigation;
 
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -108,6 +109,16 @@ public class MoodEventDetailsFragment extends Fragment {
 
             // Replace the placeholder emoji (😊) with the actual drawable
             spannableString.setSpan(imageSpan, emojiPosition, emojiPosition + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        // Get color dynamically from EmotionalState
+        int emotionColor = ContextCompat.getColor(textView.getContext(), event.getEmotionalState().color);
+
+        // Find the position of the emotion word (e.g., "Fear")
+        int emotionStart = combined.indexOf(event.getEmotionalState().getDescription());
+        if (emotionStart != -1) {
+            int emotionEnd = emotionStart + event.getEmotionalState().getDescription().length();
+            spannableString.setSpan(new ForegroundColorSpan(emotionColor), emotionStart, emotionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         // Set the final SpannableString to TextView
