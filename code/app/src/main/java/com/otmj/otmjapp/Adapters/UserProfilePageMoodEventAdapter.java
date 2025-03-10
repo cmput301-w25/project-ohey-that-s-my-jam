@@ -1,6 +1,9 @@
 package com.otmj.otmjapp.Adapters;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +15,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.otmj.otmjapp.Fragments.MoodEventAddEditDialogFragment;
+import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.R;
 
@@ -53,7 +58,18 @@ public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         textview_emotionalState.setText(m.getEmotionalState().getDescription());
         image_emoji.setImageResource(m.getEmotionalState().getEmoji());
         textView_date.setText(m.getCreatedDate().toString());
-        textView_feeling.setText("Feeling: " + Objects.toString(m.getEmotionalState().getDescription(), ""));
+        EmotionalState emotionalState = m.getEmotionalState();
+        SpannableString spannable = new SpannableString("Feeling: " + emotionalState.toString());
+        spannable.setSpan(
+                new ForegroundColorSpan(ContextCompat.getColor(getContext(), emotionalState.color)),
+                9, // Start index (after "Feeling: ")
+                spannable.length(), // End index
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+
+        textView_feeling.setText(spannable);
+
+
         textView_reason.setText("Reason: " + Objects.toString(m.getReason(), ""));
         textView_trigger.setText("Trigger: " + Objects.toString(m.getTrigger(), ""));
         if (m.getSocialSituation() != null) {
