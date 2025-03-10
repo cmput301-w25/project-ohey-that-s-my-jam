@@ -10,31 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/blue_nav_bar"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageButton
-            android:id="@+id/close_list_view_button"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="end"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/ic_close_desc"
-            android:padding="8dp"
-            app:srcCompat="@drawable/ic_close"
-            app:tint="@color/black" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="@string/temp_list_title"
-            android:textColor="@color/black"
-            android:textSize="24sp" />
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ListView
         android:id="@+id/user_list_view"
@@ -46,5 +26,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/list_view_header"/>
+
+    <!-- TextView for 'No followers' message with proper constraints -->
+    <TextView
+        android:id="@+id/no_followers_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No followers available"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/user_list_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,6 +12,7 @@ import androidx.navigation.Navigation;
 
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,38 +77,54 @@ public class MoodEventDetailsFragment extends Fragment {
     }
 
     public void setMoodEventDescription(TextView textView, MoodEvent event) {
-        // Construct the beginning of the sentence using String.format()
-        String combined = String.format("Feeling %s 😊 because of %s",
+        // Construct the beginning of the sentence
+        StringBuilder combined = new StringBuilder(String.format("Feeling %s 😊 because of %s",
                 event.getEmotionalState().getDescription(),
-                event.getReason());
+                event.getReason()));
 
         // Handle optional trigger
         String trigger = event.getTrigger();
-        if (trigger != null) {
-            combined += String.format(" triggered by %s", trigger);
+        if (trigger != null && !trigger.trim().isEmpty()) {
+            combined.append(String.format(" triggered by %s", trigger));
         }
 
         // Handle optional social situation
         SocialSituation socialSituation = event.getSocialSituation();
-        if (socialSituation != null) {
-            combined += " " + socialSituation.toString();
+        if (socialSituation != null && !socialSituation.toString().trim().isEmpty()) {
+            if ("Alone".equalsIgnoreCase(socialSituation.toString().trim())) {
+                combined.append(" while ").append(socialSituation.toString().toLowerCase()); // Add "while" for "Alone"
+            } else {
+                combined.append(" ").append(socialSituation.toString().toLowerCase());
+            }
         }
 
         // Convert text to SpannableString for emoji replacement
-        SpannableString spannableString = new SpannableString(combined);
+        SpannableString spannableString = new SpannableString(combined.toString());
+
         // Get the emoji drawable from the EmotionalState enum
         Drawable emojiDrawable = ContextCompat.getDrawable(textView.getContext(),
                 event.getEmotionalState().emoji);
 
         if (emojiDrawable != null) {
-            emojiDrawable.setBounds(0, 0, textView.getLineHeight(), textView.getLineHeight()); // Resize to fit text
-            ImageSpan imageSpan = new ImageSpan(emojiDrawable, ImageSpan.ALIGN_BASELINE);
+            int size = (int) (textView.getLineHeight() * 1.5); // Increase size by 1.5x
+            emojiDrawable.setBounds(0, 0, size, size); // Set new bounds for bigger size
+            ImageSpan imageSpan = new ImageSpan(emojiDrawable, ImageSpan.ALIGN_BOTTOM);
 
             // Find position AFTER second word ("Feeling [STATE] 😊 ...")
             int emojiPosition = combined.indexOf("😊");
 
             // Replace the placeholder emoji (😊) with the actual drawable
             spannableString.setSpan(imageSpan, emojiPosition, emojiPosition + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        // Get color dynamically from EmotionalState
+        int emotionColor = ContextCompat.getColor(textView.getContext(), event.getEmotionalState().color);
+
+        // Find the position of the emotion word (e.g., "Fear")
+        int emotionStart = combined.indexOf(event.getEmotionalState().getDescription());
+        if (emotionStart != -1) {
+            int emotionEnd = emotionStart + event.getEmotionalState().getDescription().length();
+            spannableString.setSpan(new ForegroundColorSpan(emotionColor), emotionStart, emotionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         // Set the final SpannableString to TextView

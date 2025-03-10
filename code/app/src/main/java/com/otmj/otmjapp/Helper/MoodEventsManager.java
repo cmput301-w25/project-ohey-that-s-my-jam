@@ -1,7 +1,9 @@
 package com.otmj.otmjapp.Helper;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -72,6 +74,7 @@ public class MoodEventsManager {
      * Gets all mood events from user(s) that match the provided filters. (We get the user's
      * information before retrieving mood events.)
      * @param customFilter A filter specifies the condition for the mood event to be returned
+     *                     and how to sort it
      * @return An observable that returns the filtered mood events
      */
     public LiveData<ArrayList<MoodEvent>> getMoodEvents(MoodHistoryFilter customFilter) {
@@ -79,15 +82,12 @@ public class MoodEventsManager {
         UserManager.getInstance().getUsers(userIDs, new UserManager.AuthenticationCallback() {
             @Override
             public void onAuthenticated(ArrayList<User> authenticatedUsers) {
-                // Specify to return only mood events where the 'user' property is one of `users`
-                Filter filter = Filter.inArray("userID", userIDs);
-                // If a custom filter is specified, AND it to `filter`
-                if (customFilter != null) {
-                    filter = Filter.and(filter, customFilter.getFilter());
-                }
+                MoodHistoryFilter filter = (customFilter != null)
+                        ? customFilter
+                        : MoodHistoryFilter.Default(userIDs);
 
                 // Get all mood events from specified users
-                db.getDocuments(filter, MoodEvent.class, new FirestoreDB.DBCallback<>() {
+                db.getDocuments(filter.getFilter(), MoodEvent.class, new FirestoreDB.DBCallback<>() {
                     @Override
                     public void onSuccess(ArrayList<MoodEvent> result) {
                         lastFilter = customFilter;
@@ -113,8 +113,9 @@ public class MoodEventsManager {
                     @Override
                     public void onFailure(Exception e) {
                         // TODO: Do something about error
+                        Log.d("MoodEventsManager", e.toString());
                     }
-                });
+                }, filter.getSortOption());
             }
 
             @Override
@@ -156,12 +157,6 @@ public class MoodEventsManager {
 
     public void updateMoodEvent(MoodEvent moodEvent) {
         db.updateDocument(moodEvent);
-
-        ArrayList<MoodEvent> moodEvents = moodHistory.getValue();
-        if (moodEvents != null) {
-            int index = moodEvents.indexOf(moodEvent);
-            moodEvents.set(index, moodEvent);
-        }
     }
 
     /**

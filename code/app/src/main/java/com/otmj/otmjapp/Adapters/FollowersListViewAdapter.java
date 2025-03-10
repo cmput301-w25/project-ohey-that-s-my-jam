@@ -27,6 +27,12 @@ public class FollowersListViewAdapter extends ArrayAdapter<User> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        // If the list is empty, return an empty view
+        if (getCount() == 0) {
+            // You can choose to return a placeholder view here if necessary.
+            return new View(getContext()); // Empty view if the list is empty
+        }
+
         View listItemView = convertView;
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.user_block, parent, false);
@@ -59,5 +65,5 @@ public class FollowersListViewAdapter extends ArrayAdapter<User> {
 
         return listItemView;
     }
-
 }
+

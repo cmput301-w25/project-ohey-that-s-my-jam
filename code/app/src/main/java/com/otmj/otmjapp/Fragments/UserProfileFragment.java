@@ -6,12 +6,17 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.navigation.Navigation;
 
 import com.otmj.otmjapp.Adapters.UserProfilePageMoodEventAdapter;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
@@ -23,22 +28,17 @@ import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.databinding.MyProfileBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class UserProfileFragment extends Fragment {
     private MyProfileBinding binding;
-    private User user;
-    private ArrayList<String> UserIDs;
     private UserProfilePageMoodEventAdapter moodEventAdapter;
     private LiveData<ArrayList<MoodEvent>> moodEventsLiveData;
-    private MoodEventsManager mood_event_controller;
-    private Handler handler;
-    private Runnable runnable;
-    private FollowHandler followHandler;
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout using binding and return the root view.
         binding = MyProfileBinding.inflate(inflater, container, false);
@@ -49,13 +49,32 @@ public class UserProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Disable the buttons.
-        binding.followersButton.setClickable(false);
-        binding.followingButton.setClickable(false);
+        // Enable the buttons
+        binding.followersButton.setClickable(true);
+        binding.followingButton.setClickable(true);
+
+        // Navigate to Followers List when Followers Button is clicked
+        binding.followersButton.setOnClickListener(v -> {
+            Bundle args = new Bundle();
+            args.putString("buttonClicked", "followers");  // Add an argument indicating which button was clicked
+
+            // Navigate to Followers List using Navigation Component
+            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followersListFragment, args);
+        });
+
+        // Navigate to Followers List when Followers Button is clicked
+        binding.followingButton.setOnClickListener(v -> {
+            Bundle args = new Bundle();
+            args.putString("buttonClicked", "following");  // Add an argument indicating which button was clicked
+
+            // Navigate to Followers List using Navigation Component
+            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followersListFragment, args);
+        });
+
 
         // Get UserID
         UserManager user_manager = UserManager.getInstance();
-        user = user_manager.getCurrentUser();
+        User user = user_manager.getCurrentUser();
 
         // Dummy data
         //User user = new User("Kai", "kaiiscool@example.com", "123456", "https://exampleImageLink");
@@ -71,41 +90,19 @@ public class UserProfileFragment extends Fragment {
         //temp_moodEvents.add(moodEvent_2);
 
         // get MoodEvents
-        UserIDs = new ArrayList<String>();
-        UserIDs.add(user.getID());
-        mood_event_controller = new MoodEventsManager(UserIDs);
+        MoodEventsManager mood_event_controller = new MoodEventsManager(List.of(user.getID()));
 
         // add dummy data
         //mood_event_controller.addMoodEvent(moodEvent_1);
         //mood_event_controller.addMoodEvent(moodEvent_2);
 
-        // set up a clock that every one second checks if there is MoodEvents in the DB
-        handler = new Handler(Looper.getMainLooper());
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                // Place your code to check something every 1 second here
-                if (!isMoodEvents()) {
-                    // Post this runnable again after 1 second (1000ms)
-                    handler.postDelayed(this, 1000);
-                }
-                else {
-                    getMoodEventFromDB();
-                    handler.removeCallbacks(runnable);
-                }
-            }
-        };
-
-        if (mood_event_controller.getMoodEvents()!= null) {
-            moodEventsLiveData = mood_event_controller.getMoodEvents();
+        moodEventsLiveData = mood_event_controller.getMoodEvents();
+        if (moodEventsLiveData != null) {
             getMoodEventFromDB();
-        }
-        else{
-            handler.postDelayed(runnable, 1000);
         }
 
         //get follower count and follwee count
-        followHandler = new FollowHandler();
+        FollowHandler followHandler = new FollowHandler();
         followHandler.getFollowCount(user.getID(), FollowHandler.FollowType.Followers,
                 amount -> binding.numFollowersTextView.setText(String.valueOf(amount)));
 
@@ -124,32 +121,14 @@ public class UserProfileFragment extends Fragment {
     }
 
     public void getMoodEventFromDB(){
-        moodEventsLiveData.observe(getViewLifecycleOwner(), new Observer<ArrayList<MoodEvent>>() {
-            @Override
-            public void onChanged(ArrayList<MoodEvent> moodEvents) {
-                // Update the adapter's data:
-                moodEventAdapter.clear();
-                if(moodEvents != null && !moodEvents.isEmpty()){
-                    moodEventAdapter.addAll(moodEvents);
-                }
-                moodEventAdapter.notifyDataSetChanged();
+        moodEventsLiveData.observe(getViewLifecycleOwner(), moodEvents -> {
+            // Update the adapter's data:
+            moodEventAdapter.clear();
+            if(moodEvents != null && !moodEvents.isEmpty()){
+                moodEventAdapter.addAll(moodEvents);
             }
+            moodEventAdapter.notifyDataSetChanged();
         });
-    }
-
-    /**
-     * return whether DB MoodEvents is empty
-     * @return true if is not empty, false if is empty
-     */
-    public boolean isMoodEvents(){
-        return mood_event_controller.getMoodEvents() != null;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        // Stop the periodic task when the fragment is not visible
-        handler.removeCallbacks(runnable);
     }
 
     @Override
