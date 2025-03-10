@@ -5,12 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
+import com.otmj.otmjapp.Fragments.MoodEventAddEditDialogFragment;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.R;
 
@@ -35,6 +40,7 @@ public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
 
         MoodEvent m = getItem(position);
         assert m != null;
+
         TextView textview_emotionalState = view.findViewById(R.id.textView_emotionalState);
         ImageView image_emoji = view.findViewById(R.id.image_emoji);
         TextView textView_date = view.findViewById(R.id.event_timestamp);
@@ -53,6 +59,13 @@ public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         if (m.getSocialSituation() != null) {
             textView_socialStatus.setText("Social Situation: " + m.getSocialSituation().toString());
         }
+
+        ImageButton editButton = view.findViewById(R.id.my_mood_edit_button);
+        editButton.setOnClickListener(v -> {
+            MoodEventAddEditDialogFragment popup = MoodEventAddEditDialogFragment.newInstance(m);
+            popup.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "edit");
+        });
+
         return view;
     }
 }

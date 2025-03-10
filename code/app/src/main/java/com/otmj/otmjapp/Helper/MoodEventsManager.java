@@ -156,12 +156,6 @@ public class MoodEventsManager {
 
     public void updateMoodEvent(MoodEvent moodEvent) {
         db.updateDocument(moodEvent);
-
-        ArrayList<MoodEvent> moodEvents = moodHistory.getValue();
-        if (moodEvents != null) {
-            int index = moodEvents.indexOf(moodEvent);
-            moodEvents.set(index, moodEvent);
-        }
     }
 
     /**
