@@ -81,6 +81,13 @@ public class FollowHandler {
         });
     }
 
+    /**
+     * Retrieves the IDs of followeers of followees for a given user based on the specified follow type.
+     *
+     * @param userID     The ID of the user for whom to fetch follower or followee IDs.
+     * @param followType The type of follow relationship to fetch (e.g., Followers or Following).
+     * @param callback   A callback to handle the result of the operation. The callback provides a list of user IDs.
+     */
     public void getFollowIDs(String userID, FollowType followType, FollowIDCallback callback) {
         Filter filter;
         if (followType == FollowType.Followers) {
@@ -111,6 +118,13 @@ public class FollowHandler {
         });
     }
 
+    /**
+     * Retrieves the {@link User} objects for followers or followees of a given user based on the specified follow type.
+     *
+     * @param userID     The ID of the user for whom to fetch followers or followees.
+     * @param followType The type of follow relationship to fetch (e.g., Followers or Following).
+     * @param callback   A callback to handle the result of the operation. The callback provides a list of user objects.
+     */
     private void getFollows(String userID, FollowType followType, FollowCallback callback) {
        getFollowIDs(userID, followType, ids -> {
            UserManager userManager = UserManager.getInstance();

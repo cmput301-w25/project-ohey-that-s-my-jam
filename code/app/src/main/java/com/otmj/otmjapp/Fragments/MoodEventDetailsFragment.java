@@ -26,7 +26,7 @@ import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.databinding.FragmentMoodEventDetailsBinding;
 
 /**
- * A Fragment that displays details of a MoodEvent, including user information, timestamp, location,
+ * Displays the details of a MoodEvent (user information, timestamp, etc.)
  * and an optional image associated with the event.
  */
 public class MoodEventDetailsFragment extends Fragment {
