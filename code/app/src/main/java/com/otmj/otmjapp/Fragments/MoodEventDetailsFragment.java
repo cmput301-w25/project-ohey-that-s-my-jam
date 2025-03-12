@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -64,8 +65,9 @@ public class MoodEventDetailsFragment extends Fragment {
         TextView usernameText = binding.detailsUsername;
         TextView eventTimestampText = binding.detailsEventTimestamp;
         ImageView moodEventImage = binding.detailsMoodImage;
-        TextView eventDescription = binding.detailsEventDescription;
+        TextView detailsReasonWhy = binding.detailsReasonWhy;
         TextView eventLocationText = binding.detailsEventLocation;
+        TextView detailsEmotionAndSocialSituation = binding.detailsEmotionAndSocialSituation;
 
         // Get the passed arguments using Safe Args
         MoodEventDetailsFragmentArgs args = MoodEventDetailsFragmentArgs.fromBundle(getArguments());
@@ -79,12 +81,30 @@ public class MoodEventDetailsFragment extends Fragment {
         eventTimestampText.setText(moodEvent.getCreatedDate().toString());
 
         // Set all the available text of a mood event
-        setMoodEventDescription(eventDescription, moodEvent);
+        setMoodEventHeaderText(detailsEmotionAndSocialSituation, moodEvent);
+
+        // Set Reason Why
+        if (moodEvent.getReason() != null && !moodEvent.getReason().isEmpty()){
+            detailsReasonWhy.setText(moodEvent.getReason());
+        } else {
+            detailsReasonWhy.setVisibility(View.GONE);
+        }
 
         // Load mood event image if available
         if (moodEvent.getImageLink() != null) {
             Glide.with(requireContext()).load(moodEvent.getImageLink()).into(moodEventImage);
+        } else {
+            moodEventImage.setVisibility(View.GONE);
         }
+
+        // Set location if available
+        LinearLayout locationIconAndTextLayout = binding.locationIconAndTextLayout;
+        if (moodEvent.getLocation() != null ){
+            eventLocationText.setText(moodEvent.getLocation().toString());
+        } else {
+            locationIconAndTextLayout.setVisibility(View.GONE);
+        }
+
     }
 
     /**
@@ -93,17 +113,9 @@ public class MoodEventDetailsFragment extends Fragment {
      * @param textView The TextView to display the mood event description.
      * @param event The MoodEvent object containing details about the event.
      */
-    public void setMoodEventDescription(TextView textView, MoodEvent event) {
+    public void setMoodEventHeaderText(TextView textView, MoodEvent event) {
         // Construct the beginning of the sentence
-        StringBuilder combined = new StringBuilder(String.format("Feeling %s 😊 because of %s",
-                event.getEmotionalState().getDescription(),
-                event.getReason()));
-
-        // Handle optional trigger
-        String trigger = event.getTrigger();
-        if (trigger != null && !trigger.trim().isEmpty()) {
-            combined.append(String.format(" triggered by %s", trigger));
-        }
+        StringBuilder combined = new StringBuilder(String.format("%s 😊", event.getEmotionalState().getDescription()));
 
         // Handle optional social situation
         SocialSituation socialSituation = event.getSocialSituation();
