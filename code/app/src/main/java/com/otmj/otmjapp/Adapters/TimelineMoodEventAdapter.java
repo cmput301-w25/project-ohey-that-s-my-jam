@@ -46,7 +46,11 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         setMoodEventHeaderText(usernameText, m);
 
         TextView description = view.findViewById(R.id.timeline_mood_event_desc);
-        description.setText(m.getReason());
+        if (m.getReason() != null && !m.getReason().isEmpty()) {
+            description.setText(m.getReason());
+        } else {
+            description.setVisibility(View.GONE);
+        }
 
         long createdTimeMillis = m.getCreatedDate() != null ? m.getCreatedDate().getTime() : System.currentTimeMillis();
         String timeAgo = getTimeAgo(createdTimeMillis);
@@ -68,12 +72,6 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         // Construct the beginning of the sentence
         StringBuilder combined = new StringBuilder(event.getUser().getUsername());
         combined.append(String.format(" feels %s 😊", event.getEmotionalState().getDescription()));
-
-        // Handle optional trigger
-//        String trigger = event.getTrigger();
-//        if (trigger != null && !trigger.trim().isEmpty()) {
-//            combined.append(String.format(" triggered by %s", trigger));
-//        }
 
         // Handle optional social situation
         SocialSituation socialSituation = event.getSocialSituation();
