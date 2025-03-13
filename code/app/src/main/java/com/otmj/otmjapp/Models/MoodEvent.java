@@ -49,7 +49,6 @@ public class MoodEvent extends DatabaseObject {
         Public,
         Private
     }
-
     private Privacy privacy;
 
     MoodEvent() {
@@ -173,6 +172,14 @@ public class MoodEvent extends DatabaseObject {
         this.imageLink = link;
     }
 
+    public Privacy getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(Privacy privacy) {
+        this.privacy = privacy;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -185,13 +192,5 @@ public class MoodEvent extends DatabaseObject {
     @Override
     public int hashCode() {
         return Objects.hash(userID, createdDate);
-    }
-
-    public Privacy getPrivacy() {
-        return privacy;
-    }
-
-    public void setPrivacy(Privacy privacy) {
-        this.privacy = privacy;
     }
 }
