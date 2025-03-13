@@ -243,7 +243,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:counterEnabled="true"
-        app:counterMaxLength="20"
+        app:counterMaxLength="200"
         app:boxBackgroundMode="filled"
         app:boxStrokeColor="@color/blue_nav_bar"> <!-- Changes bottom line color -->
 
@@ -256,24 +256,6 @@
             android:maxLines="4"
             android:background="#FFFFFFFF"/>
     </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/trigger_input_box"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:boxBackgroundMode="filled"
-        app:boxStrokeColor="@color/blue_nav_bar"> <!-- Changes bottom line color -->
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/trigger_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/trigger_hint_text"
-            android:inputType="textMultiLine"
-            android:maxLines="1"
-            android:background="#FFFFFFFF"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
 
     <!-- Social Situation Buttons -->
 

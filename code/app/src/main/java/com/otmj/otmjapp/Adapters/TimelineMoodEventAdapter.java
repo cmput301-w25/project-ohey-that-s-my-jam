@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.format.DateUtils;
+import android.text.style.DynamicDrawableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.otmj.otmjapp.Helper.CustomImageSpan;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.R;
@@ -64,6 +66,12 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         }
 
         // TODO: Set location
+        // do not show for now
+        TextView locationText = view.findViewById(R.id.timeline_mood_event_location);
+        if (m.getLocation() == null) {
+            locationText.setVisibility(View.GONE);
+        }
+
 
         return view;
     }
@@ -91,9 +99,9 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
                 event.getEmotionalState().emoji);
 
         if (emojiDrawable != null) {
-            int size = (int) (textView.getLineHeight() * 1.5); // Increase size by 1.5x
+            int size = (int) (textView.getLineHeight() * 2); // Increase size by 2x
             emojiDrawable.setBounds(0, 0, size, size); // Set new bounds for bigger size
-            ImageSpan imageSpan = new ImageSpan(emojiDrawable, ImageSpan.ALIGN_BOTTOM);
+            ImageSpan imageSpan = new CustomImageSpan(emojiDrawable);
 
             // Find position AFTER second word ("Feeling [STATE] 😊 ...")
             int emojiPosition = combined.indexOf("😊");

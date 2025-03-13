@@ -38,6 +38,9 @@ public class FollowersListFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.list_screen, container, false);
 
+        // Find the TextView for the list title
+        TextView listTitle = rootView.findViewById(R.id.list_title);
+
         // Get the arguments passed from the previous fragment
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -45,6 +48,8 @@ public class FollowersListFragment extends Fragment {
 
             // Check if the followers button was clicked
             if ("followers".equals(buttonClicked)) {
+                listTitle.setText("FOLLOWERS");  // Set title for followers
+
                 // Log the button click event for followers
                 Log.d("FollowersListFragment", "Followers button clicked");
 
@@ -73,6 +78,8 @@ public class FollowersListFragment extends Fragment {
 
                 // Check if the following button was clicked
             } else if ("following".equals(buttonClicked)) {
+                listTitle.setText("FOLLOWING");  // Set title for followers
+
                 // Log the button click event for following
                 Log.d("FollowersListFragment", "Following button clicked");
 
