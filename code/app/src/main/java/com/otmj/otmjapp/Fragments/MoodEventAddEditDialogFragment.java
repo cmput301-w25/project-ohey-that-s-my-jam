@@ -1,5 +1,6 @@
 package com.otmj.otmjapp.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -7,10 +8,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.chip.Chip;
@@ -39,6 +42,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
     private EmotionalState selectedEmotionalState;
     private SocialSituation selectedSocialSituation;
     private MoodEvent moodEvent;
+    private MoodEvent.Privacy privacy;
     private Map<String, SocialSituation> socialSituationMapping;
 
     // Will be implemented in project part 4
@@ -87,7 +91,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         ImageButton closeFragmentButton = view.findViewById(R.id.ExitCreateMoodEvent);
         Button submitPostButton = view.findViewById(R.id.SubmitPostButton);
         ImageButton deletePostButton = view.findViewById(R.id.DeletePostButton);
-
+        // using SwitchCompat makes the app crash when the 'addMoodEvent' button is clicked
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch privacySwitch = view.findViewById(R.id.privacy_switch);
         // Hide delete button by default
         deletePostButton.setVisibility(View.GONE);
 
@@ -100,6 +105,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             if (moodEvent != null) {
                 selectedEmotionalState = moodEvent.getEmotionalState();
                 selectedSocialSituation = moodEvent.getSocialSituation();
+                privacy = moodEvent.getPrivacy();
 
                 submitPostButton.setText(R.string.edit_button_text);
                 deletePostButton.setVisibility(View.VISIBLE); // Show delete button in edit mode
@@ -111,6 +117,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 if (moodEvent.getSocialSituation() != null) {
                     setSelectedChip(socialSituationChipGroup, moodEvent.getSocialSituation());
                 }
+
+                privacySwitch.setChecked(privacy == MoodEvent.Privacy.Public);
                 // setting boolean location and string imageLink will be added in project part 4
             }
         }
@@ -145,6 +153,11 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
 
         // close button
         closeFragmentButton.setOnClickListener(v -> dismiss());
+
+        // privacy toggle
+        privacySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            privacy = isChecked ? MoodEvent.Privacy.Public : MoodEvent.Privacy.Private;
+        });
 
         // submit post button
         submitPostButton.setOnClickListener(v -> {
@@ -202,14 +215,19 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         User user = UserManager.getInstance().getCurrentUser();
         MoodEventsManager moodEventsManager =
                 new MoodEventsManager(List.of(user.getID()));
-
+        Log.d("MoodEvent privacy", "setupMoodEvent:" + privacy);
         if (moodEvent != null) {
             moodEvent.setEmotionalState(selectedEmotionalState);
             moodEvent.setReason(reason);
             moodEvent.setSocialSituation(selectedSocialSituation);
+            moodEvent.setPrivacy(privacy);
 
             moodEventsManager.updateMoodEvent(moodEvent);
         } else {
+            if(privacy == null) { // privacy is null by default. If user doesn't toggle switch, set it to private
+                privacy = MoodEvent.Privacy.Private;
+            }
+
             moodEventsManager.addMoodEvent(new MoodEvent(
                     user.getID(),
                     selectedEmotionalState,
@@ -217,7 +235,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     selectedSocialSituation,
                     true,
                     reason,
-                    null
+                    null,
+                    privacy
             ));
         }
     }
