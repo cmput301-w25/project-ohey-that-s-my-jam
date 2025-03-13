@@ -45,6 +45,13 @@ public class MoodEvent extends DatabaseObject {
     private String reason;
     private String imageLink;
 
+    public enum Privacy {
+        Public,
+        Private
+    }
+
+    private Privacy privacy;
+
     MoodEvent() {
         userID = "";
     }
@@ -178,5 +185,13 @@ public class MoodEvent extends DatabaseObject {
     @Override
     public int hashCode() {
         return Objects.hash(userID, createdDate);
+    }
+
+    public Privacy getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(Privacy privacy) {
+        this.privacy = privacy;
     }
 }

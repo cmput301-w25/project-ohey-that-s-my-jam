@@ -165,7 +165,7 @@ public class MoodEventsManager {
      *                  So, we download the image specified by the link
      * @param downloadCallback Callback for handling success or failure of download operation
      */
-   public void downloadMoodEventImage(MoodEvent moodEvent, ImageDownloadCallback downloadCallback) {
+    public void downloadMoodEventImage(MoodEvent moodEvent, ImageDownloadCallback downloadCallback) {
         assert moodEvent.getImageLink() != null;
 
         // TODO: Implement downloading
