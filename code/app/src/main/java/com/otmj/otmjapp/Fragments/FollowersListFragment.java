@@ -106,6 +106,8 @@ public class FollowersListFragment extends Fragment {
                     }
                 });
             } else if ("peopleYouMayKnow".equals(buttonClicked)) {
+                listTitle.setText("PEOPLE YOU MAY KNOW");  // Set title for followers
+
                 // Log the button click event for following
                 Log.d("FollowersListFragment", "peopleYouMayKnow button clicked");
 
