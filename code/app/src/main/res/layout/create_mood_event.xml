@@ -320,6 +320,12 @@
 
     </com.google.android.material.chip.ChipGroup>
 
+    <Switch
+        android:id="@+id/privacy_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="   Make Public" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"

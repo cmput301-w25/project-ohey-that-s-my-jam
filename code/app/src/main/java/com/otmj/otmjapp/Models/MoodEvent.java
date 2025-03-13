@@ -62,13 +62,15 @@ public class MoodEvent extends DatabaseObject {
                      SocialSituation socialSituation,
                      boolean includeLocation,
                      String reason,
-                     String imageLink) {
+                     String imageLink,
+                     MoodEvent.Privacy privacy) {
         this.userID = userID;
         setEmotionalState(emotionalState);
         this.trigger = trigger;
         setSocialSituation(socialSituation);
         this.reason = reason;
         this.imageLink = imageLink;
+        this.privacy = privacy;
 
 //        if (includeLocation) {
 //            // TODO: Get device's location
@@ -86,7 +88,8 @@ public class MoodEvent extends DatabaseObject {
                      String socialSituation,
                      boolean includeLocation,
                      String reason,
-                     String imageLink) {
+                     String imageLink,
+                     MoodEvent.Privacy privacy) {
         this(
                 userID,
                 EmotionalState.fromString(emotionalState),
@@ -94,7 +97,8 @@ public class MoodEvent extends DatabaseObject {
                 SocialSituation.fromText(socialSituation),
                 includeLocation,
                 reason,
-                imageLink
+                imageLink,
+                privacy
         );
     }
 
