@@ -9,8 +9,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.otmj.otmjapp.Models.DatabaseObject;
+import com.otmj.otmjapp.Models.MoodEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,16 +42,23 @@ public class FirestoreDB<T extends DatabaseObject> {
         void onFailure(Exception e);
     }
 
+    /**
+     * Allows a class to listen for updates to their collection
+     */
     public interface DBListener {
         void onUpdate();
     }
 
     private final FirebaseFirestore db;
     private final String collection;
-
     public FirestoreDB(String collection) {
         this.collection = collection;
         this.db = FirebaseFirestore.getInstance();
+    }
+
+    public FirestoreDB(String collection, FirebaseFirestore db) { // Constructor with custom Firestore instance for testing
+        this.collection = collection;
+        this.db = db;
     }
 
     public void addCollectionListener(DBListener listener) {
@@ -59,29 +68,44 @@ public class FirestoreDB<T extends DatabaseObject> {
     /**
      * Retrieves all documents from the Firestore collection without any filters.
      *
+     * @param objectClass   The class of the objects to return
      * @param callback The callback to handle the operation result.
+     * @param sortOptions   The way to order the returned data
+     * @see #getDocuments(Filter, Class, DBCallback, DBSortOption...)
      */
-    public void getDocuments(Class<T> objectClass, DBCallback<T> callback) {
-        getDocuments(null, objectClass, callback);
+    public void getDocuments(Class<T> objectClass,
+                             DBCallback<T> callback,
+                             DBSortOption... sortOptions) {
+        getDocuments(null, objectClass, callback, sortOptions);
     }
 
     /**
      * Retrieves documents from the Firestore collection based on the specified filter.
      *
-     * @param filter   The filter criteria for querying documents.
-     * @param callback The callback to handle the operation result.
+     * @param filter        The filter criteria for querying documents.
+     * @param objectClass   The class of the objects to return
+     * @param callback      The callback to handle the operation result.
+     * @param sortOptions   The way to order the returned data
      */
-    public void getDocuments(Filter filter, Class<T> objectClass, DBCallback<T> callback) {
+    public void getDocuments(Filter filter,
+                             Class<T> objectClass,
+                             DBCallback<T> callback,
+                             DBSortOption... sortOptions) {
         CollectionReference collectionRef = db.collection(collection);
 
-        Task<QuerySnapshot> result;
-        if (filter == null) {
-            result = collectionRef.get();
-        } else {
-            result = collectionRef.where(filter).get();
+        Query ref = collectionRef;
+        // Add filter, if it exists
+        if (filter != null) {
+            ref = collectionRef.where(filter);
+        }
+        // Order by the given sort options
+        if (sortOptions != null) {
+            for (DBSortOption sort : sortOptions) {
+                ref = sort.getSorting(ref);
+            }
         }
 
-        result.addOnCompleteListener(task -> {
+        ref.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<T> documents = new ArrayList<>();
                 for (DocumentSnapshot doc : task.getResult()) {

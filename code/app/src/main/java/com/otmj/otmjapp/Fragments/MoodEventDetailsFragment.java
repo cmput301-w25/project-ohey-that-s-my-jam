@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -25,10 +26,22 @@ import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.databinding.FragmentMoodEventDetailsBinding;
 
+/**
+ * Displays the details of a MoodEvent (user information, timestamp, etc.)
+ * and an optional image associated with the event.
+ */
 public class MoodEventDetailsFragment extends Fragment {
 
     private FragmentMoodEventDetailsBinding binding;
 
+    /**
+     * Inflates the fragment's layout using ViewBinding.
+     *
+     * @param inflater  The LayoutInflater object that can be used to inflate views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The root view of the fragment.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -36,6 +49,13 @@ public class MoodEventDetailsFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /**
+     * Called immediately after onCreateView().
+     * Initializes UI elements and sets up the MoodEvent data in the view.
+     *
+     * @param view The view returned by onCreateView().
+     * @param savedInstanceState The saved state of the fragment if it was previously created.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -45,64 +65,79 @@ public class MoodEventDetailsFragment extends Fragment {
         TextView usernameText = binding.detailsUsername;
         TextView eventTimestampText = binding.detailsEventTimestamp;
         ImageView moodEventImage = binding.detailsMoodImage;
-        TextView eventDescription = binding.detailsEventDescription;
+        TextView detailsReasonWhy = binding.detailsReasonWhy;
         TextView eventLocationText = binding.detailsEventLocation;
+        TextView detailsEmotionAndSocialSituation = binding.detailsEmotionAndSocialSituation;
 
         // Get the passed arguments using Safe Args
         MoodEventDetailsFragmentArgs args = MoodEventDetailsFragmentArgs.fromBundle(getArguments());
         MoodEvent moodEvent = args.getMoodEvent();
         assert moodEvent != null;
 
-        // set the username text
-         usernameText.setText(moodEvent.getUser().getUsername());
+        // Set the username text
+        usernameText.setText(moodEvent.getUser().getUsername());
 
-        // load profile image
-//        if (moodEvent.getUser().getProfilePictureLink() != null) {
-            // Glide.with(requireContext()).load(event.user.getProfilePictureLink()).into(profileImage);
-//        }
-
-        // set time stamp text
+        // Set timestamp text
         eventTimestampText.setText(moodEvent.getCreatedDate().toString());
 
-        // set all the available text of a mood event
-        setMoodEventDescription(eventDescription, moodEvent);
+        // Set all the available text of a mood event
+        setMoodEventHeaderText(detailsEmotionAndSocialSituation, moodEvent);
 
-        // set location text
-//        eventLocationText.setText(moodEvent.getLocation().toString());
+        // Set Reason Why
+        if (moodEvent.getReason() != null && !moodEvent.getReason().isEmpty()){
+            detailsReasonWhy.setText(moodEvent.getReason());
+        } else {
+            detailsReasonWhy.setVisibility(View.GONE);
+        }
 
-        // load the reason why image (I'm not sure if this is right yet)
+        // Load mood event image if available
         if (moodEvent.getImageLink() != null) {
             Glide.with(requireContext()).load(moodEvent.getImageLink()).into(moodEventImage);
+        } else {
+            moodEventImage.setVisibility(View.GONE);
         }
+
+        // Set location if available
+        LinearLayout locationIconAndTextLayout = binding.locationIconAndTextLayout;
+        if (moodEvent.getLocation() != null ){
+            eventLocationText.setText(moodEvent.getLocation().toString());
+        } else {
+            locationIconAndTextLayout.setVisibility(View.GONE);
+        }
+
     }
 
-    public void setMoodEventDescription(TextView textView, MoodEvent event) {
-        // Construct the beginning of the sentence using String.format()
-        String combined = String.format("Feeling %s 😊 because of %s",
-                event.getEmotionalState().getDescription(),
-                event.getReason());
-
-        // Handle optional trigger
-        String trigger = event.getTrigger();
-        if (trigger != null) {
-            combined += String.format(" triggered by %s", trigger);
-        }
+    /**
+     * Sets the mood event description with appropriate formatting, colors, and an emoji representing the mood.
+     *
+     * @param textView The TextView to display the mood event description.
+     * @param event The MoodEvent object containing details about the event.
+     */
+    public void setMoodEventHeaderText(TextView textView, MoodEvent event) {
+        // Construct the beginning of the sentence
+        StringBuilder combined = new StringBuilder(String.format("%s 😊", event.getEmotionalState().getDescription()));
 
         // Handle optional social situation
         SocialSituation socialSituation = event.getSocialSituation();
-        if (socialSituation != null) {
-            combined += " " + socialSituation.toString();
+        if (socialSituation != null && !socialSituation.toString().trim().isEmpty()) {
+            if ("Alone".equalsIgnoreCase(socialSituation.toString().trim())) {
+                combined.append(" while ").append(socialSituation.toString().toLowerCase()); // Add "while" for "Alone"
+            } else {
+                combined.append(" ").append(socialSituation.toString().toLowerCase());
+            }
         }
 
         // Convert text to SpannableString for emoji replacement
-        SpannableString spannableString = new SpannableString(combined);
+        SpannableString spannableString = new SpannableString(combined.toString());
+
         // Get the emoji drawable from the EmotionalState enum
         Drawable emojiDrawable = ContextCompat.getDrawable(textView.getContext(),
                 event.getEmotionalState().emoji);
 
         if (emojiDrawable != null) {
-            emojiDrawable.setBounds(0, 0, textView.getLineHeight(), textView.getLineHeight()); // Resize to fit text
-            ImageSpan imageSpan = new ImageSpan(emojiDrawable, ImageSpan.ALIGN_BASELINE);
+            int size = (int) (textView.getLineHeight() * 1.5); // Increase size by 1.5x
+            emojiDrawable.setBounds(0, 0, size, size); // Set new bounds for bigger size
+            ImageSpan imageSpan = new ImageSpan(emojiDrawable, ImageSpan.ALIGN_BOTTOM);
 
             // Find position AFTER second word ("Feeling [STATE] 😊 ...")
             int emojiPosition = combined.indexOf("😊");

@@ -9,6 +9,9 @@ import com.google.firebase.firestore.ServerTimestamp;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * Represents a mood event in the app; includes the user's emotional state, social situation, trigger, etc.
+ */
 public class MoodEvent extends DatabaseObject {
     private final String userID;
     /**
@@ -41,6 +44,13 @@ public class MoodEvent extends DatabaseObject {
     private Location location;
     private String reason;
     private String imageLink;
+
+    public enum Privacy {
+        Public,
+        Private
+    }
+
+    private Privacy privacy;
 
     MoodEvent() {
         userID = "";
@@ -175,5 +185,13 @@ public class MoodEvent extends DatabaseObject {
     @Override
     public int hashCode() {
         return Objects.hash(userID, createdDate);
+    }
+
+    public Privacy getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(Privacy privacy) {
+        this.privacy = privacy;
     }
 }

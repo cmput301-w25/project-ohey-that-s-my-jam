@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,11 +22,7 @@ import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.R;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Locale;
 
 
 public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
@@ -46,10 +43,14 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         assert m != null;
 
         TextView usernameText = view.findViewById(R.id.timeline_mood_event_username);
-        usernameText.setText(m.getUser().getUsername());
+        setMoodEventHeaderText(usernameText, m);
 
         TextView description = view.findViewById(R.id.timeline_mood_event_desc);
-        setMoodEventDescription(description, m);
+        if (m.getReason() != null && !m.getReason().isEmpty()) {
+            description.setText(m.getReason());
+        } else {
+            description.setVisibility(View.GONE);
+        }
 
         long createdTimeMillis = m.getCreatedDate() != null ? m.getCreatedDate().getTime() : System.currentTimeMillis();
         String timeAgo = getTimeAgo(createdTimeMillis);
@@ -57,39 +58,42 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         TextView timeAgoText = view.findViewById(R.id.timeline_mood_event_date);
         timeAgoText.setText(timeAgo);
 
+        ImageView moodEventImage = view.findViewById(R.id.mood_image);
+        if (m.getImageLink() == null) {
+            moodEventImage.setVisibility(View.GONE);
+        }
 
         // TODO: Set location
 
         return view;
     }
 
-    public void setMoodEventDescription(TextView textView, MoodEvent event) {
-        // Construct the beginning of the sentence using String.format()
-        String combined = String.format("Feeling %s 😊 because of %s",
-                event.getEmotionalState().getDescription(),
-                event.getReason());
-
-        // Handle optional trigger
-        String trigger = event.getTrigger();
-        if (trigger != null) {
-            combined += String.format(" triggered by %s", trigger);
-        }
+    public void setMoodEventHeaderText(TextView textView, MoodEvent event) {
+        // Construct the beginning of the sentence
+        StringBuilder combined = new StringBuilder(event.getUser().getUsername());
+        combined.append(String.format(" feels %s 😊", event.getEmotionalState().getDescription()));
 
         // Handle optional social situation
         SocialSituation socialSituation = event.getSocialSituation();
-        if (socialSituation != null) {
-            combined += " " + socialSituation.toString();
+        if (socialSituation != null && !socialSituation.toString().trim().isEmpty()) {
+            if ("Alone".equalsIgnoreCase(socialSituation.toString().trim())) {
+                combined.append(" while ").append(socialSituation.toString().toLowerCase()); // Add "while" for "Alone"
+            } else {
+                combined.append(" ").append(socialSituation.toString().toLowerCase());
+            }
         }
 
         // Convert text to SpannableString for emoji replacement
-        SpannableString spannableString = new SpannableString(combined);
+        SpannableString spannableString = new SpannableString(combined.toString());
+
         // Get the emoji drawable from the EmotionalState enum
         Drawable emojiDrawable = ContextCompat.getDrawable(textView.getContext(),
                 event.getEmotionalState().emoji);
 
         if (emojiDrawable != null) {
-            emojiDrawable.setBounds(0, 0, textView.getLineHeight(), textView.getLineHeight()); // Resize to fit text
-            ImageSpan imageSpan = new ImageSpan(emojiDrawable, ImageSpan.ALIGN_BASELINE);
+            int size = (int) (textView.getLineHeight() * 1.5); // Increase size by 1.5x
+            emojiDrawable.setBounds(0, 0, size, size); // Set new bounds for bigger size
+            ImageSpan imageSpan = new ImageSpan(emojiDrawable, ImageSpan.ALIGN_BOTTOM);
 
             // Find position AFTER second word ("Feeling [STATE] 😊 ...")
             int emojiPosition = combined.indexOf("😊");
@@ -111,6 +115,7 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         // Set the final SpannableString to TextView
         textView.setText(spannableString);
     }
+
 
     public String getTimeAgo(long timestamp) {
         long now = System.currentTimeMillis();
