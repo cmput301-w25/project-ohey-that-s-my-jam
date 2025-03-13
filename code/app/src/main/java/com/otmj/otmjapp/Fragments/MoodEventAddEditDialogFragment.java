@@ -79,10 +79,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         );
 
         // Initialize UI components
-        TextInputLayout reasonWhyInputLayout = view.findViewById(R.id.reason_why_input_box),
-                triggerInputLayout = view.findViewById(R.id.trigger_input_box);
-        TextInputEditText reasonWhyInputText = view.findViewById(R.id.reason_why_edit_text),
-                triggerInputText = view.findViewById(R.id.trigger_edit_text);
+        TextInputLayout reasonWhyInputLayout = view.findViewById(R.id.reason_why_input_box);
+        TextInputEditText reasonWhyInputText = view.findViewById(R.id.reason_why_edit_text);
         ChipGroup moodChipGroup = view.findViewById(R.id.emotional_state_chip_group),
                 socialSituationChipGroup = view.findViewById(R.id.social_situation_chip_group);
 
@@ -110,9 +108,6 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 if (moodEvent.getReason() != null) {
                     reasonWhyInputText.setText(moodEvent.getReason());
                 }
-                if (moodEvent.getTrigger() != null) {
-                    triggerInputText.setText(moodEvent.getTrigger());
-                }
                 if (moodEvent.getSocialSituation() != null) {
                     setSelectedChip(socialSituationChipGroup, moodEvent.getSocialSituation());
                 }
@@ -125,10 +120,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             @Override
             public void validateWhileTyping(TextInputEditText textInputEditText, TextInputLayout textInputLayout) {
                 String input = textInputEditText.getText().toString().trim();
-                if (input.length() > 20) {
-                    textInputLayout.setError("Max 20 characters");
-                } else if (input.split("\\s+").length > 3) {
-                    textInputLayout.setError("Max 3 words");
+                if (input.length() > 200) {
+                    textInputLayout.setError("Max 200 characters");
                 } else {
                     textInputLayout.setError(null);
                 }
@@ -137,23 +130,6 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             @Override
             public void validateAfterTyping(TextInputEditText textInputEditText, TextInputLayout textInputLayout) {
                 // not needed
-            }
-        });
-
-        // Input validation for "Trigger"
-        triggerInputText.addTextChangedListener(new TextValidator(triggerInputText, triggerInputLayout) {
-            @Override
-            public void validateWhileTyping(TextInputEditText textInputEditText, TextInputLayout textInputLayout) {
-                if (textInputEditText.getText().toString().contains(" ")) {
-                    textInputLayout.setError("Max 1 word");
-                } else {
-                    textInputLayout.setError(null);
-                }
-            }
-
-            @Override
-            public void validateAfterTyping(TextInputEditText textInputEditText, TextInputLayout textInputLayout) {
-                // Not needed as social trigger is optional
             }
         });
 
@@ -173,11 +149,16 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         // submit post button
         submitPostButton.setOnClickListener(v -> {
             String reason = reasonWhyInputText.getText().toString().trim();
-            String trigger = triggerInputText.getText().toString().trim();
 
-            if (selectedEmotionalState != null) {
-                setupMoodEvent(reason, trigger);
+            if (moodChipGroup.getCheckedChipId() != View.NO_ID
+                    && reason.length() <= 200) {
+                setupMoodEvent(reason);
                 dismiss();
+            } else if (moodChipGroup.getCheckedChipId() == View.NO_ID) {
+                    Toast.makeText(getContext(),
+                                "Please select an emotional state",
+                                Toast.LENGTH_SHORT)
+                        .show();
             }
         });
 
@@ -216,13 +197,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    private void setupMoodEvent(String reason, String trigger) {
-        if (selectedEmotionalState == null) {
-            Toast.makeText(getContext(),
-                            "Please select an emotional state",
-                            Toast.LENGTH_SHORT)
-                    .show();
-        }
+    private void setupMoodEvent(String reason) {
 
         User user = UserManager.getInstance().getCurrentUser();
         MoodEventsManager moodEventsManager =
@@ -231,7 +206,6 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         if (moodEvent != null) {
             moodEvent.setEmotionalState(selectedEmotionalState);
             moodEvent.setReason(reason);
-            moodEvent.setTrigger(trigger);
             moodEvent.setSocialSituation(selectedSocialSituation);
 
             moodEventsManager.updateMoodEvent(moodEvent);
@@ -239,7 +213,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             moodEventsManager.addMoodEvent(new MoodEvent(
                     user.getID(),
                     selectedEmotionalState,
-                    trigger,
+                    "",
                     selectedSocialSituation,
                     true,
                     reason,

@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.otmj.otmjapp.Helper.CustomImageSpan;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.databinding.FragmentMoodEventDetailsBinding;
@@ -115,7 +116,8 @@ public class MoodEventDetailsFragment extends Fragment {
      */
     public void setMoodEventHeaderText(TextView textView, MoodEvent event) {
         // Construct the beginning of the sentence
-        StringBuilder combined = new StringBuilder(String.format("%s 😊", event.getEmotionalState().getDescription()));
+        StringBuilder combined = new StringBuilder(event.getUser().getUsername());
+        combined.append(String.format(" feels %s 😊", event.getEmotionalState().getDescription()));
 
         // Handle optional social situation
         SocialSituation socialSituation = event.getSocialSituation();
@@ -135,9 +137,9 @@ public class MoodEventDetailsFragment extends Fragment {
                 event.getEmotionalState().emoji);
 
         if (emojiDrawable != null) {
-            int size = (int) (textView.getLineHeight() * 1.5); // Increase size by 1.5x
+            int size = (int) (textView.getLineHeight() * 2); // Increase size by 2x
             emojiDrawable.setBounds(0, 0, size, size); // Set new bounds for bigger size
-            ImageSpan imageSpan = new ImageSpan(emojiDrawable, ImageSpan.ALIGN_BOTTOM);
+            ImageSpan imageSpan = new CustomImageSpan(emojiDrawable);
 
             // Find position AFTER second word ("Feeling [STATE] 😊 ...")
             int emojiPosition = combined.indexOf("😊");
