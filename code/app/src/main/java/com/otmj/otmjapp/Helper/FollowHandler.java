@@ -169,4 +169,50 @@ public class FollowHandler {
     public void fetchFollowing(String userID, FollowCallback callback) {
         getFollows(userID, FollowType.Following, callback);
     }
+
+    /**
+     * Fetches all the users that the current user is NOT following
+     *
+     * @param callback      the callback to handle the result, passing the list of followers or an error
+     */
+    public void fetchNotFollowingUsers(FollowCallback callback) {
+        UserManager userManager = UserManager.getInstance();
+
+        // Step 1: Get all users
+        userManager.getAllUsers(new UserManager.AuthenticationCallback() {
+            @Override
+            public void onAuthenticated(ArrayList<User> allUsers) {
+                // Step 2: Get users the current user is following
+                fetchFollowing(currentUser.getID(), new FollowCallback() {
+                    @Override
+                    public void onSuccess(ArrayList<User> followingUsers) {
+                        ArrayList<String> followingIDs = new ArrayList<>();
+                        for (User user : followingUsers) {
+                            followingIDs.add(user.getID());
+                        }
+
+                        // Step 3: Filter out users that are in the following list
+                        ArrayList<User> notFollowingUsers = new ArrayList<>();
+                        for (User user : allUsers) {
+                            if (!followingIDs.contains(user.getID()) && !user.getID().equals(currentUser.getID())) {
+                                notFollowingUsers.add(user);
+                            }
+                        }
+
+                        callback.onSuccess(notFollowingUsers);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        callback.onFailure(e);
+                    }
+                });
+            }
+
+            @Override
+            public void onAuthenticationFailure(String reason) {
+                callback.onFailure(new Exception(reason));
+            }
+        });
+    }
 }

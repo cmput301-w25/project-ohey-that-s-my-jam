@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_timelineFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_timelineFragment_to_peopleYouMayKnowFragment"
+            app:destination="@id/followersListFragment" />
     </fragment>
 
     <!-- Mood Event Details Fragment -->
