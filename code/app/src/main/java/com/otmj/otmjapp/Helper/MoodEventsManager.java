@@ -96,11 +96,10 @@ public class MoodEventsManager {
                         lastFilter = customFilter;
 
                         ArrayList<MoodEvent> moodEvents = new ArrayList<>();
-                        // For each mood event
+                        // For each mood event //
                         for (MoodEvent moodEvent : result) {
                             if(privacy == MoodEvent.Privacy.Private || moodEvent.getPrivacy() == privacy) { // Process only the mood events that match the privacy
                                 moodEvents.add(moodEvent);
-
                                 // Look through all the users
                                 for (User u : authenticatedUsers) {
                                     // When we get the user associated with the mood event
