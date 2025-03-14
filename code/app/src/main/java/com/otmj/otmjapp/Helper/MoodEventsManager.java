@@ -98,7 +98,7 @@ public class MoodEventsManager {
                         ArrayList<MoodEvent> moodEvents = new ArrayList<>();
                         // For each mood event
                         for (MoodEvent moodEvent : result) {
-                            if(moodEvent.getPrivacy() == privacy) { // Process only the mood events that match the privacy
+                            if(privacy == MoodEvent.Privacy.Private || moodEvent.getPrivacy() == privacy) { // Process only the mood events that match the privacy
                                 moodEvents.add(moodEvent);
 
                                 // Look through all the users
