@@ -3,6 +3,8 @@ package com.otmj.otmjapp.Fragments;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -106,4 +108,8 @@ public class TimelineFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+
+
+
 }

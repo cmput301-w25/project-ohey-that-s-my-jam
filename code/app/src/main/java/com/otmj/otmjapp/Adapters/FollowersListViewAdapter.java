@@ -66,4 +66,3 @@ public class FollowersListViewAdapter extends ArrayAdapter<User> {
         return listItemView;
     }
 }
-

@@ -23,6 +23,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
         <TextView
             android:id="@+id/list_title"
             android:layout_width="370dp"
@@ -36,6 +37,16 @@
     </LinearLayout>
 
     <!-- TextView for 'No followers' message with proper constraints -->
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:queryHint="Search people..."
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/list_view_header"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"/>
+
     <ListView
         android:id="@+id/user_list_view"
         android:layout_width="412dp"
@@ -46,7 +57,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list_view_header" />
+        app:layout_constraintTop_toBottomOf="@+id/search_view" />
 
     <TextView
         android:id="@+id/no_followers_message"
