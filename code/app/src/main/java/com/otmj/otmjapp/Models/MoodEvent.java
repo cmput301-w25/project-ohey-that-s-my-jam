@@ -49,7 +49,6 @@ public class MoodEvent extends DatabaseObject {
         Public,
         Private
     }
-
     private Privacy privacy;
 
     MoodEvent() {
@@ -62,13 +61,15 @@ public class MoodEvent extends DatabaseObject {
                      SocialSituation socialSituation,
                      boolean includeLocation,
                      String reason,
-                     String imageLink) {
+                     String imageLink,
+                     MoodEvent.Privacy privacy) {
         this.userID = userID;
         setEmotionalState(emotionalState);
         this.trigger = trigger;
         setSocialSituation(socialSituation);
         this.reason = reason;
         this.imageLink = imageLink;
+        this.privacy = privacy;
 
 //        if (includeLocation) {
 //            // TODO: Get device's location
@@ -86,7 +87,8 @@ public class MoodEvent extends DatabaseObject {
                      String socialSituation,
                      boolean includeLocation,
                      String reason,
-                     String imageLink) {
+                     String imageLink,
+                     MoodEvent.Privacy privacy) {
         this(
                 userID,
                 EmotionalState.fromString(emotionalState),
@@ -94,7 +96,8 @@ public class MoodEvent extends DatabaseObject {
                 SocialSituation.fromText(socialSituation),
                 includeLocation,
                 reason,
-                imageLink
+                imageLink,
+                privacy
         );
     }
 
@@ -173,6 +176,14 @@ public class MoodEvent extends DatabaseObject {
         this.imageLink = link;
     }
 
+    public Privacy getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(Privacy privacy) {
+        this.privacy = privacy;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -185,13 +196,5 @@ public class MoodEvent extends DatabaseObject {
     @Override
     public int hashCode() {
         return Objects.hash(userID, createdDate);
-    }
-
-    public Privacy getPrivacy() {
-        return privacy;
-    }
-
-    public void setPrivacy(Privacy privacy) {
-        this.privacy = privacy;
     }
 }

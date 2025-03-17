@@ -1,7 +1,6 @@
 package com.otmj.otmjapp.Fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +12,12 @@ import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.firebase.firestore.Filter;
 import com.otmj.otmjapp.Adapters.TimelineMoodEventAdapter;
-import com.otmj.otmjapp.Helper.FirestoreDB;
 import com.otmj.otmjapp.Helper.FollowHandler;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.User;
-import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.databinding.FragmentTimelineBinding;
 
 import java.util.ArrayList;
@@ -90,7 +86,7 @@ public class TimelineFragment extends Fragment {
             ids.add(currentUser.getID()); // Add user's ID to list
 
             MoodEventsManager moodEventsManager = new MoodEventsManager(ids);
-            moodEventsManager.getMoodEvents().observe(getViewLifecycleOwner(), moodEvents -> {
+            moodEventsManager.getPublicMoodEvents(null).observe(getViewLifecycleOwner(), moodEvents -> {
                 allMoodEvents.clear();
                 allMoodEvents.addAll(moodEvents);
 
