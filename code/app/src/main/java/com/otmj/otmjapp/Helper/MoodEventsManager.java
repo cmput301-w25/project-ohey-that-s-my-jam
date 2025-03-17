@@ -133,14 +133,12 @@ public class MoodEventsManager {
      * @see #getMoodEvents(MoodHistoryFilter)
      */
     public LiveData<ArrayList<MoodEvent>> getPublicMoodEvents(MoodHistoryFilter customFilter) {
-        MoodHistoryFilter defaultFilter = new MoodHistoryFilter(Filter.equalTo("privacy", MoodEvent.Privacy.Public),
-                                   new DBSortOption("createdDate", true));
-        customFilter = (null != customFilter)
-                       ? customFilter
-                       : defaultFilter;
+        MoodHistoryFilter defaultFilter = MoodHistoryFilter.Default(userIDs)
+                .addFilter(Filter.equalTo("privacy", MoodEvent.Privacy.Public));
 
-
-        return getMoodEvents(customFilter);
+        return getMoodEvents ((null != customFilter)
+                ? customFilter
+                : defaultFilter);
     }
 
     /**

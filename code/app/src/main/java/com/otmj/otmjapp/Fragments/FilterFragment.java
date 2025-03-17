@@ -42,7 +42,7 @@ public class FilterFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         AlertDialog dialog = builder.setView(view).create();
 
-        Button closeButton = view.findViewById(R.id.close_fragment_button);
+        ImageButton closeButton = view.findViewById(R.id.close_fragment_button);
         closeButton.setOnClickListener(v -> dialog.dismiss());
 
         ChipGroup chipGroup = view.findViewById(R.id.filter_chips);
