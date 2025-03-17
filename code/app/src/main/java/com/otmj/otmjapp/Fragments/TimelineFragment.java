@@ -8,6 +8,8 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.otmj.otmjapp.Adapters.TimelineMoodEventAdapter;
@@ -56,6 +58,17 @@ public class TimelineFragment extends Fragment {
             // Go to details view
             NavHostFragment.findNavController(TimelineFragment.this).navigate(toDetails);
         }));
+
+        // Link people you may know button to page
+        // Navigate to Followers List when Followers Button is clicked
+        binding.peopleYouMayKnowButton.setOnClickListener(v -> {
+            Bundle args = new Bundle();
+            args.putString("buttonClicked", "peopleYouMayKnow");  // Add an argument indicating which button was clicked
+
+            // Navigate to Followers List using Navigation Component
+            Navigation.findNavController(v).navigate(R.id.action_timelineFragment_to_peopleYouMayKnowFragment, args);
+        });
+
 
         return binding.getRoot();
     }
