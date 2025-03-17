@@ -1,5 +1,6 @@
 package com.otmj.otmjapp.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
@@ -7,10 +8,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.chip.Chip;
@@ -29,16 +32,29 @@ import com.otmj.otmjapp.Helper.TextValidator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A dialog fragment for adding or editing a MoodEvent.
+ * This fragment allows users to select an emotional state, provide a reason, specify a trigger,
+ * and optionally select a social situation. If an existing MoodEvent is passed, it allows editing
+ * the event details.
+ */
 public class MoodEventAddEditDialogFragment extends DialogFragment {
     private EmotionalState selectedEmotionalState;
     private SocialSituation selectedSocialSituation;
     private MoodEvent moodEvent;
+    private MoodEvent.Privacy privacy;
     private Map<String, SocialSituation> socialSituationMapping;
 
     // Will be implemented in project part 4
     // private String ImageLink
     // private boolean addLocation
 
+    /**
+     * Creates a new instance of the dialog fragment with a given MoodEvent.
+     *
+     * @param moodEvent The MoodEvent to be edited.
+     * @return A new instance of MoodEventAddEditDialogFragment.
+     */
     public static MoodEventAddEditDialogFragment newInstance(MoodEvent moodEvent) {
         Bundle args = new Bundle();
         args.putSerializable("moodEvent", moodEvent);
@@ -48,30 +64,35 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    /**
+     * Called when the dialog is created, setting up the UI elements and initializing event handlers.
+     *
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The created Dialog.
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.create_mood_event, null);
 
         socialSituationMapping = Map.of(
-            getString(R.string.alone_text), SocialSituation.Alone,
-            getString(R.string.with_one_person_text), SocialSituation.With_1_Other,
-            getString(R.string.with_more_than_two_people_text), SocialSituation.With_2_Others,
-            getString(R.string.crowd_text), SocialSituation.With_A_Crowd
+                getString(R.string.alone_text), SocialSituation.Alone,
+                getString(R.string.with_one_person_text), SocialSituation.With_1_Other,
+                getString(R.string.with_more_than_two_people_text), SocialSituation.With_2_Others,
+                getString(R.string.crowd_text), SocialSituation.With_A_Crowd
         );
 
-        // Initialize everything in the fragment
-        TextInputLayout reasonWhyInputLayout = view.findViewById(R.id.reason_why_input_box),
-                triggerInputLayout = view.findViewById(R.id.trigger_input_box);
-        TextInputEditText reasonWhyInputText = view.findViewById(R.id.reason_why_edit_text),
-                triggerInputText = view.findViewById(R.id.trigger_edit_text);
+        // Initialize UI components
+        TextInputLayout reasonWhyInputLayout = view.findViewById(R.id.reason_why_input_box);
+        TextInputEditText reasonWhyInputText = view.findViewById(R.id.reason_why_edit_text);
         ChipGroup moodChipGroup = view.findViewById(R.id.emotional_state_chip_group),
                 socialSituationChipGroup = view.findViewById(R.id.social_situation_chip_group);
 
         ImageButton closeFragmentButton = view.findViewById(R.id.ExitCreateMoodEvent);
         Button submitPostButton = view.findViewById(R.id.SubmitPostButton);
         ImageButton deletePostButton = view.findViewById(R.id.DeletePostButton);
-
+        // using SwitchCompat makes the app crash when the 'addMoodEvent' button is clicked
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch privacySwitch = view.findViewById(R.id.privacy_switch);
         // Hide delete button by default
         deletePostButton.setVisibility(View.GONE);
 
@@ -84,6 +105,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             if (moodEvent != null) {
                 selectedEmotionalState = moodEvent.getEmotionalState();
                 selectedSocialSituation = moodEvent.getSocialSituation();
+                privacy = moodEvent.getPrivacy();
 
                 submitPostButton.setText(R.string.edit_button_text);
                 deletePostButton.setVisibility(View.VISIBLE); // Show delete button in edit mode
@@ -92,12 +114,11 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 if (moodEvent.getReason() != null) {
                     reasonWhyInputText.setText(moodEvent.getReason());
                 }
-                if (moodEvent.getTrigger() != null) {
-                    triggerInputText.setText(moodEvent.getTrigger());
-                }
                 if (moodEvent.getSocialSituation() != null) {
                     setSelectedChip(socialSituationChipGroup, moodEvent.getSocialSituation());
                 }
+
+                privacySwitch.setChecked(privacy == MoodEvent.Privacy.Public);
                 // setting boolean location and string imageLink will be added in project part 4
             }
         }
@@ -107,10 +128,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             @Override
             public void validateWhileTyping(TextInputEditText textInputEditText, TextInputLayout textInputLayout) {
                 String input = textInputEditText.getText().toString().trim();
-                if (input.length() > 20) {
-                    textInputLayout.setError("Max 20 characters");
-                } else if (input.split("\\s+").length > 3) {
-                    textInputLayout.setError("Max 3 words");
+                if (input.length() > 200) {
+                    textInputLayout.setError("Max 200 characters");
                 } else {
                     textInputLayout.setError(null);
                 }
@@ -118,26 +137,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
 
             @Override
             public void validateAfterTyping(TextInputEditText textInputEditText, TextInputLayout textInputLayout) {
-//                if (textInputEditText.getText().toString().isBlank()) {
-//                    textInputLayout.setError("This field cannot be empty");
-//                }
-            }
-        });
-
-        // Input validation for "Trigger"
-        triggerInputText.addTextChangedListener(new TextValidator(triggerInputText, triggerInputLayout) {
-            @Override
-            public void validateWhileTyping(TextInputEditText textInputEditText, TextInputLayout textInputLayout) {
-                if (textInputEditText.getText().toString().contains(" ")) {
-                    textInputLayout.setError("Max 1 word");
-                } else {
-                    textInputLayout.setError(null);
-                }
-            }
-
-            @Override
-            public void validateAfterTyping(TextInputEditText textInputEditText, TextInputLayout textInputLayout) {
-                // Not needed as social trigger is optional
+                // not needed
             }
         });
 
@@ -154,14 +154,24 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         // close button
         closeFragmentButton.setOnClickListener(v -> dismiss());
 
+        // privacy toggle
+        privacySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            privacy = isChecked ? MoodEvent.Privacy.Public : MoodEvent.Privacy.Private;
+        });
+
         // submit post button
         submitPostButton.setOnClickListener(v -> {
             String reason = reasonWhyInputText.getText().toString().trim();
-            String trigger = triggerInputText.getText().toString().trim();
 
-            if (selectedEmotionalState != null) {
-                setupMoodEvent(reason, trigger);
+            if (moodChipGroup.getCheckedChipId() != View.NO_ID
+                    && reason.length() <= 200) {
+                setupMoodEvent(reason);
                 dismiss();
+            } else if (moodChipGroup.getCheckedChipId() == View.NO_ID) {
+                    Toast.makeText(getContext(),
+                                "Please select an emotional state",
+                                Toast.LENGTH_SHORT)
+                        .show();
             }
         });
 
@@ -200,46 +210,61 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    private void setupMoodEvent(String reason, String trigger) {
-        if (selectedEmotionalState == null) {
-            Toast.makeText(getContext(),
-                            "Please select an emotional state",
-                            Toast.LENGTH_SHORT)
-                    .show();
-        }
+    private void setupMoodEvent(String reason) {
 
         User user = UserManager.getInstance().getCurrentUser();
         MoodEventsManager moodEventsManager =
                 new MoodEventsManager(List.of(user.getID()));
-
+        Log.d("MoodEvent privacy", "setupMoodEvent:" + privacy);
         if (moodEvent != null) {
             moodEvent.setEmotionalState(selectedEmotionalState);
             moodEvent.setReason(reason);
-            moodEvent.setTrigger(trigger);
             moodEvent.setSocialSituation(selectedSocialSituation);
+            moodEvent.setPrivacy(privacy);
 
             moodEventsManager.updateMoodEvent(moodEvent);
         } else {
+            if(privacy == null) { // privacy is null by default. If user doesn't toggle switch, set it to private
+                privacy = MoodEvent.Privacy.Private;
+            }
+
             moodEventsManager.addMoodEvent(new MoodEvent(
                     user.getID(),
                     selectedEmotionalState,
-                    trigger,
+                    "",
                     selectedSocialSituation,
                     true,
                     reason,
-                    null
+                    null,
+                    privacy
             ));
         }
     }
 
+    /**
+     * Sets the selected emotional state based on user selection.
+     *
+     * @param emotionalState The emotional state as a string.
+     */
     private void setEmotionalState(String emotionalState) {
         selectedEmotionalState = EmotionalState.fromString(emotionalState);
     }
 
+    /**
+     * Sets the selected social situation based on user selection.
+     *
+     * @param text The social situation as a string.
+     */
     private void setSocialSituation(String text) {
         selectedSocialSituation = socialSituationMapping.get(text);
     }
 
+    /**
+     * Marks the correct chip in a ChipGroup based on the selected emotional state.
+     *
+     * @param chipGroup The ChipGroup containing emotion chips.
+     * @param emotionalState The selected emotional state.
+     */
     private void setSelectedChip(ChipGroup chipGroup, EmotionalState emotionalState) {
         for (int i = 0; i < chipGroup.getChildCount(); i++) {
             Chip chip = (Chip) chipGroup.getChildAt(i);
@@ -251,6 +276,12 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Marks the correct chip in a ChipGroup based on the selected social situation.
+     *
+     * @param chipGroup The ChipGroup containing social situation chips.
+     * @param socialSituation The selected social situation.
+     */
     private void setSelectedChip(ChipGroup chipGroup, SocialSituation socialSituation) {
         for (int i = 0; i < chipGroup.getChildCount(); i++) {
             Chip chip = (Chip) chipGroup.getChildAt(i);
@@ -261,4 +292,5 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             }
         }
     }
+
 }

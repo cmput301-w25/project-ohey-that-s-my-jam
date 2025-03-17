@@ -9,6 +9,9 @@ import com.google.firebase.firestore.ServerTimestamp;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * Represents a mood event in the app; includes the user's emotional state, social situation, trigger, etc.
+ */
 public class MoodEvent extends DatabaseObject {
     private final String userID;
     /**
@@ -42,6 +45,12 @@ public class MoodEvent extends DatabaseObject {
     private String reason;
     private String imageLink;
 
+    public enum Privacy {
+        Public,
+        Private
+    }
+    private Privacy privacy;
+
     MoodEvent() {
         userID = "";
     }
@@ -52,13 +61,15 @@ public class MoodEvent extends DatabaseObject {
                      SocialSituation socialSituation,
                      boolean includeLocation,
                      String reason,
-                     String imageLink) {
+                     String imageLink,
+                     MoodEvent.Privacy privacy) {
         this.userID = userID;
         setEmotionalState(emotionalState);
         this.trigger = trigger;
         setSocialSituation(socialSituation);
         this.reason = reason;
         this.imageLink = imageLink;
+        this.privacy = privacy;
 
 //        if (includeLocation) {
 //            // TODO: Get device's location
@@ -76,7 +87,8 @@ public class MoodEvent extends DatabaseObject {
                      String socialSituation,
                      boolean includeLocation,
                      String reason,
-                     String imageLink) {
+                     String imageLink,
+                     MoodEvent.Privacy privacy) {
         this(
                 userID,
                 EmotionalState.fromString(emotionalState),
@@ -84,7 +96,8 @@ public class MoodEvent extends DatabaseObject {
                 SocialSituation.fromText(socialSituation),
                 includeLocation,
                 reason,
-                imageLink
+                imageLink,
+                privacy
         );
     }
 
@@ -161,6 +174,14 @@ public class MoodEvent extends DatabaseObject {
 
     public void setImageLink(String link) {
         this.imageLink = link;
+    }
+
+    public Privacy getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(Privacy privacy) {
+        this.privacy = privacy;
     }
 
     @Override

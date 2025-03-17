@@ -81,6 +81,13 @@ public class FollowHandler {
         });
     }
 
+    /**
+     * Retrieves the IDs of followeers of followees for a given user based on the specified follow type.
+     *
+     * @param userID     The ID of the user for whom to fetch follower or followee IDs.
+     * @param followType The type of follow relationship to fetch (e.g., Followers or Following).
+     * @param callback   A callback to handle the result of the operation. The callback provides a list of user IDs.
+     */
     public void getFollowIDs(String userID, FollowType followType, FollowIDCallback callback) {
         Filter filter;
         if (followType == FollowType.Followers) {
@@ -111,6 +118,13 @@ public class FollowHandler {
         });
     }
 
+    /**
+     * Retrieves the {@link User} objects for followers or followees of a given user based on the specified follow type.
+     *
+     * @param userID     The ID of the user for whom to fetch followers or followees.
+     * @param followType The type of follow relationship to fetch (e.g., Followers or Following).
+     * @param callback   A callback to handle the result of the operation. The callback provides a list of user objects.
+     */
     private void getFollows(String userID, FollowType followType, FollowCallback callback) {
        getFollowIDs(userID, followType, ids -> {
            UserManager userManager = UserManager.getInstance();
@@ -154,5 +168,51 @@ public class FollowHandler {
      */
     public void fetchFollowing(String userID, FollowCallback callback) {
         getFollows(userID, FollowType.Following, callback);
+    }
+
+    /**
+     * Fetches all the users that the current user is NOT following
+     *
+     * @param callback      the callback to handle the result, passing the list of followers or an error
+     */
+    public void fetchNotFollowingUsers(FollowCallback callback) {
+        UserManager userManager = UserManager.getInstance();
+
+        // Step 1: Get all users
+        userManager.getAllUsers(new UserManager.AuthenticationCallback() {
+            @Override
+            public void onAuthenticated(ArrayList<User> allUsers) {
+                // Step 2: Get users the current user is following
+                fetchFollowing(currentUser.getID(), new FollowCallback() {
+                    @Override
+                    public void onSuccess(ArrayList<User> followingUsers) {
+                        ArrayList<String> followingIDs = new ArrayList<>();
+                        for (User user : followingUsers) {
+                            followingIDs.add(user.getID());
+                        }
+
+                        // Step 3: Filter out users that are in the following list
+                        ArrayList<User> notFollowingUsers = new ArrayList<>();
+                        for (User user : allUsers) {
+                            if (!followingIDs.contains(user.getID()) && !user.getID().equals(currentUser.getID())) {
+                                notFollowingUsers.add(user);
+                            }
+                        }
+
+                        callback.onSuccess(notFollowingUsers);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        callback.onFailure(e);
+                    }
+                });
+            }
+
+            @Override
+            public void onAuthenticationFailure(String reason) {
+                callback.onFailure(new Exception(reason));
+            }
+        });
     }
 }

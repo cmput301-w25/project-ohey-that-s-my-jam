@@ -6,6 +6,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Represents a filter for mood history data and can be used to define criteria for filtering mood events.
+ */
 public class MoodHistoryFilter {
     // Field names as found in database
     enum MoodEventFields {

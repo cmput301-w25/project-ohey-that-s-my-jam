@@ -1,5 +1,7 @@
 package com.otmj.otmjapp.Helper;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.FieldPath;
@@ -174,4 +176,27 @@ public class UserManager {
     public User getCurrentUser() {
         return currentUser;
     }
+
+    /**
+     * Grabs all users in db
+     *
+     */
+    public void getAllUsers(@NonNull AuthenticationCallback callback) {
+        db.getDocuments(User.class, new FirestoreDB.DBCallback<>() {
+            @Override
+            public void onSuccess(ArrayList<User> result) {
+                // Log fetched users
+                Log.d("UserManager", "Fetched Users: " + result.toString());
+
+                callback.onAuthenticated(result);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("UserManager", "Error fetching users: " + e.getMessage());
+                callback.onAuthenticationFailure(e.getMessage());
+            }
+        });
+    }
+
 }

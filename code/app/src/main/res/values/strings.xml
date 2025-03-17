@@ -69,7 +69,7 @@
     <string name="unfollow_text">UNFOLLOW</string>
 
     <string name="confirm_request_text">CONFIRM</string>
-    <string name="temp_list_title">FOLLOWERS</string>
+    <string name="temp_list_title">LIST TITLE</string>
     <string name="whose_mood_cap">WHOSE MOOD DO YOU WANT TO SEE?</string>
     <string name="friend_cap">FRIEND</string>
     <string name="all_cap">ALL</string>
@@ -108,5 +108,6 @@
     <string name="select_mood_status">Select A Mood</string>
     <string name="edit_button_text">EDIT</string>
     <string name="ic_delete_detail">Deletes the mood event</string>
+    <string name="add_comment">Add Comment</string>
 
 </resources>
