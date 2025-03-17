@@ -81,12 +81,7 @@ public class UserProfileFragment extends Fragment {
         // get MoodEvents
         MoodEventsManager mood_event_controller = new MoodEventsManager(List.of(user.getID()));
 
-        // create filter to get only the moodEvents of the user that is signed in
-        DBSortOption sortOption = new DBSortOption("createdDate", true);
-        MoodHistoryFilter historyFilter = new MoodHistoryFilter(Filter.equalTo("userID", user.getID()),
-                                          sortOption);
-
-        moodEventsLiveData = mood_event_controller.getUserMoodEvents(historyFilter);
+        moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
         if (moodEventsLiveData != null) {
             getMoodEventFromDB();
         }

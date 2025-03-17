@@ -3,6 +3,7 @@ package com.otmj.otmjapp.Fragments;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -17,6 +18,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
+import com.otmj.otmjapp.Helper.MoodHistoryFilter;
 import com.otmj.otmjapp.Helper.TextValidator;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.EmotionalState;
@@ -48,7 +50,10 @@ public class FilterFragment extends DialogFragment {
         ChipGroup chipGroup = view.findViewById(R.id.filter_chips);
         chipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (!checkedIds.isEmpty()) {
-
+//                MoodHistoryFilter filters = MoodHistoryFilter.Default()
+//                if (checkedIds.contains(R.id.recent_week_chip)) {
+//
+//                }
             }
         });
 

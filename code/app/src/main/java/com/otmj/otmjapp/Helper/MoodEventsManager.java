@@ -3,6 +3,7 @@ package com.otmj.otmjapp.Helper;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -51,43 +52,23 @@ public class MoodEventsManager {
     }
 
     /**
-     * Gets all mood events from user(s)
-     * @return An observable value that returns all the mood events.
-     * @see #getMoodEvents(MoodHistoryFilter)
-     */
-    public LiveData<ArrayList<MoodEvent>> getMoodEvents() {
-        // Assume that mood history has been populated (see constructor)
-        if (lastFilter == null) {
-            return moodHistory;
-        } else {
-            // If previously getMoodEvents was called with a filter,
-            // we need to get all mood events again
-            return getMoodEvents(null);
-        }
-    }
-
-    /**
      * Gets all mood events from user(s) that match the provided filters. (We get the user's
      * information before retrieving mood events.)
      *
-     * @param customFilter A filter specifies the condition for the mood event to be returned
-     *                     and how to sort it
+     * @param filter    A filter specifies the condition for the mood event to be returned
+     *                  and how to sort it
      * @return An observable that returns the filtered mood events
      */
-    private LiveData<ArrayList<MoodEvent>> getMoodEvents(MoodHistoryFilter customFilter) {
+    private LiveData<ArrayList<MoodEvent>> getMoodEvents(@NonNull MoodHistoryFilter filter) {
         // We need the users associated with each mood event
         UserManager.getInstance().getUsers(userIDs, new UserManager.AuthenticationCallback() {
             @Override
             public void onAuthenticated(ArrayList<User> authenticatedUsers) {
-                MoodHistoryFilter filter = (null != customFilter)
-                        ? customFilter
-                        : MoodHistoryFilter.Default(userIDs);
-
                 // Get all mood events from specified users
                 db.getDocuments(filter.getFilter(), MoodEvent.class, new FirestoreDB.DBCallback<>() {
                     @Override
                     public void onSuccess(ArrayList<MoodEvent> result) {
-                        lastFilter = customFilter;
+                        lastFilter = filter;
 
                         ArrayList<MoodEvent> moodEvents = new ArrayList<>();
                         // For each mood event //
@@ -150,7 +131,9 @@ public class MoodEventsManager {
      * @see #getMoodEvents(MoodHistoryFilter)
      */
     public LiveData<ArrayList<MoodEvent>> getUserMoodEvents(MoodHistoryFilter customFilter) {
-        return getMoodEvents(customFilter);
+        return getMoodEvents((null != customFilter)
+                ? customFilter
+                : MoodHistoryFilter.Default(userIDs));
     }
 
     /**
