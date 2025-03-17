@@ -182,7 +182,7 @@ public class UserManager {
      *
      */
     public void getAllUsers(@NonNull AuthenticationCallback callback) {
-        db.getDocuments(null, User.class, new FirestoreDB.DBCallback<>() {
+        db.getDocuments(User.class, new FirestoreDB.DBCallback<>() {
             @Override
             public void onSuccess(ArrayList<User> result) {
                 // Log fetched users
