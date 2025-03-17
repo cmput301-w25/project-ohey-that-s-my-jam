@@ -83,6 +83,8 @@ public class MoodEventsManager {
                                     break;
                                 }
                             }
+
+                            Log.d("MoodEventsManager", moodEvent.toString());
                         }
 
                         moodHistory.setValue(moodEvents);
@@ -114,12 +116,12 @@ public class MoodEventsManager {
      * @see #getMoodEvents(MoodHistoryFilter)
      */
     public LiveData<ArrayList<MoodEvent>> getPublicMoodEvents(MoodHistoryFilter customFilter) {
-        MoodHistoryFilter defaultFilter = MoodHistoryFilter.Default(userIDs)
-                .addFilter(Filter.equalTo("privacy", MoodEvent.Privacy.Public));
+        if (customFilter == null) {
+            customFilter = MoodHistoryFilter.Default(userIDs);
+        }
+        customFilter.addFilter(Filter.equalTo("privacy", MoodEvent.Privacy.Public));
 
-        return getMoodEvents ((null != customFilter)
-                ? customFilter
-                : defaultFilter);
+        return getMoodEvents(customFilter);
     }
 
     /**

@@ -22,7 +22,7 @@ public class MoodHistoryFilter {
         reason
     }
 
-    private final Filter filter;
+    private Filter filter;
     private final DBSortOption sortOption;
 
     private MoodHistoryFilter(Filter filter, DBSortOption sortOption) {
@@ -33,37 +33,33 @@ public class MoodHistoryFilter {
     /**
      * AND current filter with new filter to produce a new MoodHistoryFilter
      * @param newFilter New filter to AND with current filter
-     * @return          A new MoodHistoryFilter with a compound filter formed by ANDing
      */
-    public MoodHistoryFilter addFilter(Filter newFilter) {
-        Filter andFilter = Filter.and(this.filter, newFilter);
-        return new MoodHistoryFilter(andFilter, sortOption);
-    }
-
-    /**
-     * OR current filter with new filter to produce a new MoodHistoryFilter
-     * @param newFilter New filter to OR with current filter
-     * @return          A new MoodHistoryFilter with a compound filter formed by ORing
-     */
-    public MoodHistoryFilter includeFilter(Filter newFilter) {
-        Filter orFilter = Filter.or(this.filter, newFilter);
-        return new MoodHistoryFilter(orFilter, sortOption);
-    }
-
-    /**
-     * Accepts a MoodHistoryFilter object, instead of a filter
-     * @see #includeFilter(Filter)
-     */
-    public MoodHistoryFilter includeFilter(MoodHistoryFilter newFilter) {
-        return includeFilter(newFilter.getFilter());
+    public void addFilter(Filter newFilter) {
+        filter = Filter.and(filter, newFilter);
     }
 
     /**
      * Accepts a MoodHistoryFilter object, instead of a filter
      * @see #addFilter(Filter)
      */
-    public MoodHistoryFilter addFilter(MoodHistoryFilter newFilter) {
-        return addFilter(newFilter.getFilter());
+    public void addFilter(MoodHistoryFilter newFilter) {
+        addFilter(newFilter.getFilter());
+    }
+
+    /**
+     * OR current filter with new filter to produce a new MoodHistoryFilter
+     * @param newFilter New filter to OR with current filter
+     */
+    public void includeFilter(Filter newFilter) {
+        filter = Filter.or(filter, newFilter);
+    }
+
+    /**
+     * Accepts a MoodHistoryFilter object, instead of a filter
+     * @see #includeFilter(Filter)
+     */
+    public void includeFilter(MoodHistoryFilter newFilter) {
+        includeFilter(newFilter.getFilter());
     }
 
     /**
