@@ -18,6 +18,7 @@
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.OTMJApp"
+            android:windowSoftInputMode="adjustNothing"
             android:label="Main Page" /> <!-- Added title here -->
 
         <activity
