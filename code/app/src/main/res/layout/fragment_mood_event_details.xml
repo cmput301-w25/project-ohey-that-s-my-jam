@@ -61,14 +61,12 @@
     <TextView
         android:id="@+id/details_event_timestamp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="15dp"
         android:text="@string/date_and_time_text"
         android:textColor="@color/gray"
         android:textSize="11sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintBottom_toBottomOf="@+id/details_emotion_and_social_situation"/>
-
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
     <TextView
         android:id="@+id/details_emotion_and_social_situation"
         android:layout_width="0dp"
@@ -77,12 +75,14 @@
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/details_event_timestamp"
-        app:layout_constraintBottom_toBottomOf="@+id/details_event_timestamp"/>
+        app:layout_constraintBottom_toBottomOf="@+id/details_event_timestamp"
+        android:paddingTop="15dp"
+        android:paddingBottom="5dp"/>
 
     <ImageView
         android:id="@+id/details_mood_image"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
         android:contentDescription="@string/reason_why_image_desc"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
@@ -95,7 +95,6 @@
         android:layout_height="wrap_content"
         android:text="@string/reason_why"
         android:textSize="16sp"
-        android:paddingTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/details_mood_image" />

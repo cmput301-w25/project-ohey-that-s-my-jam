@@ -2,11 +2,13 @@ package com.otmj.otmjapp.Adapters;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.format.DateUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.otmj.otmjapp.Helper.CustomImageSpan;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
@@ -27,7 +30,6 @@ import java.util.ArrayList;
 
 
 public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
-
     public TimelineMoodEventAdapter(@NonNull Context context, @NonNull ArrayList<MoodEvent> objects) {
         super(context,0, objects);
     }
@@ -46,31 +48,47 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         if(null != m.getUser()) {
             TextView usernameText = view.findViewById(R.id.timeline_mood_event_username);
             setMoodEventHeaderText(usernameText, m);
+        }
 
-            TextView description = view.findViewById(R.id.timeline_mood_event_desc);
-            if (m.getReason() != null && !m.getReason().isEmpty()) {
-                description.setText(m.getReason());
-            } else {
-                description.setVisibility(View.GONE);
-            }
+        TextView description = view.findViewById(R.id.timeline_mood_event_desc);
+        if (m.getReason() != null && !m.getReason().isEmpty()) {
+            description.setVisibility(View.VISIBLE);
+            description.setText(m.getReason());
+        } else {
+            description.setVisibility(View.GONE);
+        }
 
-            long createdTimeMillis = m.getCreatedDate() != null ? m.getCreatedDate().getTime() : System.currentTimeMillis();
-            String timeAgo = getTimeAgo(createdTimeMillis);
+        long createdTimeMillis = m.getCreatedDate() != null ? m.getCreatedDate().getTime() : System.currentTimeMillis();
+        String timeAgo = getTimeAgo(createdTimeMillis);
 
-            TextView timeAgoText = view.findViewById(R.id.timeline_mood_event_date);
-            timeAgoText.setText(timeAgo);
+        TextView timeAgoText = view.findViewById(R.id.timeline_mood_event_date);
+        timeAgoText.setText(timeAgo);
 
-            ImageView moodEventImage = view.findViewById(R.id.mood_image);
-            if (m.getImageLink() == null) {
-                moodEventImage.setVisibility(View.GONE);
-            }
+        ImageView moodEventImage = view.findViewById(R.id.mood_image);
+        // Load Image if available
+        if (m.getImageLink() != null && !m.getImageLink().isEmpty()) {
+            Log.d("ImageLoader", "Loading image: " + m.getImageLink());
 
-            // TODO: Set location
-            // do not show for now
-            TextView locationText = view.findViewById(R.id.timeline_mood_event_location);
-            if (m.getLocation() == null) {
-                locationText.setVisibility(View.GONE);
-            }
+            Uri uri = Uri.parse(m.getImageLink());
+
+            // Ensure ImageView is visible
+            moodEventImage.setVisibility(View.VISIBLE);
+
+            // Load with Glide (use parent.getContext() for correct context)
+            Glide.with(parent.getContext())
+                    .load(uri)
+                    .into(moodEventImage);
+        } else {
+            // Hide ImageView if no image
+            moodEventImage.setVisibility(View.GONE);
+        }
+
+
+        // TODO: Set location
+        // do not show for now
+        TextView locationText = view.findViewById(R.id.timeline_mood_event_location);
+        if (m.getLocation() == null) {
+            locationText.setVisibility(View.GONE);
         }
 
 
