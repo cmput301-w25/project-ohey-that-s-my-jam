@@ -6,7 +6,21 @@ plugins {
 
     // SafeArgs
     id("androidx.navigation.safeargs")
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
+
+secrets {
+    // To add your Maps API key to this project:
+    // 1. If the secrets.properties file does not exist, create it in the same folder as the local.properties file.
+    // 2. Add this line, where YOUR_API_KEY is your API key:
+    //        MAPS_API_KEY=YOUR_API_KEY
+    propertiesFileName = "secrets.properties"
+
+    // A properties file containing default secret values. This file can be
+    // checked in version control.
+    defaultPropertiesFileName = "local.properties"
+}
+
 
 android {
     namespace = "com.otmj.otmjapp"
@@ -62,6 +76,7 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation(libs.annotation)
+    implementation(libs.play.services.maps)
     testImplementation(libs.runner)
     testImplementation(libs.ext.junit)
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
@@ -78,4 +93,7 @@ dependencies {
     implementation("io.github.ParkSangGwon:tedimagepicker:1.6.1") {
         exclude(group = "com.android.support")
     }
+
+    implementation("com.google.android.gms:play-services-maps:19.1.0")
+
 }
