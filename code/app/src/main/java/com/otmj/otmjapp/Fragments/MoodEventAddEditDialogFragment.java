@@ -1,19 +1,26 @@
 package com.otmj.otmjapp.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.chip.Chip;
@@ -29,8 +36,15 @@ import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.Helper.TextValidator;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import gun0912.tedimagepicker.builder.TedImagePicker;
+import gun0912.tedimagepicker.builder.type.MediaType;
+
 
 /**
  * A dialog fragment for adding or editing a MoodEvent.
@@ -45,8 +59,9 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
     private MoodEvent.Privacy privacy;
     private Map<String, SocialSituation> socialSituationMapping;
 
+    private String imageLink;
+
     // Will be implemented in project part 4
-    // private String ImageLink
     // private boolean addLocation
 
     /**
@@ -91,6 +106,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         ImageButton closeFragmentButton = view.findViewById(R.id.ExitCreateMoodEvent);
         Button submitPostButton = view.findViewById(R.id.SubmitPostButton);
         ImageButton deletePostButton = view.findViewById(R.id.DeletePostButton);
+        ImageView uploadImage = view.findViewById(R.id.add_image_button);
+
         // using SwitchCompat makes the app crash when the 'addMoodEvent' button is clicked
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch privacySwitch = view.findViewById(R.id.privacy_switch);
         // Hide delete button by default
@@ -116,6 +133,9 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 }
                 if (moodEvent.getSocialSituation() != null) {
                     setSelectedChip(socialSituationChipGroup, moodEvent.getSocialSituation());
+                }
+                if (moodEvent.getImageLink() != null) {
+                    imageLink = moodEvent.getImageLink();
                 }
 
                 privacySwitch.setChecked(privacy == MoodEvent.Privacy.Public);
@@ -148,6 +168,14 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 String chipText = chip.getText().toString();
 
                 setSocialSituation(chipText);
+            }
+        });
+
+        uploadImage.setOnClickListener(v -> {
+            if (imageLink == null) {
+                setImageLink();
+            } else {
+                imageLink = updateImageLink(imageLink);
             }
         });
 
@@ -221,7 +249,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             moodEvent.setReason(reason);
             moodEvent.setSocialSituation(selectedSocialSituation);
             moodEvent.setPrivacy(privacy);
-
+            moodEvent.setImageLink(imageLink);
             moodEventsManager.updateMoodEvent(moodEvent);
         } else {
             if(privacy == null) { // privacy is null by default. If user doesn't toggle switch, set it to private
@@ -235,7 +263,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     selectedSocialSituation,
                     true,
                     reason,
-                    null,
+                    imageLink,
                     privacy
             ));
         }
@@ -291,6 +319,43 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 return;
             }
         }
+    }
+
+    private void setImageLink() {
+        TedImagePicker.with(getContext())
+                .title("Select an Image")
+                .mediaType(MediaType.IMAGE)
+                .showCameraTile(false)
+                .max(1, "You can only select 1 image.")
+                .startMultiImage(uriList -> {
+                    if (!uriList.isEmpty()) {
+                        Uri uri = uriList.get(0);
+                        imageLink = uri.toString();
+                    }
+                });
+    }
+
+    private String updateImageLink(String imageLink) {
+        Uri preselectedImage = Uri.parse(imageLink);
+        List<Uri> updatedImage = new ArrayList<>();
+
+        TedImagePicker.with(getContext())
+                .title("Select an Image")
+                .mediaType(MediaType.IMAGE)
+                .showCameraTile(false)
+                .max(1, "You can only select 1 image.")
+                .selectedUri(Collections.singletonList(preselectedImage))
+                .startMultiImage(uriList -> {
+                    if (!uriList.isEmpty()) {
+                        updatedImage.add(uriList.get(0));
+                    }
+                });
+
+            if (updatedImage.isEmpty()) {
+                return null;
+            } else {
+                return updatedImage.get(0).toString();
+            }
     }
 
 }

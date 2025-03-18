@@ -2,7 +2,9 @@ package com.otmj.otmjapp.Fragments;
 
 import androidx.core.content.ContextCompat;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +16,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +25,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.otmj.otmjapp.Helper.CustomImageSpan;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
+import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.databinding.FragmentMoodEventDetailsBinding;
 
 /**
@@ -66,6 +74,7 @@ public class MoodEventDetailsFragment extends Fragment {
         TextView usernameText = binding.detailsUsername;
         TextView eventTimestampText = binding.detailsEventTimestamp;
         ImageView moodEventImage = binding.detailsMoodImage;
+
         TextView detailsReasonWhy = binding.detailsReasonWhy;
         TextView eventLocationText = binding.detailsEventLocation;
         TextView detailsEmotionAndSocialSituation = binding.detailsEmotionAndSocialSituation;
@@ -91,12 +100,22 @@ public class MoodEventDetailsFragment extends Fragment {
             detailsReasonWhy.setVisibility(View.GONE);
         }
 
-        // Load mood event image if available
-        if (moodEvent.getImageLink() != null) {
-            Glide.with(requireContext()).load(moodEvent.getImageLink()).into(moodEventImage);
+        Log.d("MoodEventDetails", "MoodEvent: " + moodEvent);
+        Log.d("MoodEventDetails", "Image Link: " + moodEvent.getImageLink());
+
+        // Load Image if available
+        if (moodEvent.getImageLink() != null && !moodEvent.getImageLink().isEmpty()) {
+            moodEventImage.setVisibility(View.VISIBLE);
+            Uri uri = Uri.parse(moodEvent.getImageLink());
+
+            Glide.with(this)
+                    .load(uri)
+                    .into(moodEventImage);
         } else {
+            // Hide ImageView if no image
             moodEventImage.setVisibility(View.GONE);
         }
+
 
         // Set location if available
         LinearLayout locationIconAndTextLayout = binding.locationIconAndTextLayout;

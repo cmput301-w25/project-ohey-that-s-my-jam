@@ -38,6 +38,9 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    buildFeatures {
+        dataBinding = true
+    }
 }
 
 dependencies {
@@ -71,4 +74,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core:5.7.0")
     testImplementation("org.mockito:mockito-inline:5.2.0")
     implementation("net.bytebuddy:byte-buddy:1.17.1")
+
+    implementation("io.github.ParkSangGwon:tedimagepicker:1.6.1") {
+        exclude(group = "com.android.support")
+    }
 }
