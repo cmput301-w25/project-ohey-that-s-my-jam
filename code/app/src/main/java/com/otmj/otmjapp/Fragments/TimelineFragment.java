@@ -104,8 +104,8 @@ public class TimelineFragment extends Fragment {
                     if (last7Days) {
                         customFilter.addFilter(MoodHistoryFilter.MostRecentWeek());
                     }
-                    for (EmotionalState e : emotionalStates) {
-                        customFilter.includeFilter(MoodHistoryFilter.OnlyEmotionalState(e));
+                    if (!emotionalStates.isEmpty()) {
+                        customFilter.addFilter(MoodHistoryFilter.OnlyEmotionalStates(emotionalStates));
                     }
 //                    if (!text.isBlank()) {
 //                        customFilter.addFilter(MoodHistoryFilter.ContainsText(text));

@@ -1,8 +1,11 @@
 package com.otmj.otmjapp.Helper;
 
+import android.util.Log;
+
 import com.google.firebase.firestore.Filter;
 import com.otmj.otmjapp.Models.EmotionalState;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -97,9 +100,20 @@ public class MoodHistoryFilter {
                 null);
     }
 
-    public static MoodHistoryFilter OnlyEmotionalState(EmotionalState emotionalState) {
+    /**
+     * Get mood events that have an emotional state included in the list
+     * @param emotionalStates   List of desired emotional states
+     * @return                  Filter that specifies emotional states
+     */
+    public static MoodHistoryFilter OnlyEmotionalStates(List<EmotionalState> emotionalStates) {
+        // Get names of emotional states
+        ArrayList<String> emotionalStateNames = new ArrayList<>();
+        for (EmotionalState e : emotionalStates) {
+            emotionalStateNames.add(e.name());
+        }
+
         return new MoodHistoryFilter(
-                Filter.equalTo(MoodEventFields.emotionalState.name(), emotionalState.name()),
+                Filter.inArray(MoodEventFields.emotionalState.name(), emotionalStateNames),
                 null);
     }
 

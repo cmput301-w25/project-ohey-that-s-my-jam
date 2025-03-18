@@ -36,7 +36,10 @@
             app:chipCornerRadius="10dp"
             app:chipMinHeight="24dp"
             app:ensureMinTouchTargetSize="false"
-            android:checkable="true"/>
+            android:checkable="true"
+            app:chipStrokeColor="#00FF0004"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/anger_chip"

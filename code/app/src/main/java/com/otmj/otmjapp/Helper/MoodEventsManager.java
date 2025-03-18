@@ -48,6 +48,12 @@ public class MoodEventsManager {
         this.userIDs = new ArrayList<>(userIDs);
         this.db = new FirestoreDB<>(FirestoreCollections.MoodEvents.name);
 
+        db.addCollectionListener(() -> {
+            if (lastFilter != null) {
+                getMoodEvents(lastFilter);
+            }
+        });
+
         moodHistory = new MutableLiveData<>(new ArrayList<>());
     }
 
@@ -101,6 +107,7 @@ public class MoodEventsManager {
             @Override
             public void onAuthenticationFailure(String reason) {
                 // TODO: Handle case where we're unable to get users
+                Log.d("MoodEventsManager", reason);
             }
         });
 

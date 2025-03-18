@@ -30,7 +30,7 @@
     <string name="recent_events">RECENT EVENTS</string>
     <string name="filter_desc">Initiates filter fragment for mood events list</string>
     <string name="add_icon_desc">Pops the Add mood event fragment</string>
-    <string name="recent_week_filter_text">LAST 7 DAYS</string>
+    <string name="recent_week_filter_text">THIS WEEK</string>
     <string name="anger_text">ANGER</string>
     <string name="disgust_text">DISGUST</string>
     <string name="fear_text">FEAR</string>
