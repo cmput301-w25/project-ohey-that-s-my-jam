@@ -53,7 +53,7 @@
     <!-- Followers List Fragment -->
     <fragment
         android:id="@+id/followersListFragment"
-        android:name="com.otmj.otmjapp.Fragments.FollowersListFragment"
+        android:name="com.otmj.otmjapp.Fragments.FollowListFragment"
         android:label="fragment_followers_list"
         tools:layout="@layout/list_screen" />
 </navigation>

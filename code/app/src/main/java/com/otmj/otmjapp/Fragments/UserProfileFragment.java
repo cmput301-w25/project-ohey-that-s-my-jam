@@ -1,26 +1,22 @@
 package com.otmj.otmjapp.Fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 
+import com.google.firebase.firestore.Filter;
 import com.otmj.otmjapp.Adapters.UserProfilePageMoodEventAdapter;
-import com.otmj.otmjapp.Helper.MoodEventsManager;
+import com.otmj.otmjapp.Helper.DBSortOption;
 import com.otmj.otmjapp.Helper.FollowHandler;
+import com.otmj.otmjapp.Helper.MoodEventsManager;
+import com.otmj.otmjapp.Helper.MoodHistoryFilter;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.User;
@@ -62,41 +58,37 @@ public class UserProfileFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followersListFragment, args);
         });
 
-        // Navigate to Followers List when Followers Button is clicked
+        // Navigate to Followers List when Following Button is clicked
         binding.followingButton.setOnClickListener(v -> {
             Bundle args = new Bundle();
             args.putString("buttonClicked", "following");  // Add an argument indicating which button was clicked
 
-            // Navigate to Followers List using Navigation Component
-            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followersListFragment, args);
+            // Navigate to Following List using Navigation Component
+            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, args);
         });
 
+        // Navigate to Requests List when Requests Button is clicked
+        binding.requestsButton.setOnClickListener(v -> {
+            Bundle args = new Bundle();
+            args.putString("buttonClicked", "requests");  // Add an argument indicating which button was clicked
+
+            // Navigate to Requests List using Navigation Component
+            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, args);
+        });
 
         // Get UserID
         UserManager user_manager = UserManager.getInstance();
         User user = user_manager.getCurrentUser();
 
-        // Dummy data
-        //User user = new User("Kai", "kaiiscool@example.com", "123456", "https://exampleImageLink");
-        //Bitmap bitmapProfileImage = BitmapFactory.decodeResource(getResources(), R.drawable.dummy_profile_image);
-        //int numFollowers = 5;
-        //int numFollowing = 10;
-        //Timestamp temp_now = new Timestamp(new Date());
-        //MoodEvent moodEvent_3 = new MoodEvent(user.getID(),R.color.anger, "not happy", "Alone", false, "life is hard", null);
-        //MoodEvent moodEvent_1 = new MoodEvent(user.getID(), temp_now, EmotionalState.Anger, "not happy", SocialSituation.Alone, null, "live is hard",null);
-        //MoodEvent moodEvent_2 = new MoodEvent(user.getID(), temp_now, EmotionalState.Fear, "not happy", SocialSituation.With_1_Other, null, "live is hard",null);
-        //ArrayList<MoodEvent> temp_moodEvents = new ArrayList<MoodEvent>();
-        //temp_moodEvents.add(moodEvent_1);
-        //temp_moodEvents.add(moodEvent_2);
-
         // get MoodEvents
         MoodEventsManager mood_event_controller = new MoodEventsManager(List.of(user.getID()));
 
-        // add dummy data
-        //mood_event_controller.addMoodEvent(moodEvent_1);
-        //mood_event_controller.addMoodEvent(moodEvent_2);
+        // create filter to get only the moodEvents of the user that is signed in
+        DBSortOption sortOption = new DBSortOption("createdDate", true);
+        MoodHistoryFilter historyFilter = new MoodHistoryFilter(Filter.equalTo("userID", user.getID()),
+                                          sortOption);
 
-        moodEventsLiveData = mood_event_controller.getMoodEvents();
+        moodEventsLiveData = mood_event_controller.getUserMoodEvents(historyFilter);
         if (moodEventsLiveData != null) {
             getMoodEventFromDB();
         }
