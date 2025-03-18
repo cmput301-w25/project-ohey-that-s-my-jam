@@ -1,6 +1,8 @@
 package com.otmj.otmjapp;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -50,6 +52,22 @@ public class MainActivity extends AppCompatActivity {
             new MoodEventAddEditDialogFragment().show(getSupportFragmentManager(), null);
         });
     }
+
+    //@Override
+    //public boolean onCreateOptionsMenu(Menu menu){
+    //    getMenuInflater().inflate(R.menu.people_you_may_know_menu, menu);
+
+    //    MenuItem menuItem = menu.findItem(R.id.action_search);
+
+    //    SearchView searchView = (SearchView) menuItem.getActionView();
+    //    searchView.setQueryHint("Search for a User");
+
+    //    searchView.setOnQuery
+
+    //    return super.onCreateOptionsMenu(menu);
+
+    //}
+
 
     @Override
     public boolean onSupportNavigateUp() {

@@ -3,12 +3,14 @@ package com.otmj.otmjapp.Fragments;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.appcompat.widget.SearchView;
 
 import com.otmj.otmjapp.Adapters.FollowersListViewAdapter;
 import com.otmj.otmjapp.Adapters.RequestsListViewAdapter;
@@ -23,6 +25,8 @@ import java.util.ArrayList;
  * Displays a list of a user's follow requests, followers, or following users.
  */
 public class FollowListFragment extends Fragment {
+    private ArrayList<User> originalList = new ArrayList<>();
+
 
     private final FollowHandler followHandler;
 
@@ -45,6 +49,25 @@ public class FollowListFragment extends Fragment {
 
         // Find the TextView for the list title
         TextView listTitle = rootView.findViewById(R.id.list_title);
+
+        // Find the SearchView
+        SearchView searchView = rootView.findViewById(R.id.search_view);
+
+        // Set up the SearchView listener (for text changes)
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // You can handle the search submit event here (if needed)
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Filter the list as the user types
+                filterList(newText, originalList);
+                return false;
+            }
+        });
 
         // Get the arguments passed from the previous fragment
         Bundle arguments = getArguments();
@@ -77,9 +100,12 @@ public class FollowListFragment extends Fragment {
                     }
                 });
 
+                // Hide the SearchView for followers
+                searchView.setVisibility(View.GONE);
+
                 // Check if the following button was clicked
             } else if ("following".equals(buttonClicked)) {
-                listTitle.setText("FOLLOWING");  // Set title for followers
+                listTitle.setText("FOLLOWING");  // Set title for following
 
                 // Log the button click event for following
                 Log.d("FollowListFragment", "Following button clicked");
@@ -102,20 +128,32 @@ public class FollowListFragment extends Fragment {
                         // Optionally, show an error message
                     }
                 });
+
+                // Hide the SearchView for following
+                searchView.setVisibility(View.GONE);
+
+                // Check if the "peopleYouMayKnow" button was clicked
             } else if ("peopleYouMayKnow".equals(buttonClicked)) {
-                listTitle.setText("PEOPLE YOU MAY KNOW");  // Set title for followers
+                listTitle.setText("PEOPLE YOU MAY KNOW");  // Set title for "People You May Know"
+
+                // Show the SearchView for "People You May Know"
+                searchView.setVisibility(View.VISIBLE);
 
                 // Log the button click event for following
                 Log.d("FollowListFragment", "peopleYouMayKnow button clicked");
 
-                // Todo: Replace with people you may know queries
+                // Log the button click event for "People You May Know"
+                Log.d("FollowersListFragment", "People You May Know button clicked");
+
+
+                // Fetch users the current user is not following
                 followHandler.fetchNotFollowingUsers(new FollowHandler.FollowCallback() {
                     @Override
                     public void onSuccess(ArrayList<User> notFollowingList) {
                         // Log the following list size
                         Log.d("FollowListFragment", "notFollowingList List Size: " + (notFollowingList != null ? notFollowingList.size() : "null"));
 
-                        // Once following are fetched, pass them to the adapter
+                        // Once not-following users are fetched, pass them to the adapter
                         setUpFollowersList(rootView, notFollowingList);
                     }
 
@@ -138,6 +176,8 @@ public class FollowListFragment extends Fragment {
                     @Override
                     public void onFailure(Exception e) { /*TODO: Handle failure*/ }
                 });
+
+
             }
         }
 
@@ -145,13 +185,16 @@ public class FollowListFragment extends Fragment {
     }
 
     /**
-     * Sets up the {@link ListView} with the provided list of followers or users that the current user is following.
+     * Sets up the {@link ListView} with the provided list of followers or users.
      *
      * @param rootView                 The root view of the fragment.
      * @param followList The list of followers or users that the current user is following.
      */
     // Set up the ListView with the followers data
     private void setUpFollowersList(View rootView, ArrayList<User> followList) {
+
+        originalList = followList; // Save the original list
+
         ListView listView = rootView.findViewById(R.id.user_list_view);
 
         // Populate the list
@@ -165,6 +208,45 @@ public class FollowListFragment extends Fragment {
 
         // Populate the list
         RequestsListViewAdapter adapter = new RequestsListViewAdapter(getContext(), requestList);
+        // Set up the ListView with the adapter
         listView.setAdapter(adapter);
+    }
+
+    public ArrayList<User> getOriginalList() {
+        return originalList;
+    }
+
+    public void setOriginalList(ArrayList<User> originalList) {
+        this.originalList = originalList;
+    }
+
+    // Method to filter the list based on search query
+    private void filterList(String query, ArrayList<User> originalList) {
+        ArrayList<User> filteredList = new ArrayList<>();
+
+        // Check if query is not empty
+        if (query != null && !query.isEmpty()) {
+            for (User user : originalList) {
+                if (user.getUsername().toLowerCase().contains(query.toLowerCase())) {
+                    filteredList.add(user);
+                }
+            }
+        } else {
+            filteredList = originalList;  // If no search query, return the full list
+        }
+
+        // Once filtered, update the list view
+        updateListView(filteredList);
+    }
+
+    // Method to update the ListView with the filtered list
+    private void updateListView(ArrayList<User> filteredList) {
+        // Ensure rootView is not null when accessing the list view
+        View rootView = getView();
+        if (rootView != null) {
+            ListView listView = rootView.findViewById(R.id.user_list_view);
+            FollowersListViewAdapter adapter = new FollowersListViewAdapter(getContext(), filteredList);
+            listView.setAdapter(adapter);
+        }
     }
 }

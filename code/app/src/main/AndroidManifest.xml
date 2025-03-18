@@ -13,17 +13,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OTMJApp"
         tools:targetApi="31">
+
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.OTMJApp" />
+            android:theme="@style/Theme.OTMJApp"
+            android:label="Main Page" /> <!-- Added title here -->
+
         <activity
             android:name=".InitialActivity"
             android:exported="true"
-            android:theme="@style/Theme.OTMJApp">
+            android:theme="@style/Theme.OTMJApp"
+            android:label="Welcome"> <!-- Added title here -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
