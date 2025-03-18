@@ -78,8 +78,13 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
     }
 
     public void setMoodEventHeaderText(TextView textView, MoodEvent event) {
+        String username = "username";
+        if (event.getUser() != null) {
+            username = event.getUser().getUsername();
+        }
+
         // Construct the beginning of the sentence
-        StringBuilder combined = new StringBuilder(event.getUser().getUsername());
+        StringBuilder combined = new StringBuilder(username);
         combined.append(String.format(" feels %s 😊", event.getEmotionalState().getDescription()));
 
         // Handle optional social situation

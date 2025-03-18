@@ -20,11 +20,11 @@ public class MoodEventTest {
     private MoodEvent mockMoodEvent(){
         MoodEvent moodEvent = new MoodEvent("FF1234",
                                             EmotionalState.Surprise,
-                                            "The weather is good",
                                             SocialSituation.Alone,
                                             false,
                                             "I am happy",
-                                            "http://example.com/profile.jpg");
+                                            "http://example.com/profile.jpg",
+                                            MoodEvent.Privacy.Public);
         return moodEvent;
     }
 
@@ -39,19 +39,6 @@ public class MoodEventTest {
         MoodEvent moodEvent = mockMoodEvent();
         moodEvent.setEmotionalState(EmotionalState.Sad);
         assertEquals(EmotionalState.Sad, moodEvent.getEmotionalState());
-    }
-
-    @Test
-    public void TestGetTrigger(){
-        MoodEvent moodEvent = mockMoodEvent();
-        assertEquals("The weather is good", moodEvent.getTrigger());
-    }
-
-    @Test
-    public void TestSetTrigger(){
-        MoodEvent moodEvent = mockMoodEvent();
-        moodEvent.setTrigger("The weather is bad");
-        assertEquals("The weather is bad", moodEvent.getTrigger());
     }
 
     @Test

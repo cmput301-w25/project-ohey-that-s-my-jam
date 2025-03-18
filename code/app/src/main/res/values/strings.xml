@@ -30,7 +30,7 @@
     <string name="recent_events">RECENT EVENTS</string>
     <string name="filter_desc">Initiates filter fragment for mood events list</string>
     <string name="add_icon_desc">Pops the Add mood event fragment</string>
-    <string name="recent_week_filter_text">LAST 7 DAYS</string>
+    <string name="recent_week_filter_text">THIS WEEK</string>
     <string name="anger_text">ANGER</string>
     <string name="disgust_text">DISGUST</string>
     <string name="fear_text">FEAR</string>
@@ -39,7 +39,7 @@
     <string name="shame_text">SHAME</string>
     <string name="happy_text">HAPPY</string>
     <string name="surprise_text">SURPRISE</string>
-    <string name="search_reason_why_text">Enter Keyword(s)</string>
+    <string name="search_reason_why_text">Reason(s)…</string>
     <string name="ic_search_desc">Initiates the search of matching keyword(s) in reason why texts</string>
 
     <string name="ic_close_desc">Closes a fragment or view</string>

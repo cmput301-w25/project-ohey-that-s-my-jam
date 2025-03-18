@@ -2,6 +2,8 @@ package com.otmj.otmjapp.Models;
 
 import android.location.Location;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.PropertyName;
 import com.google.firebase.firestore.ServerTimestamp;
@@ -33,14 +35,7 @@ public class MoodEvent extends DatabaseObject {
      */
     @PropertyName("emotionalState")
     private String emotionalStateText;
-    private String trigger;
-    @Exclude
     private SocialSituation socialSituation;
-    /**
-     * Dummy variable to help with deserialization of `SocialSituation` from database
-     */
-    @PropertyName("socialSituation")
-    private String socialSituationText;
     private Location location;
     private String reason;
     private String imageLink;
@@ -57,7 +52,6 @@ public class MoodEvent extends DatabaseObject {
 
     public MoodEvent(String userID,
                      EmotionalState emotionalState,
-                     String trigger,
                      SocialSituation socialSituation,
                      boolean includeLocation,
                      String reason,
@@ -65,8 +59,7 @@ public class MoodEvent extends DatabaseObject {
                      MoodEvent.Privacy privacy) {
         this.userID = userID;
         setEmotionalState(emotionalState);
-        this.trigger = trigger;
-        setSocialSituation(socialSituation);
+        this.socialSituation = socialSituation;
         this.reason = reason;
         this.imageLink = imageLink;
         this.privacy = privacy;
@@ -83,7 +76,6 @@ public class MoodEvent extends DatabaseObject {
      */
     public MoodEvent(String userID,
                      String emotionalState,
-                     String trigger,
                      String socialSituation,
                      boolean includeLocation,
                      String reason,
@@ -92,7 +84,6 @@ public class MoodEvent extends DatabaseObject {
         this(
                 userID,
                 EmotionalState.fromString(emotionalState),
-                trigger,
                 SocialSituation.fromText(socialSituation),
                 includeLocation,
                 reason,
@@ -133,23 +124,12 @@ public class MoodEvent extends DatabaseObject {
         this.emotionalStateText = emotionalState.name();
     }
 
-    public String getTrigger() {
-        return trigger;
-    }
-
-    public void setTrigger(String trigger) {
-        this.trigger = trigger;
-    }
-
     public SocialSituation getSocialSituation() {
         return socialSituation;
     }
 
     public void setSocialSituation(SocialSituation socialSituation) {
         this.socialSituation = socialSituation;
-        if (socialSituation != null) {
-            this.socialSituationText = socialSituation.name();
-        }
     }
 
     public Location getLocation() {
@@ -196,5 +176,21 @@ public class MoodEvent extends DatabaseObject {
     @Override
     public int hashCode() {
         return Objects.hash(userID, createdDate);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "MoodEvent{" +
+                "userID='" + userID + '\'' +
+                ", user=" + user +
+                ", createdDate=" + createdDate +
+                ", emotionalState=" + emotionalState +
+                ", socialSituation=" + socialSituation +
+                ", location=" + location +
+                ", reason='" + reason + '\'' +
+                ", imageLink='" + imageLink + '\'' +
+                ", privacy=" + privacy +
+                '}';
     }
 }

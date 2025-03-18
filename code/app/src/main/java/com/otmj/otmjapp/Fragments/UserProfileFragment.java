@@ -11,12 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.navigation.Navigation;
 
-import com.google.firebase.firestore.Filter;
 import com.otmj.otmjapp.Adapters.UserProfilePageMoodEventAdapter;
-import com.otmj.otmjapp.Helper.DBSortOption;
-import com.otmj.otmjapp.Helper.FollowHandler;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
-import com.otmj.otmjapp.Helper.MoodHistoryFilter;
+import com.otmj.otmjapp.Helper.FollowHandler;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.User;
@@ -83,12 +80,7 @@ public class UserProfileFragment extends Fragment {
         // get MoodEvents
         MoodEventsManager mood_event_controller = new MoodEventsManager(List.of(user.getID()));
 
-        // create filter to get only the moodEvents of the user that is signed in
-        DBSortOption sortOption = new DBSortOption("createdDate", true);
-        MoodHistoryFilter historyFilter = new MoodHistoryFilter(Filter.equalTo("userID", user.getID()),
-                                          sortOption);
-
-        moodEventsLiveData = mood_event_controller.getUserMoodEvents(historyFilter);
+        moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
         if (moodEventsLiveData != null) {
             getMoodEventFromDB();
         }

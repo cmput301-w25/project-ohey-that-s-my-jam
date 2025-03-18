@@ -52,7 +52,6 @@ public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         ImageView imageView_image = view.findViewById(R.id.reason_why_image);
         TextView textView_feeling = view.findViewById(R.id.textview_feeling);
         TextView textView_reason = view.findViewById(R.id.textview_reason);
-        TextView textView_trigger = view.findViewById(R.id.textview_trigger);
         TextView textView_socialStatus =view.findViewById(R.id.textview_socialStatus);
         TextView textView_location = view.findViewById(R.id.event_location);
         textview_emotionalState.setText(m.getEmotionalState().getDescription());
@@ -71,7 +70,6 @@ public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
 
 
         textView_reason.setText("Reason: " + Objects.toString(m.getReason(), ""));
-        textView_trigger.setText("Trigger: " + Objects.toString(m.getTrigger(), ""));
         if (m.getSocialSituation() != null) {
             textView_socialStatus.setText("Social Situation: " + m.getSocialSituation().toString());
         }

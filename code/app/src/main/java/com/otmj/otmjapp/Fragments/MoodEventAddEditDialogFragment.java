@@ -231,7 +231,6 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             moodEventsManager.addMoodEvent(new MoodEvent(
                     user.getID(),
                     selectedEmotionalState,
-                    "",
                     selectedSocialSituation,
                     true,
                     reason,

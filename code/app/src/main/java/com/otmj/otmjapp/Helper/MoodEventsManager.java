@@ -3,6 +3,7 @@ package com.otmj.otmjapp.Helper;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -47,47 +48,33 @@ public class MoodEventsManager {
         this.userIDs = new ArrayList<>(userIDs);
         this.db = new FirestoreDB<>(FirestoreCollections.MoodEvents.name);
 
-        moodHistory = new MutableLiveData<>(new ArrayList<>());
-    }
+        db.addCollectionListener(() -> {
+            if (lastFilter != null) {
+                getMoodEvents(lastFilter);
+            }
+        });
 
-    /**
-     * Gets all mood events from user(s)
-     * @return An observable value that returns all the mood events.
-     * @see #getMoodEvents(MoodHistoryFilter)
-     */
-    public LiveData<ArrayList<MoodEvent>> getMoodEvents() {
-        // Assume that mood history has been populated (see constructor)
-        if (lastFilter == null) {
-            return moodHistory;
-        } else {
-            // If previously getMoodEvents was called with a filter,
-            // we need to get all mood events again
-            return getMoodEvents(null);
-        }
+        moodHistory = new MutableLiveData<>(new ArrayList<>());
     }
 
     /**
      * Gets all mood events from user(s) that match the provided filters. (We get the user's
      * information before retrieving mood events.)
      *
-     * @param customFilter A filter specifies the condition for the mood event to be returned
-     *                     and how to sort it
+     * @param filter    A filter specifies the condition for the mood event to be returned
+     *                  and how to sort it
      * @return An observable that returns the filtered mood events
      */
-    private LiveData<ArrayList<MoodEvent>> getMoodEvents(MoodHistoryFilter customFilter) {
+    private LiveData<ArrayList<MoodEvent>> getMoodEvents(@NonNull MoodHistoryFilter filter) {
         // We need the users associated with each mood event
         UserManager.getInstance().getUsers(userIDs, new UserManager.AuthenticationCallback() {
             @Override
             public void onAuthenticated(ArrayList<User> authenticatedUsers) {
-                MoodHistoryFilter filter = (null != customFilter)
-                        ? customFilter
-                        : MoodHistoryFilter.Default(userIDs);
-
                 // Get all mood events from specified users
                 db.getDocuments(filter.getFilter(), MoodEvent.class, new FirestoreDB.DBCallback<>() {
                     @Override
                     public void onSuccess(ArrayList<MoodEvent> result) {
-                        lastFilter = customFilter;
+                        lastFilter = filter;
 
                         ArrayList<MoodEvent> moodEvents = new ArrayList<>();
                         // For each mood event //
@@ -102,13 +89,11 @@ public class MoodEventsManager {
                                     break;
                                 }
                             }
+
+                            Log.d("MoodEventsManager", moodEvent.toString());
                         }
 
-                        if(moodEvents.isEmpty()) {
-                            moodHistory.setValue(new ArrayList<>());
-                        } else {
-                            moodHistory.setValue(moodEvents);
-                        }
+                        moodHistory.setValue(moodEvents);
                     }
 
                     @Override
@@ -122,6 +107,7 @@ public class MoodEventsManager {
             @Override
             public void onAuthenticationFailure(String reason) {
                 // TODO: Handle case where we're unable to get users
+                Log.d("MoodEventsManager", reason);
             }
         });
 
@@ -137,12 +123,10 @@ public class MoodEventsManager {
      * @see #getMoodEvents(MoodHistoryFilter)
      */
     public LiveData<ArrayList<MoodEvent>> getPublicMoodEvents(MoodHistoryFilter customFilter) {
-        MoodHistoryFilter defaultFilter = new MoodHistoryFilter(Filter.equalTo("privacy", MoodEvent.Privacy.Public),
-                                   new DBSortOption("createdDate", true));
-        customFilter = (null != customFilter)
-                       ? customFilter
-                       : defaultFilter;
-
+        if (customFilter == null) {
+            customFilter = MoodHistoryFilter.Default(userIDs);
+        }
+        customFilter.addFilter(Filter.equalTo("privacy", MoodEvent.Privacy.Public));
 
         return getMoodEvents(customFilter);
     }
@@ -156,7 +140,9 @@ public class MoodEventsManager {
      * @see #getMoodEvents(MoodHistoryFilter)
      */
     public LiveData<ArrayList<MoodEvent>> getUserMoodEvents(MoodHistoryFilter customFilter) {
-        return getMoodEvents(customFilter);
+        return getMoodEvents((null != customFilter)
+                ? customFilter
+                : MoodHistoryFilter.Default(userIDs));
     }
 
     /**

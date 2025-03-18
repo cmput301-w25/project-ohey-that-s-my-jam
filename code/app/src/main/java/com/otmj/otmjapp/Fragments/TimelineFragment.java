@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.otmj.otmjapp.Adapters.TimelineMoodEventAdapter;
 import com.otmj.otmjapp.Helper.FollowHandler;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
+import com.otmj.otmjapp.Helper.MoodHistoryFilter;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.User;
@@ -23,16 +24,16 @@ import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.databinding.FragmentTimelineBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Displays the timeline of mood events for the logged-in user and their followers.
  */
 public class TimelineFragment extends Fragment {
-
     private FragmentTimelineBinding binding;
-    /** ListView to display the timeline of mood events. */
+    // ListView to display the timeline of mood events.
     private final ArrayList<MoodEvent> allMoodEvents = new ArrayList<>();
-    /** List of all mood events (current user's events and events from users they follow). */
+    // List of all mood events (current user's events and events from users they follow).
     private TimelineMoodEventAdapter moodEventAdapter;
 
     @Override
@@ -71,7 +72,6 @@ public class TimelineFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.action_timelineFragment_to_peopleYouMayKnowFragment, args);
         });
 
-
         return binding.getRoot();
     }
 
@@ -79,6 +79,7 @@ public class TimelineFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Populates the timeline with mood events for the current user and the users they follow.
+
         UserManager userManager = UserManager.getInstance();
         User currentUser = userManager.getCurrentUser();
 
@@ -88,15 +89,41 @@ public class TimelineFragment extends Fragment {
             ids.add(currentUser.getID()); // Add user's ID to list
 
             MoodEventsManager moodEventsManager = new MoodEventsManager(ids);
-            moodEventsManager.getPublicMoodEvents(null).observe(getViewLifecycleOwner(), moodEvents -> {
-                allMoodEvents.clear();
-                allMoodEvents.addAll(moodEvents);
+            moodEventsManager.getPublicMoodEvents(null).observe(
+                    getViewLifecycleOwner(),
+                    this::updateMoodEventsList
+            );
 
-                if (moodEventAdapter != null) {
-                    moodEventAdapter.notifyDataSetChanged();
-                }
+            // Handle filtering
+            binding.filterButton.setOnClickListener(v -> {
+                FilterFragment filterPopup = new FilterFragment((last7Days, text, emotionalStates) -> {
+                    MoodHistoryFilter customFilter = MoodHistoryFilter.Default(ids);
+                    if (last7Days) {
+                        customFilter.addFilter(MoodHistoryFilter.MostRecentWeek());
+                    }
+                    if (!emotionalStates.isEmpty()) {
+                        customFilter.addFilter(MoodHistoryFilter.OnlyEmotionalStates(emotionalStates));
+                    }
+//                    if (!text.isBlank()) {
+//                        customFilter.addFilter(MoodHistoryFilter.ContainsText(text));
+//                    }
+
+                    moodEventsManager.getPublicMoodEvents(customFilter).observe(
+                            getViewLifecycleOwner(),
+                            this::updateMoodEventsList
+                    );
+                });
+                filterPopup.show(getParentFragmentManager(), null);
             });
         });
+    }
+
+    private void updateMoodEventsList(List<MoodEvent> moodEvents) {
+        allMoodEvents.clear();
+        allMoodEvents.addAll(moodEvents);
+        if (moodEventAdapter != null) {
+            moodEventAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

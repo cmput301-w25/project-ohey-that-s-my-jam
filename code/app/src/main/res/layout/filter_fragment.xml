@@ -37,7 +37,9 @@
             app:chipMinHeight="24dp"
             app:ensureMinTouchTargetSize="false"
             android:checkable="true"
-            app:singleSelection="true"/>
+            app:chipStrokeColor="#00FF0004"
+            app:checkedIcon="@drawable/ic_check"
+            app:checkedIconEnabled="true"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/anger_chip"
@@ -186,7 +188,7 @@
         android:padding="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/search_edit_text"
+            android:id="@+id/filter_reason_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/search_reason_why_text"
