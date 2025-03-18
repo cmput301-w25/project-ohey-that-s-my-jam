@@ -1,9 +1,6 @@
 package com.otmj.otmjapp.Helper;
 
-import android.util.Log;
-
 import com.google.firebase.firestore.Filter;
-
 import com.otmj.otmjapp.Models.Follow;
 import com.otmj.otmjapp.Models.FollowRequest;
 import com.otmj.otmjapp.Models.User;
@@ -15,6 +12,7 @@ import java.util.ArrayList;
  */
 public class FollowHandler {
     private final User currentUser;
+    private final UserManager userManager;
     private final FirestoreDB<FollowRequest> requestDB;
     private final FirestoreDB<Follow> followDB;
 
@@ -39,7 +37,8 @@ public class FollowHandler {
     }
 
     public FollowHandler() {
-        this.currentUser = UserManager.getInstance().getCurrentUser();
+        userManager = UserManager.getInstance();
+        currentUser = userManager.getCurrentUser();
         requestDB = new FirestoreDB<>(FirestoreCollections.FollowRequests.name);
         followDB = new FirestoreDB<>(FirestoreCollections.Follows.name);
     }
@@ -119,6 +118,31 @@ public class FollowHandler {
     }
 
     /**
+     * Retrieves the user IDs of the requests sent to the current user.
+     *
+     * @param callback  A callback to handle the result of the operation. The callback provides a list of user IDs.
+     */
+    public void getRequestIDs(FollowIDCallback callback) {
+        Filter filter = Filter.equalTo("followeeID", currentUser.getID());
+
+        requestDB.getDocuments(filter, FollowRequest.class, new FirestoreDB.DBCallback<>() {
+            @Override
+            public void onSuccess(ArrayList<FollowRequest> result) {
+                ArrayList<String> ids = new ArrayList<>();
+
+                for (FollowRequest f : result) {
+                    ids.add(f.getFollowerID());
+                }
+
+                callback.result(ids);
+            }
+
+            @Override
+            public void onFailure(Exception e) { callback.result(new ArrayList<>()); }
+        });
+    }
+
+    /**
      * Retrieves the {@link User} objects for followers or followees of a given user based on the specified follow type.
      *
      * @param userID     The ID of the user for whom to fetch followers or followees.
@@ -127,7 +151,6 @@ public class FollowHandler {
      */
     private void getFollows(String userID, FollowType followType, FollowCallback callback) {
        getFollowIDs(userID, followType, ids -> {
-           UserManager userManager = UserManager.getInstance();
            userManager.getUsers(ids, new UserManager.AuthenticationCallback() {
                @Override
                public void onAuthenticated(ArrayList<User> authenticatedUsers) {
@@ -140,6 +163,25 @@ public class FollowHandler {
                }
            });
        });
+    }
+
+    /**
+     * Retrieves the {@link User} objects for the users who have sent follow requests to the current user.
+     *
+     * @param callback  A callback to handle the result of the operation. The callback provides a list of user objects.
+     */
+    public void getRequests(FollowCallback callback) {
+        getRequestIDs(ids -> userManager.getUsers(ids, new UserManager.AuthenticationCallback() {
+            @Override
+            public void onAuthenticated(ArrayList<User> authenticatedUsers) {
+                callback.onSuccess(authenticatedUsers);
+            }
+
+            @Override
+            public void onAuthenticationFailure(String reason) {
+                callback.onFailure(new Exception(reason));
+            }
+        }));
     }
 
     /**
@@ -176,8 +218,6 @@ public class FollowHandler {
      * @param callback      the callback to handle the result, passing the list of followers or an error
      */
     public void fetchNotFollowingUsers(FollowCallback callback) {
-        UserManager userManager = UserManager.getInstance();
-
         // Step 1: Get all users
         userManager.getAllUsers(new UserManager.AuthenticationCallback() {
             @Override

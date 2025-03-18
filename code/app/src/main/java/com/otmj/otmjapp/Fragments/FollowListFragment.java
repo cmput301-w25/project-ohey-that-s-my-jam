@@ -1,16 +1,17 @@
 package com.otmj.otmjapp.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
 import com.otmj.otmjapp.Adapters.FollowersListViewAdapter;
+import com.otmj.otmjapp.Adapters.RequestsListViewAdapter;
 import com.otmj.otmjapp.Helper.FollowHandler;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.User;
@@ -19,16 +20,16 @@ import com.otmj.otmjapp.R;
 import java.util.ArrayList;
 
 /**
- * Displays a list of the user's followers.
+ * Displays a list of a user's follow requests, followers, or following users.
  */
-public class FollowersListFragment extends Fragment {
+public class FollowListFragment extends Fragment {
 
     private final FollowHandler followHandler;
 
     /**
      * Initializes the {@link FollowHandler} instance.
      */
-    public FollowersListFragment() {
+    public FollowListFragment() {
         followHandler = new FollowHandler();  // Initialize the FollowHandler
     }
 
@@ -37,6 +38,10 @@ public class FollowersListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.list_screen, container, false);
+
+        // Get current user
+        UserManager userManager = UserManager.getInstance();
+        String currentUserId = userManager.getCurrentUser().getID();
 
         // Find the TextView for the list title
         TextView listTitle = rootView.findViewById(R.id.list_title);
@@ -51,18 +56,14 @@ public class FollowersListFragment extends Fragment {
                 listTitle.setText("FOLLOWERS");  // Set title for followers
 
                 // Log the button click event for followers
-                Log.d("FollowersListFragment", "Followers button clicked");
-
-                // Get the current user ID
-                UserManager userManager = UserManager.getInstance();
-                String currentUserId = userManager.getCurrentUser().getID();  // Get current user ID
+                Log.d("FollowListFragment", "Followers button clicked");
 
                 // Fetch followers using FollowHandler
                 followHandler.fetchFollowers(currentUserId, new FollowHandler.FollowCallback() {
                     @Override
                     public void onSuccess(ArrayList<User> followersList) {
                         // Log the followers list size
-                        Log.d("FollowersListFragment", "Followers List Size: " + (followersList != null ? followersList.size() : "null"));
+                        Log.d("FollowListFragment", "Followers List Size: " + (followersList != null ? followersList.size() : "null"));
 
                         // Once followers are fetched, pass them to the adapter
                         setUpFollowersList(rootView, followersList);
@@ -71,7 +72,7 @@ public class FollowersListFragment extends Fragment {
                     @Override
                     public void onFailure(Exception e) {
                         // Log the error if fetching fails
-                        Log.e("FollowersListFragment", "Error fetching followers", e);
+                        Log.e("FollowListFragment", "Error fetching followers", e);
                         // Optionally, show an error message
                     }
                 });
@@ -81,18 +82,14 @@ public class FollowersListFragment extends Fragment {
                 listTitle.setText("FOLLOWING");  // Set title for followers
 
                 // Log the button click event for following
-                Log.d("FollowersListFragment", "Following button clicked");
-
-                // Get the current user ID
-                UserManager userManager = UserManager.getInstance();
-                String currentUserId = userManager.getCurrentUser().getID();  // Get current user ID
+                Log.d("FollowListFragment", "Following button clicked");
 
                 // Fetch following using FollowHandler
                 followHandler.fetchFollowing(currentUserId, new FollowHandler.FollowCallback() {
                     @Override
                     public void onSuccess(ArrayList<User> followingList) {
                         // Log the following list size
-                        Log.d("FollowersListFragment", "Following List Size: " + (followingList != null ? followingList.size() : "null"));
+                        Log.d("FollowListFragment", "Following List Size: " + (followingList != null ? followingList.size() : "null"));
 
                         // Once following are fetched, pass them to the adapter
                         setUpFollowersList(rootView, followingList);
@@ -101,7 +98,7 @@ public class FollowersListFragment extends Fragment {
                     @Override
                     public void onFailure(Exception e) {
                         // Log the error if fetching fails
-                        Log.e("FollowersListFragment", "Error fetching following", e);
+                        Log.e("FollowListFragment", "Error fetching following", e);
                         // Optionally, show an error message
                     }
                 });
@@ -109,18 +106,14 @@ public class FollowersListFragment extends Fragment {
                 listTitle.setText("PEOPLE YOU MAY KNOW");  // Set title for followers
 
                 // Log the button click event for following
-                Log.d("FollowersListFragment", "peopleYouMayKnow button clicked");
-
-                // Get the current user ID
-                UserManager userManager = UserManager.getInstance();
-                String currentUserId = userManager.getCurrentUser().getID();  // Get current user ID
+                Log.d("FollowListFragment", "peopleYouMayKnow button clicked");
 
                 // Todo: Replace with people you may know queries
                 followHandler.fetchNotFollowingUsers(new FollowHandler.FollowCallback() {
                     @Override
                     public void onSuccess(ArrayList<User> notFollowingList) {
                         // Log the following list size
-                        Log.d("FollowersListFragment", "notFollowingList List Size: " + (notFollowingList != null ? notFollowingList.size() : "null"));
+                        Log.d("FollowListFragment", "notFollowingList List Size: " + (notFollowingList != null ? notFollowingList.size() : "null"));
 
                         // Once following are fetched, pass them to the adapter
                         setUpFollowersList(rootView, notFollowingList);
@@ -129,9 +122,21 @@ public class FollowersListFragment extends Fragment {
                     @Override
                     public void onFailure(Exception e) {
                         // Log the error if fetching fails
-                        Log.e("FollowersListFragment", "Error fetching following", e);
+                        Log.e("FollowListFragment", "Error fetching following", e);
                         // Optionally, show an error message
                     }
+                });
+            } else if("requests".equals(buttonClicked)) {
+                listTitle.setText("REQUESTS");  // Set title for followers
+
+                followHandler.getRequests(new FollowHandler.FollowCallback() {
+                    @Override
+                    public void onSuccess(ArrayList<User> requestsList) {
+                        setUpRequestsList(rootView, requestsList);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) { /*TODO: Handle failure*/ }
                 });
             }
         }
@@ -143,15 +148,23 @@ public class FollowersListFragment extends Fragment {
      * Sets up the {@link ListView} with the provided list of followers or users that the current user is following.
      *
      * @param rootView                 The root view of the fragment.
-     * @param followersorfollowingList The list of followers or users that the current user is following.
+     * @param followList The list of followers or users that the current user is following.
      */
     // Set up the ListView with the followers data
-    private void setUpFollowersList(View rootView, ArrayList<User> followersorfollowingList) {
+    private void setUpFollowersList(View rootView, ArrayList<User> followList) {
         ListView listView = rootView.findViewById(R.id.user_list_view);
 
         // Populate the list
-        FollowersListViewAdapter adapter = new FollowersListViewAdapter(getContext(), followersorfollowingList);
+        FollowersListViewAdapter adapter = new FollowersListViewAdapter(getContext(), followList);
         listView.setAdapter(adapter);
 
+    }
+
+    private void setUpRequestsList(View rootView, ArrayList<User> requestList) {
+        ListView listView = rootView.findViewById(R.id.user_list_view);
+
+        // Populate the list
+        RequestsListViewAdapter adapter = new RequestsListViewAdapter(getContext(), requestList);
+        listView.setAdapter(adapter);
     }
 }

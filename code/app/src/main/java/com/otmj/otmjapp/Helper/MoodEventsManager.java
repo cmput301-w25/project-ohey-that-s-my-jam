@@ -104,7 +104,11 @@ public class MoodEventsManager {
                             }
                         }
 
-                        moodHistory.setValue(moodEvents);
+                        if(moodEvents.isEmpty()) {
+                            moodHistory.setValue(new ArrayList<>());
+                        } else {
+                            moodHistory.setValue(moodEvents);
+                        }
                     }
 
                     @Override
