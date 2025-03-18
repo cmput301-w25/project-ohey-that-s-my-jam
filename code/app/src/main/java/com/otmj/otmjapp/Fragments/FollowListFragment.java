@@ -209,8 +209,7 @@ public class FollowListFragment extends Fragment {
         // Populate the list
         RequestsListViewAdapter adapter = new RequestsListViewAdapter(getContext(), requestList);
         // Set up the ListView with the adapter
-        FollowersListViewAdapter adapter2 = new FollowersListViewAdapter(getContext(), originalList);
-        listView.setAdapter(adapter2);
+        listView.setAdapter(adapter);
     }
 
     public ArrayList<User> getOriginalList() {
