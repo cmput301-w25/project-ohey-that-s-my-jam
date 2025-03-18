@@ -8,7 +8,6 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -18,6 +17,7 @@ import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.User;
+import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.databinding.FragmentTimelineBinding;
 
 import java.util.ArrayList;

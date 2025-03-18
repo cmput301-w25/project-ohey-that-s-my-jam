@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.format.DateUtils;
-import android.text.style.DynamicDrawableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
@@ -44,32 +43,34 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         MoodEvent m = getItem(position);
         assert m != null;
 
-        TextView usernameText = view.findViewById(R.id.timeline_mood_event_username);
-        setMoodEventHeaderText(usernameText, m);
+        if(null != m.getUser()) {
+            TextView usernameText = view.findViewById(R.id.timeline_mood_event_username);
+            setMoodEventHeaderText(usernameText, m);
 
-        TextView description = view.findViewById(R.id.timeline_mood_event_desc);
-        if (m.getReason() != null && !m.getReason().isEmpty()) {
-            description.setText(m.getReason());
-        } else {
-            description.setVisibility(View.GONE);
-        }
+            TextView description = view.findViewById(R.id.timeline_mood_event_desc);
+            if (m.getReason() != null && !m.getReason().isEmpty()) {
+                description.setText(m.getReason());
+            } else {
+                description.setVisibility(View.GONE);
+            }
 
-        long createdTimeMillis = m.getCreatedDate() != null ? m.getCreatedDate().getTime() : System.currentTimeMillis();
-        String timeAgo = getTimeAgo(createdTimeMillis);
+            long createdTimeMillis = m.getCreatedDate() != null ? m.getCreatedDate().getTime() : System.currentTimeMillis();
+            String timeAgo = getTimeAgo(createdTimeMillis);
 
-        TextView timeAgoText = view.findViewById(R.id.timeline_mood_event_date);
-        timeAgoText.setText(timeAgo);
+            TextView timeAgoText = view.findViewById(R.id.timeline_mood_event_date);
+            timeAgoText.setText(timeAgo);
 
-        ImageView moodEventImage = view.findViewById(R.id.mood_image);
-        if (m.getImageLink() == null) {
-            moodEventImage.setVisibility(View.GONE);
-        }
+            ImageView moodEventImage = view.findViewById(R.id.mood_image);
+            if (m.getImageLink() == null) {
+                moodEventImage.setVisibility(View.GONE);
+            }
 
-        // TODO: Set location
-        // do not show for now
-        TextView locationText = view.findViewById(R.id.timeline_mood_event_location);
-        if (m.getLocation() == null) {
-            locationText.setVisibility(View.GONE);
+            // TODO: Set location
+            // do not show for now
+            TextView locationText = view.findViewById(R.id.timeline_mood_event_location);
+            if (m.getLocation() == null) {
+                locationText.setVisibility(View.GONE);
+            }
         }
 
 
