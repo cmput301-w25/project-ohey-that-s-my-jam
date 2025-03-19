@@ -27,6 +27,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.EmotionalState;
@@ -320,6 +321,10 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Opens an image picker, allows the user to select an image, and uploads it to Firebase Storage.
+     * Once uploaded, the image's download URL is stored in the `imageLink` variable.
+     */
     private void setImageLink() {
         TedImagePicker.with(getContext())
                 .title("Select an Image")
@@ -329,14 +334,40 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 .startMultiImage(uriList -> {
                     if (!uriList.isEmpty()) {
                         Uri uri = uriList.get(0);
-                        imageLink = uri.toString();
+                        ImageHandler.uploadImage(uri, new ImageHandler.UploadCallback() {
+                            @Override
+                            public void onSuccess(String imageUrl) {
+                                imageLink = imageUrl; // Set the image URL for Firestore
+                                Log.d("Image Upload", "Image successfully uploaded: " + imageLink);
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                Log.e("Image Upload", "Failed to upload image: " + e.getMessage());
+                            }
+                        });
                     }
                 });
     }
 
+
+    /**
+     * Opens an image picker to allow the user to replace or remove an existing image in their mood event.
+     * New image is uploaded to Firebase Storage.
+     * Old image are deleted from Firebase Storage.
+     * @param imageLink The current image URL stored in Firebase Storage.
+     * @return The new image URL after upload, or `null` if no image was selected.
+     * **Behavior:**
+     * - If the user selects a new image, the old image is deleted, and the new URL is returned.
+     * - If the upload fails, the old image remains unchanged.
+     * - If the user deselected all images, detaching image from their post, `null` is returned.
+     */
     private String updateImageLink(String imageLink) {
         Uri preselectedImage = Uri.parse(imageLink);
         List<Uri> updatedImage = new ArrayList<>();
+
+        // Use a final array to hold the updated image link
+        final String[] updatedImageLink = {imageLink};
 
         TedImagePicker.with(getContext())
                 .title("Select an Image")
@@ -346,15 +377,33 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 .selectedUri(Collections.singletonList(preselectedImage))
                 .startMultiImage(uriList -> {
                     if (!uriList.isEmpty()) {
-                        updatedImage.add(uriList.get(0));
+                        Uri selectedUri = uriList.get(0);
+                        updatedImage.add(selectedUri);
+
+                        // Upload the new image to Firebase
+                        ImageHandler.uploadImage(selectedUri, new ImageHandler.UploadCallback() {
+                            @Override
+                            public void onSuccess(String imageUrl) {
+                                // Update the array value instead of a final String variable
+                                updatedImageLink[0] = imageUrl;
+                                Log.d("Image Update", "Updated image URL: " + updatedImageLink[0]);
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                Log.e("Image Update", "Failed to update image: " + e.getMessage());
+                            }
+                        });
                     }
                 });
 
-            if (updatedImage.isEmpty()) {
-                return null;
-            } else {
-                return updatedImage.get(0).toString();
-            }
+        // Delete the old image if a new one was uploaded successfully
+        if (!updatedImageLink[0].equals(imageLink)) {
+            ImageHandler.deleteImage(imageLink);
+        }
+
+        return updatedImage.isEmpty() ? null : updatedImageLink[0];
     }
+
 
 }

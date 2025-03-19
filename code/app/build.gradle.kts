@@ -78,4 +78,6 @@ dependencies {
     implementation("io.github.ParkSangGwon:tedimagepicker:1.6.1") {
         exclude(group = "com.android.support")
     }
+
+    implementation("com.google.firebase:firebase-storage:20.2.1")
 }
