@@ -1,6 +1,6 @@
 package com.otmj.otmjapp.Helper;
 
-import android.util.Log;
+import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.Filter;
 import com.otmj.otmjapp.Models.EmotionalState;
@@ -27,17 +27,29 @@ public class MoodHistoryFilter {
 
     private Filter filter;
     private final DBSortOption sortOption;
+    private String queryText;
 
     private MoodHistoryFilter(Filter filter, DBSortOption sortOption) {
         this.filter = filter;
         this.sortOption = sortOption;
+        this.queryText = null;
+    }
+
+    /**
+     * Specialized constructor for handling text search
+     * @param queryText Query to search for
+     */
+    private MoodHistoryFilter(String queryText) {
+        this.filter = null;
+        this.sortOption = null;
+        this.queryText = queryText.trim().toLowerCase();
     }
 
     /**
      * AND current filter with new filter to produce a new MoodHistoryFilter
      * @param newFilter New filter to AND with current filter
      */
-    public void addFilter(Filter newFilter) {
+    public void addFilter(@NonNull Filter newFilter) {
         filter = Filter.and(filter, newFilter);
     }
 
@@ -46,23 +58,12 @@ public class MoodHistoryFilter {
      * @see #addFilter(Filter)
      */
     public void addFilter(MoodHistoryFilter newFilter) {
-        addFilter(newFilter.getFilter());
-    }
-
-    /**
-     * OR current filter with new filter to produce a new MoodHistoryFilter
-     * @param newFilter New filter to OR with current filter
-     */
-    public void includeFilter(Filter newFilter) {
-        filter = Filter.or(filter, newFilter);
-    }
-
-    /**
-     * Accepts a MoodHistoryFilter object, instead of a filter
-     * @see #includeFilter(Filter)
-     */
-    public void includeFilter(MoodHistoryFilter newFilter) {
-        includeFilter(newFilter.getFilter());
+        if (newFilter.queryText != null) {
+            this.queryText = newFilter.queryText;
+        }
+        if (newFilter.getFilter() != null) {
+            addFilter(newFilter.getFilter());
+        }
     }
 
     /**
@@ -84,14 +85,13 @@ public class MoodHistoryFilter {
     public static MoodHistoryFilter MostRecentWeek() {
         String createdDate = MoodEventFields.createdDate.name();
 
-        // Get first date of the week
+        // Get today's date
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-        final Date startDate = calendar.getTime();
-
-        // Get last date of the week
-        calendar.add(Calendar.DAY_OF_YEAR, 6);
         final Date endDate = calendar.getTime();
+
+        // Go back 6 days from now to get starting date
+        calendar.add(Calendar.DAY_OF_YEAR, -6);
+        final Date startDate = calendar.getTime();
 
         return new MoodHistoryFilter(
                 Filter.and(
@@ -118,12 +118,7 @@ public class MoodHistoryFilter {
     }
 
     public static MoodHistoryFilter ContainsText(String text) {
-        return new MoodHistoryFilter(
-                Filter.and(
-                        Filter.greaterThanOrEqualTo(MoodEventFields.reason.name(), text),
-                        Filter.lessThanOrEqualTo(MoodEventFields.reason.name(), text + 'z')),
-                null
-        );
+        return new MoodHistoryFilter(text);
     }
 
     public Filter getFilter() {
@@ -132,5 +127,9 @@ public class MoodHistoryFilter {
 
     public DBSortOption getSortOption() {
         return sortOption;
+    }
+
+    public String getQueryText() {
+        return queryText;
     }
 }
