@@ -7,4 +7,5 @@ plugins {
 
     // Safe Args for Navigation
     id("androidx.navigation.safeargs") version "2.8.8" apply false
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin) apply false
 }
