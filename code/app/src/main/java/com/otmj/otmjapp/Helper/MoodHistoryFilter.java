@@ -84,14 +84,13 @@ public class MoodHistoryFilter {
     public static MoodHistoryFilter MostRecentWeek() {
         String createdDate = MoodEventFields.createdDate.name();
 
-        // Get first date of the week
+        // Get today's date
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-        final Date startDate = calendar.getTime();
-
-        // Get last date of the week
-        calendar.add(Calendar.DAY_OF_YEAR, 6);
         final Date endDate = calendar.getTime();
+
+        // Go back 6 days from now to get starting date
+        calendar.add(Calendar.DAY_OF_YEAR, -6);
+        final Date startDate = calendar.getTime();
 
         return new MoodHistoryFilter(
                 Filter.and(
