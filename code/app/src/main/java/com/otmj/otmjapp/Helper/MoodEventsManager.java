@@ -77,9 +77,21 @@ public class MoodEventsManager {
                         lastFilter = filter;
 
                         ArrayList<MoodEvent> moodEvents = new ArrayList<>();
-                        // For each mood event //
+                        // For each mood event
                         for (MoodEvent moodEvent : result) {
-                            moodEvents.add(moodEvent);
+                            // If the filter contains a query text and mood event has "reason"
+                            if (filter.getQueryText() != null && moodEvent.getReason() != null) {
+                                // Then only add mood events that match query
+                                String reason = moodEvent.getReason().trim().toLowerCase();
+                                if (reason.contains(filter.getQueryText())) {
+                                    moodEvents.add(moodEvent);
+                                } else {
+                                    // Move to next mood event if current mood event does not match
+                                    continue;
+                                }
+                            } else {
+                                moodEvents.add(moodEvent);
+                            }
 
                             // Look through all the users
                             for (User u : authenticatedUsers) {
@@ -90,7 +102,7 @@ public class MoodEventsManager {
                                 }
                             }
 
-                            Log.d("MoodEventsManager", moodEvent.toString());
+//                            Log.d("MoodEventsManager", moodEvent.toString());
                         }
 
                         moodHistory.setValue(moodEvents);

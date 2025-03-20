@@ -2,8 +2,6 @@ package com.otmj.otmjapp.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -14,9 +12,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.otmj.otmjapp.Adapters.TimelineMoodEventAdapter;
+import com.otmj.otmjapp.Helper.FilterOptions;
 import com.otmj.otmjapp.Helper.FollowHandler;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
-import com.otmj.otmjapp.Helper.MoodHistoryFilter;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.User;
@@ -35,6 +33,7 @@ public class TimelineFragment extends Fragment {
     private final ArrayList<MoodEvent> allMoodEvents = new ArrayList<>();
     // List of all mood events (current user's events and events from users they follow).
     private TimelineMoodEventAdapter moodEventAdapter;
+    private FilterOptions filterOptions = null;
 
     @Override
     public View onCreateView(
@@ -94,21 +93,13 @@ public class TimelineFragment extends Fragment {
                     this::updateMoodEventsList
             );
 
-            // Handle filtering
+            // Show filter popup on click
             binding.filterButton.setOnClickListener(v -> {
-                FilterFragment filterPopup = new FilterFragment((last7Days, text, emotionalStates) -> {
-                    MoodHistoryFilter customFilter = MoodHistoryFilter.Default(ids);
-                    if (last7Days) {
-                        customFilter.addFilter(MoodHistoryFilter.MostRecentWeek());
-                    }
-                    if (!emotionalStates.isEmpty()) {
-                        customFilter.addFilter(MoodHistoryFilter.OnlyEmotionalStates(emotionalStates));
-                    }
-//                    if (!text.isBlank()) {
-//                        customFilter.addFilter(MoodHistoryFilter.ContainsText(text));
-//                    }
-
-                    moodEventsManager.getPublicMoodEvents(customFilter).observe(
+                FilterFragment filterPopup = new FilterFragment(filterOptions, (newFilterOptions) -> {
+                    // Save filter options
+                    filterOptions = newFilterOptions;
+                    // Use the new filter options to show mood events
+                    moodEventsManager.getPublicMoodEvents(newFilterOptions.buildFilter(ids)).observe(
                             getViewLifecycleOwner(),
                             this::updateMoodEventsList
                     );
@@ -131,8 +122,4 @@ public class TimelineFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-
-
-
 }

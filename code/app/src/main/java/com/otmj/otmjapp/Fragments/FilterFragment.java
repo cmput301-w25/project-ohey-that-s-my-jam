@@ -13,31 +13,37 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
+
+import com.otmj.otmjapp.Helper.FilterOptions;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.R;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class FilterFragment extends DialogFragment {
-
     public interface FilterListener {
-        void filterOptions(boolean last7Days,
-                           String text,
-                           List<EmotionalState> emotionalStates);
+        void filterOptions(FilterOptions filterOptions);
     }
 
     private final FilterListener listener;
+    private FilterOptions filterOptions;
+    private final Map<Integer, EmotionalState> idToEmotionalState = Map.of(
+            R.id.anger_chip, EmotionalState.Anger,
+            R.id.confuse_chip, EmotionalState.Confuse,
+            R.id.disgust_chip, EmotionalState.Disgust,
+            R.id.fear_chip, EmotionalState.Fear,
+            R.id.sad_chip, EmotionalState.Sad,
+            R.id.shame_chip, EmotionalState.Shame,
+            R.id.happy_chip, EmotionalState.Happy,
+            R.id.surprise_chip, EmotionalState.Surprise
+    );
 
-    // Filter options
-    private final ArrayList<EmotionalState> checkedEmotionalStates = new ArrayList<>();
-    private boolean onlyLast7Days = false;
-    private String reasonText = "";
-
-    public FilterFragment(FilterListener listener) {
+    public FilterFragment(FilterOptions filterOptions, FilterListener listener) {
+        this.filterOptions = filterOptions;
         this.listener = listener;
     }
 
@@ -50,32 +56,30 @@ public class FilterFragment extends DialogFragment {
         AlertDialog dialog = builder.setView(view).create();
 
         ChipGroup chipGroup = view.findViewById(R.id.filter_chips);
+        TextInputEditText reasonEditText = view.findViewById(R.id.filter_reason_text);
+
+        if (filterOptions != null) {
+            setChips(chipGroup);
+            reasonEditText.setText(filterOptions.getReasonText());
+        } else {
+            filterOptions = new FilterOptions();
+        }
+
         chipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            checkedEmotionalStates.clear();
-
+            filterOptions.setLast7Days(checkedIds.contains(R.id.recent_week_chip));
             if (!checkedIds.isEmpty()) {
-                onlyLast7Days = checkedIds.contains(R.id.recent_week_chip);
-
-                ArrayList<Integer> chips = new ArrayList<>(
-                        Arrays.asList(R.id.anger_chip, R.id.confuse_chip, R.id.shame_chip, R.id.surprise_chip,
-                                R.id.disgust_chip, R.id.fear_chip,
-                                R.id.happy_chip, R.id.sad_chip));
-
-                ArrayList<EmotionalState> emotionalStates = new ArrayList<>(
-                        Arrays.asList(EmotionalState.Anger, EmotionalState.Confuse, EmotionalState.Shame,
-                                EmotionalState.Surprise, EmotionalState.Disgust, EmotionalState.Fear,
-                                EmotionalState.Happy, EmotionalState.Sad)
-                );
-
-                for(int i = 0; i < chips.size(); i++) {
-                    if(checkedIds.contains(chips.get(i))) {
-                        checkedEmotionalStates.add(emotionalStates.get(i));
+                filterOptions.resetEmotionalStates();
+                // Handle emotional states
+                for (int id : checkedIds) {
+                    // Recent week chip is already handled above
+                    if (id == R.id.recent_week_chip) {
+                        continue;
                     }
+                    filterOptions.addEmotionalState(idToEmotionalState.get(id));
                 }
             }
         });
 
-        TextInputEditText reasonEditText = view.findViewById(R.id.filter_reason_text);
         reasonEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -85,7 +89,7 @@ public class FilterFragment extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                reasonText = editable.toString().trim();
+                filterOptions.setReasonText(editable.toString().trim());
             }
         });
 
@@ -95,10 +99,27 @@ public class FilterFragment extends DialogFragment {
         return dialog;
     }
 
+    private void setChips(ChipGroup chipGroup) {
+        List<EmotionalState> selectedEmotionalStates = filterOptions.getEmotionalStates();
+        for (int i = 0; i < chipGroup.getChildCount(); i++) {
+            Chip chip = (Chip) chipGroup.getChildAt(i);
+            // Handle recent week chip differently
+            if (chip.getId() == R.id.recent_week_chip) {
+                chip.setChecked(filterOptions.getLast7Days());
+            } else {
+                // The id of the chip is already in the "idToEmotionalState" map
+                EmotionalState correspondingEmotionalState = idToEmotionalState.get(chip.getId());
+                // If the "selectedEmotionalStates" contains the emotional state corresponding to the chip
+                if (selectedEmotionalStates.contains(correspondingEmotionalState)) {
+                    chip.setChecked(true);
+                }
+            }
+        }
+    }
+
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-
-        listener.filterOptions(onlyLast7Days, reasonText, checkedEmotionalStates);
+        listener.filterOptions(filterOptions);
     }
 }
