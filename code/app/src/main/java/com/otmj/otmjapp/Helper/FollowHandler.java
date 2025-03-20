@@ -67,12 +67,12 @@ public class FollowHandler {
         requestDB.getDocuments(getFollowRequest, FollowRequest.class, new FirestoreDB.DBCallback<>() {
             @Override
             public void onSuccess(ArrayList<FollowRequest> result) {
-                FollowRequest follower = result.get(0);
+                FollowRequest request = result.get(0);
 
-                Follow newFollow = new Follow(follower.getFollowerID(), currentUser.getID());
+                Follow newFollow = new Follow(request.getFollowerID(), currentUser.getID());
                 followDB.addDocument(newFollow, null); // callback can be implemented later
 
-                requestDB.deleteDocument(follower);
+                requestDB.deleteDocument(request);
             }
 
             @Override
@@ -129,7 +129,6 @@ public class FollowHandler {
             @Override
             public void onSuccess(ArrayList<FollowRequest> result) {
                 ArrayList<String> ids = new ArrayList<>();
-
                 for (FollowRequest f : result) {
                     ids.add(f.getFollowerID());
                 }

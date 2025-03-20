@@ -1,10 +1,12 @@
 package com.otmj.otmjapp.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.otmj.otmjapp.Helper.CircleTransform;
+import com.otmj.otmjapp.Helper.FollowHandler;
+import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 import com.squareup.picasso.Picasso;
@@ -19,8 +23,10 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class RequestsListViewAdapter extends ArrayAdapter<User> {
+    private final FollowHandler followHandler;
     public RequestsListViewAdapter(Context context, ArrayList<User> followersList) {
         super(context, 0, followersList); // Pass context, layout resource, and the data
+        followHandler = new FollowHandler();
     }
 
     @NonNull
@@ -52,6 +58,29 @@ public class RequestsListViewAdapter extends ArrayAdapter<User> {
         if (profilePicUrl == null || profilePicUrl.isEmpty()) {
             profilePicUrl = "android.resource://com.otmj.otmjapp/drawable/placeholder_image"; // Use a placeholder image
         }
+
+        Button confirmRequest = listItemView.findViewById(R.id.confirm_request_button);
+        confirmRequest.setOnClickListener(view -> {
+            View request = (View) view.getParent();
+            TextView usernameField = request.findViewById(R.id.username);
+            String username = usernameField.getText().toString();
+
+            UserManager.getInstance().getUser(username, new UserManager.AuthenticationCallback() {
+                @Override
+                public void onAuthenticated(ArrayList<User> authenticatedUsers) {
+                    User requester = authenticatedUsers.get(0);
+                    followHandler.acceptFollowRequest(requester.getID());
+
+                    remove(user);
+                    // TODO: show the confirmed request screen once created
+                }
+
+                @Override
+                public void onAuthenticationFailure(String reason) {
+                    Log.e("FollowListFragment", "Error getting user: " + reason);
+                }
+            });
+        });
 
         // Set the profile picture using Picasso (with a placeholder)
         ImageView profileImageView = listItemView.findViewById(R.id.profile_image);

@@ -144,6 +144,32 @@ public class UserManager {
     }
 
     /**
+     * Gets the corresponding user given their username.
+     *
+     * @param username  The username of the user to retrieve
+     */
+    public void getUser(String username, @NonNull AuthenticationCallback callback) {
+        db.getDocuments(User.class, new FirestoreDB.DBCallback<>() {
+            @Override
+            public void onSuccess(ArrayList<User> result) {
+                for(User u : result) {
+                    if(u.getUsername().equals(username)) {
+                        callback.onAuthenticated(new ArrayList<>(List.of(u)));
+
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("UserManager", "Error fetching users: " + e.getMessage());
+                callback.onAuthenticationFailure(e.getMessage());
+            }
+        });
+    }
+
+    /**
      * Checks if a given user exists in DB
      *
      * @param user            The user's details

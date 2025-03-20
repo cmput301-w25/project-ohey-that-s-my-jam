@@ -2,7 +2,6 @@ package com.otmj.otmjapp.Fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,11 +15,11 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FilterFragment extends DialogFragment {
@@ -53,31 +52,25 @@ public class FilterFragment extends DialogFragment {
         ChipGroup chipGroup = view.findViewById(R.id.filter_chips);
         chipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
             checkedEmotionalStates.clear();
+
             if (!checkedIds.isEmpty()) {
                 onlyLast7Days = checkedIds.contains(R.id.recent_week_chip);
-                if (checkedIds.contains(R.id.anger_chip)) {
-                    checkedEmotionalStates.add(EmotionalState.Anger);
-                }
-                if (checkedIds.contains(R.id.confuse_chip)) {
-                    checkedEmotionalStates.add(EmotionalState.Confuse);
-                }
-                if (checkedIds.contains(R.id.shame_chip)) {
-                    checkedEmotionalStates.add(EmotionalState.Shame);
-                }
-                if (checkedIds.contains(R.id.surprise_chip)) {
-                    checkedEmotionalStates.add(EmotionalState.Surprise);
-                }
-                if (checkedIds.contains(R.id.disgust_chip)) {
-                    checkedEmotionalStates.add(EmotionalState.Disgust);
-                }
-                if (checkedIds.contains(R.id.fear_chip)) {
-                    checkedEmotionalStates.add(EmotionalState.Fear);
-                }
-                if (checkedIds.contains(R.id.happy_chip)) {
-                    checkedEmotionalStates.add(EmotionalState.Happy);
-                }
-                if (checkedIds.contains(R.id.sad_chip)) {
-                    checkedEmotionalStates.add(EmotionalState.Sad);
+
+                ArrayList<Integer> chips = new ArrayList<>(
+                        Arrays.asList(R.id.anger_chip, R.id.confuse_chip, R.id.shame_chip, R.id.surprise_chip,
+                                R.id.disgust_chip, R.id.fear_chip,
+                                R.id.happy_chip, R.id.sad_chip));
+
+                ArrayList<EmotionalState> emotionalStates = new ArrayList<>(
+                        Arrays.asList(EmotionalState.Anger, EmotionalState.Confuse, EmotionalState.Shame,
+                                EmotionalState.Surprise, EmotionalState.Disgust, EmotionalState.Fear,
+                                EmotionalState.Happy, EmotionalState.Sad)
+                );
+
+                for(int i = 0; i < chips.size(); i++) {
+                    if(checkedIds.contains(chips.get(i))) {
+                        checkedEmotionalStates.add(emotionalStates.get(i));
+                    }
                 }
             }
         });

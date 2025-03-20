@@ -3,14 +3,13 @@ package com.otmj.otmjapp.Fragments;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.fragment.app.Fragment;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
 
 import com.otmj.otmjapp.Adapters.FollowersListViewAdapter;
 import com.otmj.otmjapp.Adapters.RequestsListViewAdapter;
