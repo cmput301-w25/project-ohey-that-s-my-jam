@@ -5,6 +5,9 @@
 # Local configuration file
 **/local.properties
 
+# Ignore secrets file
+secrets.properties
+
 # Log/OS Files
 **/*.log
 
