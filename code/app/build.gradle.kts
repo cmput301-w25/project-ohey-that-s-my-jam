@@ -75,10 +75,6 @@ dependencies {
     testImplementation("org.mockito:mockito-inline:5.2.0")
     implementation("net.bytebuddy:byte-buddy:1.17.1")
 
-    implementation("io.github.ParkSangGwon:tedimagepicker:1.6.1") {
-        exclude(group = "com.android.support")
-    }
-
     implementation("com.google.firebase:firebase-storage:20.2.1")
     implementation("com.google.firebase:firebase-auth:22.3.1")
 }

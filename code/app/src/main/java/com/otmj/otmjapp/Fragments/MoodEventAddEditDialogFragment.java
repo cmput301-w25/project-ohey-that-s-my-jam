@@ -1,16 +1,11 @@
 package com.otmj.otmjapp.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -38,16 +33,11 @@ import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.Helper.TextValidator;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import gun0912.tedimagepicker.builder.TedImagePicker;
-import gun0912.tedimagepicker.builder.type.MediaType;
+
 
 
 /**
@@ -67,6 +57,32 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
 
     // Will be implemented in project part 4
     // private boolean addLocation
+
+    private final ActivityResultLauncher<PickVisualMediaRequest> galleryLauncher =
+            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                if (uri != null) {
+                    long imageSize = ImageHandler.getImageSize(requireContext(), uri);
+                    if (imageSize <= 65536) {
+                        ImageHandler.uploadToFirebaseStorage(requireContext(), uri, new ImageHandler.UploadCallback() {
+                            @Override
+                            public void onSuccess(String imageUrl) {
+                                Log.d("Image Upload", "Image successfully uploaded: " + imageUrl);
+                                imageLink = imageUrl;  // ✅ Set the image link
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                Log.e("Image Upload", "Failed to upload image: " + e.getMessage());
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getContext(), "Image size too big", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+
+
 
     /**
      * Creates a new instance of the dialog fragment with a given MoodEvent.
@@ -176,12 +192,16 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         });
 
         uploadImage.setOnClickListener(v -> {
-            if (imageLink == null) {
-                setImageLink();
-            } else {
-                imageLink = updateImageLink(imageLink);
-            }
+            Log.d("ImageLink Check", "Current imageLink: " + imageLink);
+
+            // Directly launch the image picker instead of calling setImageLink()
+            galleryLauncher.launch(new PickVisualMediaRequest.Builder()
+                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                    .build());
+
+            Log.d("ImageLink Check", "Gallery picker launched");
         });
+
 
         // close button
         closeFragmentButton.setOnClickListener(v -> dismiss());
@@ -323,100 +343,5 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             }
         }
     }
-
-    /**
-     * Opens an image picker, allows the user to select an image, and uploads it to Firebase Storage.
-     * Once uploaded, the image's download URL is stored in the `imageLink` variable.
-     */
-    private void setImageLink() {
-        TedImagePicker.with(getContext())
-                .title("Select an Image")
-                .mediaType(MediaType.IMAGE)
-                .showCameraTile(false)
-                .max(1, "You can only select 1 image.")
-                .startMultiImage(uriList -> {
-                    if (!uriList.isEmpty()) {
-                        Uri uri = uriList.get(0);
-                        long imageSize = ImageHandler.getImageSize(requireContext(), uri);
-                        if (imageSize <= 65536) {
-                            ImageHandler.uploadToFirebaseStorage(requireContext(), uri, new ImageHandler.UploadCallback() {
-                                @Override
-                                public void onSuccess(String imageUrl) {
-                                    imageLink = imageUrl; // Set the image URL for Firestore
-                                    Log.d("Image Upload", "Image successfully uploaded: " + imageLink);
-                                }
-
-                                @Override
-                                public void onFailure(Exception e) {
-                                    Log.e("Image Upload", "Failed to upload image: " + e.getMessage());
-                                }
-                            });
-                        } else {
-                            Toast.makeText(getContext(), "Image size too big", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
-
-    /**
-     * Opens an image picker to allow the user to replace or remove an existing image in their mood event.
-     * New image is uploaded to Firebase Storage.
-     * Old image are deleted from Firebase Storage.
-     * @param imageLink The current image URL stored in Firebase Storage.
-     * @return The new image URL after upload, or `null` if no image was selected.
-     * **Behavior:**
-     * - If the user selects a new image, the old image is deleted, and the new URL is returned.
-     * - If the upload fails, the old image remains unchanged.
-     * - If the user deselected all images, detaching image from their post, `null` is returned.
-     */
-    private String updateImageLink(String imageLink) {
-        Uri preselectedImage = Uri.parse(imageLink);
-        List<Uri> updatedImage = new ArrayList<>();
-
-        // Use a final array to hold the updated image link
-        final String[] updatedImageLink = {imageLink};
-
-        TedImagePicker.with(getContext())
-                .title("Select an Image")
-                .mediaType(MediaType.IMAGE)
-                .showCameraTile(false)
-                .max(1, "You can only select 1 image.")
-                .selectedUri(Collections.singletonList(preselectedImage))
-                .startMultiImage(uriList -> {
-                    if (!uriList.isEmpty()) {
-                        Uri selectedUri = uriList.get(0);
-                        long imageSize = ImageHandler.getImageSize(requireContext(), selectedUri);
-                        if (imageSize <= 65536) {
-                            updatedImage.add(selectedUri);
-
-                            // Upload the new image to Firebase
-                            ImageHandler.uploadToFirebaseStorage(requireContext(), selectedUri, new ImageHandler.UploadCallback() {
-                                @Override
-                                public void onSuccess(String imageUrl) {
-                                    // Update the array value instead of a final String variable
-                                    updatedImageLink[0] = imageUrl;
-                                    Log.d("Image Update", "Updated image URL: " + updatedImageLink[0]);
-                                }
-
-                                @Override
-                                public void onFailure(Exception e) {
-                                    Log.e("Image Update", "Failed to update image: " + e.getMessage());
-                                }
-                            });
-                        }
-                    } else {
-                        Toast.makeText(getContext(), "Image size too big", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        // Delete the old image if a new one was uploaded successfully
-        if (!updatedImageLink[0].equals(imageLink)) {
-            ImageHandler.deleteImage(imageLink);
-        }
-
-        return updatedImage.isEmpty() ? null : updatedImageLink[0];
-    }
-
 
 }

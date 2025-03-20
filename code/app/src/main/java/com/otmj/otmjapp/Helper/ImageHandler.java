@@ -44,8 +44,8 @@ public class ImageHandler {
             fileExtension = "jpg"; // Default to jpg if unknown
         }
 
-        // Generate a unique filename to prevent overwrites
-        String fileName = "images/" + UUID.randomUUID().toString() + "." + fileExtension;
+        // this will prevent duplicates
+        String fileName = "images/" + imageUri.getLastPathSegment() + "." + fileExtension;
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(fileName);
 
         UploadTask uploadTask = storageRef.putFile(imageUri);
