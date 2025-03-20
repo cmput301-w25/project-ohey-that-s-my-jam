@@ -337,9 +337,9 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 .startMultiImage(uriList -> {
                     if (!uriList.isEmpty()) {
                         Uri uri = uriList.get(0);
-                        long imageSize = ImageHandler.getFileSize(requireContext(), uri);
+                        long imageSize = ImageHandler.getImageSize(requireContext(), uri);
                         if (imageSize <= 65536) {
-                            ImageHandler.uploadImage(requireContext(), uri, new ImageHandler.UploadCallback() {
+                            ImageHandler.uploadToFirebaseStorage(requireContext(), uri, new ImageHandler.UploadCallback() {
                                 @Override
                                 public void onSuccess(String imageUrl) {
                                     imageLink = imageUrl; // Set the image URL for Firestore
@@ -351,8 +351,9 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                                     Log.e("Image Upload", "Failed to upload image: " + e.getMessage());
                                 }
                             });
+                        } else {
+                            Toast.makeText(getContext(), "Image size too big", Toast.LENGTH_SHORT).show();
                         }
-                        // TODO: add a toast message that image size is too big
                     }
                 });
     }
@@ -385,12 +386,12 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 .startMultiImage(uriList -> {
                     if (!uriList.isEmpty()) {
                         Uri selectedUri = uriList.get(0);
-                        long imageSize = ImageHandler.getFileSize(requireContext(), selectedUri);
+                        long imageSize = ImageHandler.getImageSize(requireContext(), selectedUri);
                         if (imageSize <= 65536) {
                             updatedImage.add(selectedUri);
 
                             // Upload the new image to Firebase
-                            ImageHandler.uploadImage(requireContext(), selectedUri, new ImageHandler.UploadCallback() {
+                            ImageHandler.uploadToFirebaseStorage(requireContext(), selectedUri, new ImageHandler.UploadCallback() {
                                 @Override
                                 public void onSuccess(String imageUrl) {
                                     // Update the array value instead of a final String variable
@@ -404,8 +405,9 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                                 }
                             });
                         }
+                    } else {
+                        Toast.makeText(getContext(), "Image size too big", Toast.LENGTH_SHORT).show();
                     }
-                    // TODO: add a toast message that image size is too big
                 });
 
         // Delete the old image if a new one was uploaded successfully
