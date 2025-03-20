@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +38,8 @@ import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.Helper.TextValidator;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -334,18 +337,22 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 .startMultiImage(uriList -> {
                     if (!uriList.isEmpty()) {
                         Uri uri = uriList.get(0);
-                        ImageHandler.uploadImage(uri, new ImageHandler.UploadCallback() {
-                            @Override
-                            public void onSuccess(String imageUrl) {
-                                imageLink = imageUrl; // Set the image URL for Firestore
-                                Log.d("Image Upload", "Image successfully uploaded: " + imageLink);
-                            }
+                        long imageSize = ImageHandler.getFileSize(requireContext(), uri);
+                        if (imageSize <= 65536) {
+                            ImageHandler.uploadImage(requireContext(), uri, new ImageHandler.UploadCallback() {
+                                @Override
+                                public void onSuccess(String imageUrl) {
+                                    imageLink = imageUrl; // Set the image URL for Firestore
+                                    Log.d("Image Upload", "Image successfully uploaded: " + imageLink);
+                                }
 
-                            @Override
-                            public void onFailure(Exception e) {
-                                Log.e("Image Upload", "Failed to upload image: " + e.getMessage());
-                            }
-                        });
+                                @Override
+                                public void onFailure(Exception e) {
+                                    Log.e("Image Upload", "Failed to upload image: " + e.getMessage());
+                                }
+                            });
+                        }
+                        // TODO: add a toast message that image size is too big
                     }
                 });
     }
@@ -378,23 +385,27 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 .startMultiImage(uriList -> {
                     if (!uriList.isEmpty()) {
                         Uri selectedUri = uriList.get(0);
-                        updatedImage.add(selectedUri);
+                        long imageSize = ImageHandler.getFileSize(requireContext(), selectedUri);
+                        if (imageSize <= 65536) {
+                            updatedImage.add(selectedUri);
 
-                        // Upload the new image to Firebase
-                        ImageHandler.uploadImage(selectedUri, new ImageHandler.UploadCallback() {
-                            @Override
-                            public void onSuccess(String imageUrl) {
-                                // Update the array value instead of a final String variable
-                                updatedImageLink[0] = imageUrl;
-                                Log.d("Image Update", "Updated image URL: " + updatedImageLink[0]);
-                            }
+                            // Upload the new image to Firebase
+                            ImageHandler.uploadImage(requireContext(), selectedUri, new ImageHandler.UploadCallback() {
+                                @Override
+                                public void onSuccess(String imageUrl) {
+                                    // Update the array value instead of a final String variable
+                                    updatedImageLink[0] = imageUrl;
+                                    Log.d("Image Update", "Updated image URL: " + updatedImageLink[0]);
+                                }
 
-                            @Override
-                            public void onFailure(Exception e) {
-                                Log.e("Image Update", "Failed to update image: " + e.getMessage());
-                            }
-                        });
+                                @Override
+                                public void onFailure(Exception e) {
+                                    Log.e("Image Update", "Failed to update image: " + e.getMessage());
+                                }
+                            });
+                        }
                     }
+                    // TODO: add a toast message that image size is too big
                 });
 
         // Delete the old image if a new one was uploaded successfully
