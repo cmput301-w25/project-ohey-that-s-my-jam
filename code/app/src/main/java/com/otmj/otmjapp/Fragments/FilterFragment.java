@@ -102,7 +102,6 @@ public class FilterFragment extends DialogFragment {
         List<EmotionalState> selectedEmotionalStates = filterOptions.getEmotionalStates();
         for (int i = 0; i < chipGroup.getChildCount(); i++) {
             Chip chip = (Chip) chipGroup.getChildAt(i);
-
             // Handle recent week chip differently
             if (chip.getId() == R.id.recent_week_chip) {
                 chip.setChecked(filterOptions.getLast7Days());
