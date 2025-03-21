@@ -30,6 +30,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.otmj.otmjapp.Helper.CustomImageSpan;
+import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.R;
@@ -106,16 +107,13 @@ public class MoodEventDetailsFragment extends Fragment {
         // Load Image if available
         if (moodEvent.getImageLink() != null && !moodEvent.getImageLink().isEmpty()) {
             moodEventImage.setVisibility(View.VISIBLE);
-            Uri uri = Uri.parse(moodEvent.getImageLink());
 
-            Glide.with(this)
-                    .load(uri)
-                    .into(moodEventImage);
+            // Use ImageHandler with correct context
+            ImageHandler.loadImage(requireContext(), moodEvent.getImageLink(), moodEventImage);
         } else {
             // Hide ImageView if no image
             moodEventImage.setVisibility(View.GONE);
         }
-
 
         // Set location if available
         LinearLayout locationIconAndTextLayout = binding.locationIconAndTextLayout;

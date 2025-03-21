@@ -1,15 +1,11 @@
 package com.otmj.otmjapp.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,6 +23,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.EmotionalState;
@@ -36,14 +33,11 @@ import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.Helper.TextValidator;
 
-import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import gun0912.tedimagepicker.builder.TedImagePicker;
-import gun0912.tedimagepicker.builder.type.MediaType;
+
 
 
 /**
@@ -63,6 +57,32 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
 
     // Will be implemented in project part 4
     // private boolean addLocation
+
+    private final ActivityResultLauncher<PickVisualMediaRequest> galleryLauncher =
+            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                if (uri != null) {
+                    long imageSize = ImageHandler.getImageSize(requireContext(), uri);
+                    if (imageSize <= 65536) {
+                        ImageHandler.uploadToFirebaseStorage(requireContext(), uri, new ImageHandler.UploadCallback() {
+                            @Override
+                            public void onSuccess(String imageUrl) {
+                                Log.d("Image Upload", "Image successfully uploaded: " + imageUrl);
+                                imageLink = imageUrl;  // ✅ Set the image link
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                Log.e("Image Upload", "Failed to upload image: " + e.getMessage());
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getContext(), "Image size too big", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+
+
 
     /**
      * Creates a new instance of the dialog fragment with a given MoodEvent.
@@ -172,12 +192,16 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         });
 
         uploadImage.setOnClickListener(v -> {
-            if (imageLink == null) {
-                setImageLink();
-            } else {
-                imageLink = updateImageLink(imageLink);
-            }
+            Log.d("ImageLink Check", "Current imageLink: " + imageLink);
+
+            // Directly launch the image picker instead of calling setImageLink()
+            galleryLauncher.launch(new PickVisualMediaRequest.Builder()
+                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                    .build());
+
+            Log.d("ImageLink Check", "Gallery picker launched");
         });
+
 
         // close button
         closeFragmentButton.setOnClickListener(v -> dismiss());
@@ -318,43 +342,6 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 return;
             }
         }
-    }
-
-    private void setImageLink() {
-        TedImagePicker.with(getContext())
-                .title("Select an Image")
-                .mediaType(MediaType.IMAGE)
-                .showCameraTile(false)
-                .max(1, "You can only select 1 image.")
-                .startMultiImage(uriList -> {
-                    if (!uriList.isEmpty()) {
-                        Uri uri = uriList.get(0);
-                        imageLink = uri.toString();
-                    }
-                });
-    }
-
-    private String updateImageLink(String imageLink) {
-        Uri preselectedImage = Uri.parse(imageLink);
-        List<Uri> updatedImage = new ArrayList<>();
-
-        TedImagePicker.with(getContext())
-                .title("Select an Image")
-                .mediaType(MediaType.IMAGE)
-                .showCameraTile(false)
-                .max(1, "You can only select 1 image.")
-                .selectedUri(Collections.singletonList(preselectedImage))
-                .startMultiImage(uriList -> {
-                    if (!uriList.isEmpty()) {
-                        updatedImage.add(uriList.get(0));
-                    }
-                });
-
-            if (updatedImage.isEmpty()) {
-                return null;
-            } else {
-                return updatedImage.get(0).toString();
-            }
     }
 
 }

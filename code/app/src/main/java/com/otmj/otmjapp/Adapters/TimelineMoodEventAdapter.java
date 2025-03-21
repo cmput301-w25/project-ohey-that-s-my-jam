@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.otmj.otmjapp.Helper.CustomImageSpan;
+import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.R;
@@ -65,19 +66,16 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         timeAgoText.setText(timeAgo);
 
         ImageView moodEventImage = view.findViewById(R.id.mood_image);
+
         // Load Image if available
         if (m.getImageLink() != null && !m.getImageLink().isEmpty()) {
             Log.d("ImageLoader", "Loading image: " + m.getImageLink());
 
-            Uri uri = Uri.parse(m.getImageLink());
-
             // Ensure ImageView is visible
             moodEventImage.setVisibility(View.VISIBLE);
 
-            // Load with Glide (use parent.getContext() for correct context)
-            Glide.with(parent.getContext())
-                    .load(uri)
-                    .into(moodEventImage);
+            // Use ImageHandler to load the image
+            ImageHandler.loadImage(parent.getContext(), m.getImageLink(), moodEventImage);
         } else {
             // Hide ImageView if no image
             moodEventImage.setVisibility(View.GONE);
