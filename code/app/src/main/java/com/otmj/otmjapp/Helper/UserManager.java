@@ -118,7 +118,7 @@ public class UserManager {
         });
     }
 
-    public void getUsers(ArrayList<String> userIDs, @NonNull AuthenticationCallback callback) {
+    public void getUsers(List<String> userIDs, @NonNull AuthenticationCallback callback) {
         if (userIDs == null || userIDs.isEmpty()) {
             callback.onAuthenticated(new ArrayList<>()); // Return an empty list
             return;
