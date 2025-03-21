@@ -369,6 +369,12 @@
                 app:srcCompat="@drawable/ic_trash"
                 android:contentDescription="@string/ic_delete_detail"/>
 
+            <TextView
+                android:id="@+id/textview_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
         </LinearLayout>
     </LinearLayout>
 
