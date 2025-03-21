@@ -2,14 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/nav_location"
-        android:icon="@drawable/location"
+        android:id="@+id/timelineFragment"
+        android:icon="@drawable/home"
+        android:title="@string/nav_profile_text" />
+
+    <item
+        android:id="@+id/mapFragment"
+        android:icon="@drawable/continents"
         android:title="@string/nav_location_text" />
 
     <item
-        android:id="@+id/timelineFragment"
+        android:id="@+id/spacer"
         android:checkable="false"
         android:title="timeLine"/>
+
+    <item
+        android:id="@+id/wowFactorFragment"
+        android:icon="@drawable/question_mark"
+        android:title="@string/nav_profile_text" />
 
     <item
         android:id="@+id/userProfileFragment"
