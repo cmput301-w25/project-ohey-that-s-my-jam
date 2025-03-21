@@ -1,38 +1,42 @@
 package com.otmj.otmjapp.Models;
 
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.ServerTimestamp;
 
-public class Comment {
-    private String userId;
-    private String username;
+import java.util.Date;
+
+public class Comment extends DatabaseObject {
+    private final String moodEventId;
+    private final String userId;
+    @Exclude
+    private User user = null;
+    @ServerTimestamp
+    private Date timestamp;
     private String commentText;
-    private String timestamp;
-    private String moodEventId;
-    private String profilePictureUrl;
-    public Comment() {}
 
-    public Comment(String userId, String username, String commentText, String timestamp, String moodEventId, String profilePictureUrl) {
+    public Comment() {
+        userId = "";
+        moodEventId = "";
+    }
+
+    public Comment(String userId,
+                   String moodEventId,
+                    String commentText) {
         this.userId = userId;
-        this.username = username;
-        this.commentText = commentText;
-        this.timestamp = timestamp;
         this.moodEventId = moodEventId;
-        this.profilePictureUrl = profilePictureUrl;
+        this.commentText = commentText;
     }
 
     public String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(final User user) {
+        this.user = user;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public User getUser() {
+        return user;
     }
 
     public String getCommentText() {
@@ -43,29 +47,14 @@ public class Comment {
         this.commentText = commentText;
     }
 
-    public String getTimestamp() {
+    public Date getTimestamp() {
+        if (timestamp == null) {
+            timestamp = new Date();
+        }
         return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
     }
 
     public String getMoodEventId() {
         return moodEventId;
     }
-
-    public void setMoodEventId(String moodEventId) {
-        this.moodEventId = moodEventId;
-    }
-
-    public String getProfilePictureUrl() {
-        return profilePictureUrl;
-    }
-
-    public void setProfilePictureUrl(String profilePictureUrl) {
-        this.profilePictureUrl = profilePictureUrl;
-    }
-
-
 }

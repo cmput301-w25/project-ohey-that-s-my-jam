@@ -3,11 +3,13 @@ package com.otmj.otmjapp.Helper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.otmj.otmjapp.Adapters.CommentAdapter;
 import com.otmj.otmjapp.Models.Comment;
+import com.otmj.otmjapp.Models.User;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,78 +18,103 @@ import java.util.List;
 import java.util.Locale;
 
 public class CommentHandler {
+
+    public interface CommentCountsCallback {
+        void result(int count);
+    }
+
     private static final String TAG = "CommentHandler";
-    private final FirebaseFirestore db;
+    private final FirestoreDB<Comment> db;
 
     public CommentHandler() {
-        this.db = FirebaseFirestore.getInstance();
+        db = new FirestoreDB<>(FirestoreCollections.Comments.name);
     }
 
     /**
      * Retrieves comments from Firestore for a specific MoodEvent ID.
      */
-    public void loadComments(String moodEventId, CommentAdapter commentsAdapter) {
-        db.collection("comments")
-                .whereEqualTo("moodEventId", moodEventId)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                // Real time reload
-                .addSnapshotListener((queryDocumentSnapshots, e) -> {
-                    if (e != null) {
-                        Log.e(TAG, "Error listening for comment changes", e);
-                        return;
-                    }
+    private void getComments(String moodEventId, FirestoreDB.DBCallback<Comment> callback) {
+        Filter filter = Filter.equalTo("moodEventId", moodEventId);
+        DBSortOption sortOption = new DBSortOption("timestamp", true);
 
-                    if (queryDocumentSnapshots == null) return;
-
-                    List<Comment> comments = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        Comment comment = document.toObject(Comment.class);
-                        comments.add(comment);
-                    }
-
-                    commentsAdapter.clear();
-                    commentsAdapter.addAll(comments);
-                    commentsAdapter.notifyDataSetChanged();
-                });
+        db.getDocuments(filter, Comment.class, callback, sortOption);
     }
 
+    /**
+     * Get comments with the associated user details and send data to adapter
+     */
+    public void loadComments(String moodEventId, CommentAdapter commentsAdapter) {
+        getComments(moodEventId, new FirestoreDB.DBCallback<>() {
+            @Override
+            public void onSuccess(ArrayList<Comment> comments) {
+                UserManager userManager = UserManager.getInstance();
 
+                commentsAdapter.clear();
+                // For each comment
+                for (Comment comment : comments) {
+                    // Get the user that made the comment
+                    userManager.getUsers(List.of(comment.getUserId()), new UserManager.AuthenticationCallback() {
+                        @Override
+                        public void onAuthenticated(ArrayList<User> users) {
+                            if (!users.isEmpty()) {
+                                comment.setUser(users.get(0));
+
+                                commentsAdapter.add(comment);
+                                commentsAdapter.notifyDataSetChanged();
+                            } else {
+                                Log.e(TAG, "User document does not exist.");
+                            }
+                        }
+
+                        @Override
+                        public void onAuthenticationFailure(String reason) {
+                            Log.e(TAG, "Error fetching user data");
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e(TAG, "Error listening for comment changes", e);
+            }
+        });
+    }
 
     /**
      * Saves a new comment to Firestore and ensures UI is updated only after successful save.
      */
-    public void addComment(String commentText, String moodEventId, CommentAdapter commentsAdapter, String userId, String username) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public void addComment(String commentText,
+                           String moodEventId,
+                           String userId,
+                           CommentAdapter commentsAdapter) {
+        // Create a comment
+        Comment comment = new Comment(userId, moodEventId, commentText);
+        // Add it to the db
+        db.addDocument(comment, new FirestoreDB.DBCallback<>() {
+            @Override
+            public void onSuccess(ArrayList<Comment> result) {
+                loadComments(moodEventId, commentsAdapter);
+            }
 
-        // Fetch additional user details (if needed)
-        db.collection("users").document(userId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String profilePictureUrl = documentSnapshot.getString("profilePictureUrl");
-                        if (profilePictureUrl == null) profilePictureUrl = "";
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("Firestore", "Error adding comment", e);
+            }
+        });
+    }
 
-                        // Create the Comment object
-                        Comment comment = new Comment(
-                                userId,
-                                username,
-                                commentText,
-                                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date()),
-                                moodEventId,
-                                profilePictureUrl
-                        );
+    public void getCommentCount(String moodEventId, CommentCountsCallback callback) {
+        getComments(moodEventId, new FirestoreDB.DBCallback<>() {
+            @Override
+            public void onSuccess(ArrayList<Comment> result) {
+                callback.result(result.size());
+            }
 
-                        // Upload the comment to Firestore
-                        db.collection("comments")
-                                .add(comment)
-                                .addOnSuccessListener(documentReference -> {
-                                    // Reload the comments after successfully adding
-                                    loadComments(moodEventId, commentsAdapter);
-                                })
-                                .addOnFailureListener(e -> Log.e("Firestore", "Error adding comment", e));
-                    } else {
-                        Log.e("Firestore", "User document does not exist");
-                    }
-                })
-                .addOnFailureListener(e -> Log.e("Firestore", "Error fetching user data", e));
+            @Override
+            public void onFailure(Exception e) {
+                callback.result(-1);
+            }
+        });
     }
 }

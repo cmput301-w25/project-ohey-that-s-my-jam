@@ -145,32 +145,11 @@ public class MoodEventDetailsFragment extends Fragment {
         CommentAdapter commentsAdapter = new CommentAdapter(requireContext(), new ArrayList<>());
         commentsListView.setAdapter(commentsAdapter);
 
-        // Fetch current user data from Firestore
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         // Retrieve user from UserManager
         UserManager userManager = UserManager.getInstance();
         User currentUser = userManager.getCurrentUser(); // Get logged-in user
 
         String currentUserId = currentUser.getID();
-        String currentUsername = currentUser.getUsername();
-
-        Log.d("UserManager", "User logged in with ID: " + currentUserId + ", Username: " + currentUsername);
-
-        // Retrieve user info from Firestore
-        db.collection("users").document(currentUserId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String username = documentSnapshot.getString("username");
-                        if (username != null) {
-                            Log.d("Firestore", "Fetched Username: " + username);
-                        }
-                    } else {
-                        Log.e("Firestore", "User document does not exist.");
-                    }
-                })
-                .addOnFailureListener(e -> Log.e("Firestore", "Error fetching user data", e));
-
 
         // Load comments
         commentHandler.loadComments(moodEventId, commentsAdapter);
@@ -183,7 +162,7 @@ public class MoodEventDetailsFragment extends Fragment {
             String commentText = commentInput.getText().toString().trim();
             if (!commentText.isEmpty()) {
                 // Add the comment with the correct user details
-                commentHandler.addComment(commentText, moodEventId, commentsAdapter, currentUserId, currentUsername);
+                commentHandler.addComment(commentText, moodEventId, currentUserId, commentsAdapter);
                 commentInput.setText("");  // Clear input field after sending
             } else {
                 Toast.makeText(requireContext(), "Comment cannot be empty", Toast.LENGTH_SHORT).show();
