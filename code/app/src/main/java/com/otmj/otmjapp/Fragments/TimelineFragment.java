@@ -22,6 +22,7 @@ import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.databinding.FragmentTimelineBinding;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -111,7 +112,27 @@ public class TimelineFragment extends Fragment {
 
     private void updateMoodEventsList(List<MoodEvent> moodEvents) {
         allMoodEvents.clear();
-        allMoodEvents.addAll(moodEvents);
+
+        HashMap<String, ArrayList<MoodEvent>> moodEventsPerUser = new HashMap<>();
+        for (MoodEvent moodEvent : moodEvents) {
+            // If this is the first time this userID is seen
+            if (!moodEventsPerUser.containsKey(moodEvent.getUserID())) {
+                // Add to map with current mood event
+                moodEventsPerUser.put(moodEvent.getUserID(), new ArrayList<>(List.of(moodEvent)));
+            } else {
+                ArrayList<MoodEvent> userMoodEvents = moodEventsPerUser.get(moodEvent.getUserID());
+                // Only add if we don't have up to 3 mood events for the user
+                if (userMoodEvents != null && userMoodEvents.size() < 3) {
+                    userMoodEvents.add(moodEvent);
+                } else {
+                    continue;
+                }
+            }
+
+            // At this point, we're only adding a maximum of 3 mood events per user
+            allMoodEvents.add(moodEvent);
+        }
+
         if (moodEventAdapter != null) {
             moodEventAdapter.notifyDataSetChanged();
         }
