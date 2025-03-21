@@ -77,6 +77,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation(libs.annotation)
     implementation(libs.play.services.maps)
+    implementation(libs.firebase.storage)
     testImplementation(libs.runner)
     testImplementation(libs.ext.junit)
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")

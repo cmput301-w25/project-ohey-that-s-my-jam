@@ -8,6 +8,7 @@ import com.google.firebase.firestore.*;
 import com.otmj.otmjapp.Helper.FirestoreDB;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.MoodEvent;
+import com.otmj.otmjapp.Models.SocialSituation;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -41,17 +42,21 @@ public class FirestoreDBTest {
         db = new FirestoreDB<>("moodEvents", mockFirestore);
     }
 
-    @Test
-    public void testGetDocumentsWithoutFilter() {
-        MoodEvent mockMood = new MoodEvent(
+    private MoodEvent getMockMood() {
+        return new MoodEvent(
                 "1",
-                (EmotionalState) EmotionalState.values()[4],
-                "Basketball",
-                null,
+                EmotionalState.Happy,
+                SocialSituation.Alone,
                 false,
                 "Lakers won",
-                null
+                null,
+                MoodEvent.Privacy.Public
         );
+    }
+
+    @Test
+    public void testGetDocumentsWithoutFilter() {
+        MoodEvent mockMood = getMockMood();
 
         ArrayList<MoodEvent> expectedEvents = new ArrayList<>();
         expectedEvents.add(mockMood);
@@ -77,15 +82,7 @@ public class FirestoreDBTest {
 
     @Test
     public void testGetDocumentsWithFilter() {
-        MoodEvent mockMoodEvent = new MoodEvent(
-                "1",
-                (EmotionalState) EmotionalState.values()[4],
-                "Basketball",
-                null,
-                false,
-                "Lakers won",
-                null
-        );
+        MoodEvent mockMoodEvent = getMockMood();
 
         ArrayList<MoodEvent> expectedEvents = new ArrayList<>();
         expectedEvents.add(mockMoodEvent);
@@ -114,15 +111,7 @@ public class FirestoreDBTest {
 
     @Test
     public void testAddDocument() {
-        MoodEvent mockMoodEvent = new MoodEvent(
-                "1",
-                (EmotionalState) EmotionalState.values()[4],
-                "Basketball",
-                null,
-                false,
-                "Lakers won",
-                null
-        );
+        MoodEvent mockMoodEvent = getMockMood();
 
         Task<DocumentReference> mockAddTask = mock(Task.class);
         when(mockCollectionRef.add(mockMoodEvent)).thenReturn(mockAddTask);
@@ -144,15 +133,7 @@ public class FirestoreDBTest {
     @Test
     public void testUpdateDocument() {
         // Arrange
-        MoodEvent mockMoodEvent = new MoodEvent(
-                "1",
-                (EmotionalState) EmotionalState.values()[4],
-                "Basketball",
-                null,
-                false,
-                "Lakers won",
-                null
-        );
+        MoodEvent mockMoodEvent = getMockMood();
         mockMoodEvent.setID("abc");
 
         // add document
@@ -195,15 +176,7 @@ public class FirestoreDBTest {
     @Test
     public void testDeleteDocument() {
         // Arrange
-        MoodEvent mockMoodEvent = new MoodEvent(
-                "1",
-                (EmotionalState) EmotionalState.values()[4],
-                "Basketball",
-                null,
-                false,
-                "Lakers won",
-                null
-        );
+        MoodEvent mockMoodEvent = getMockMood();
         mockMoodEvent.setID("abc");
 
         // add document
