@@ -20,21 +20,32 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.otmj.otmjapp.Adapters.CommentAdapter;
+import com.otmj.otmjapp.Helper.CommentHandler;
 import com.otmj.otmjapp.Helper.CustomImageSpan;
 import com.otmj.otmjapp.Helper.ImageHandler;
+import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
+import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.databinding.FragmentMoodEventDetailsBinding;
+
+import java.util.ArrayList;
 
 /**
  * Displays the details of a MoodEvent (user information, timestamp, etc.)
@@ -79,6 +90,7 @@ public class MoodEventDetailsFragment extends Fragment {
         TextView detailsReasonWhy = binding.detailsReasonWhy;
         TextView eventLocationText = binding.detailsEventLocation;
         TextView detailsEmotionAndSocialSituation = binding.detailsEmotionAndSocialSituation;
+        ListView commentsListView = binding.commentsListView;
 
         // Get the passed arguments using Safe Args
         MoodEventDetailsFragmentArgs args = MoodEventDetailsFragmentArgs.fromBundle(getArguments());
@@ -123,6 +135,60 @@ public class MoodEventDetailsFragment extends Fragment {
             locationIconAndTextLayout.setVisibility(View.GONE);
         }
 
+        // Initialize the CommentHandler
+        CommentHandler commentHandler = new CommentHandler();
+
+        // Get MoodEvent details
+        String moodEventId = moodEvent.getID();
+
+        // Initialize ListView and Adapter
+        CommentAdapter commentsAdapter = new CommentAdapter(requireContext(), new ArrayList<>());
+        commentsListView.setAdapter(commentsAdapter);
+
+        // Fetch current user data from Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Retrieve user from UserManager
+        UserManager userManager = UserManager.getInstance();
+        User currentUser = userManager.getCurrentUser(); // Get logged-in user
+
+        String currentUserId = currentUser.getID();
+        String currentUsername = currentUser.getUsername();
+
+        Log.d("UserManager", "User logged in with ID: " + currentUserId + ", Username: " + currentUsername);
+
+        // Retrieve user info from Firestore
+        db.collection("users").document(currentUserId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String username = documentSnapshot.getString("username");
+                        if (username != null) {
+                            Log.d("Firestore", "Fetched Username: " + username);
+                        }
+                    } else {
+                        Log.e("Firestore", "User document does not exist.");
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("Firestore", "Error fetching user data", e));
+
+
+        // Load comments
+        commentHandler.loadComments(moodEventId, commentsAdapter);
+
+        // Handle sending comments
+        ImageButton sendCommentButton = binding.sendCommentButton;
+        EditText commentInput = binding.commentInput;
+
+        sendCommentButton.setOnClickListener(v -> {
+            String commentText = commentInput.getText().toString().trim();
+            if (!commentText.isEmpty()) {
+                // Add the comment with the correct user details
+                commentHandler.addComment(commentText, moodEventId, commentsAdapter, currentUserId, currentUsername);
+                commentInput.setText("");  // Clear input field after sending
+            } else {
+                Toast.makeText(requireContext(), "Comment cannot be empty", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
