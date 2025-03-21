@@ -99,7 +99,8 @@ public class UserProfileFragment extends Fragment {
         moodEventAdapter = new UserProfilePageMoodEventAdapter(
                 requireContext(),
                 R.layout.my_mood_history_block,
-                new ArrayList<>()
+                new ArrayList<>(),
+                requireActivity()
         );
         binding.listviewMoodEventList.setAdapter(moodEventAdapter);
     }

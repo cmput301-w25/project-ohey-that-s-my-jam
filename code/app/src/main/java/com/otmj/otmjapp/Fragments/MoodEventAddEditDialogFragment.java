@@ -3,6 +3,8 @@ package com.otmj.otmjapp.Fragments;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -17,6 +20,7 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.chip.Chip;
@@ -24,14 +28,17 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.otmj.otmjapp.Helper.ImageHandler;
+import com.otmj.otmjapp.Helper.LocationHelper;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.MoodEvent;
+import com.otmj.otmjapp.Models.SimpleLocation;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.Helper.TextValidator;
+import android.Manifest;
 
 
 import java.util.List;
@@ -52,8 +59,12 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
     private MoodEvent moodEvent;
     private MoodEvent.Privacy privacy;
     private Map<String, SocialSituation> socialSituationMapping;
-
+    private  Location location;
+    private LocationHelper locationHelper;
+    private ActivityResultLauncher<String> permissionLauncher;
+    private TextView addressTextView;
     private String imageLink;
+
 
     // Will be implemented in project part 4
     // private boolean addLocation
@@ -127,6 +138,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         Button submitPostButton = view.findViewById(R.id.SubmitPostButton);
         ImageButton deletePostButton = view.findViewById(R.id.DeletePostButton);
         ImageView uploadImage = view.findViewById(R.id.add_image_button);
+        ImageButton addLocationBottom = view.findViewById(R.id.add_location_button);
+        addressTextView = view.findViewById(R.id.textview_address);
 
         // using SwitchCompat makes the app crash when the 'addMoodEvent' button is clicked
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch privacySwitch = view.findViewById(R.id.privacy_switch);
@@ -156,6 +169,9 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 }
                 if (moodEvent.getImageLink() != null) {
                     imageLink = moodEvent.getImageLink();
+                }
+                if (moodEvent.getLocation() != null) {
+                    getCurrentAddress(moodEvent.getLocation().toLocation());
                 }
 
                 privacySwitch.setChecked(privacy == MoodEvent.Privacy.Public);
@@ -245,6 +261,16 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             }
         });
 
+        addLocationBottom.setOnClickListener(v -> {
+            addressTextView.setText("Please wait a moment");
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            } else {
+                getCurrentLocation();
+            }
+        });
+
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         AlertDialog dialog = builder.setView(view).create();
 
@@ -279,8 +305,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             if(privacy == null) { // privacy is null by default. If user doesn't toggle switch, set it to private
                 privacy = MoodEvent.Privacy.Private;
             }
-
-            moodEventsManager.addMoodEvent(new MoodEvent(
+            MoodEvent temp_moodEvent = new MoodEvent(
                     user.getID(),
                     selectedEmotionalState,
                     selectedSocialSituation,
@@ -288,7 +313,12 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     reason,
                     imageLink,
                     privacy
-            ));
+            );
+            if (location != null){
+                SimpleLocation temp_simpleLocation = new SimpleLocation(location.getLatitude(),location.getLongitude());
+                temp_moodEvent.setLocation(temp_simpleLocation);
+            }
+            moodEventsManager.addMoodEvent(temp_moodEvent);
         }
     }
 
@@ -344,4 +374,61 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         }
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Register permission launcher in your Fragment
+        permissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        // Permission granted, now fetch location.
+                        getCurrentLocation();
+                    } else {
+                        Log.d("Testing", "permission denied");
+                        Toast.makeText(getContext(), "Location permission denied", Toast.LENGTH_SHORT).show();
+                        addressTextView.setText("Permission denied Please Allow\n share location in setting");
+                    }
+                }
+        );
+        locationHelper = new LocationHelper(requireActivity());
+    }
+
+    public void getCurrentLocation(){
+        locationHelper = new LocationHelper(requireActivity());
+        Log.d("Testing", "stage initial");
+        locationHelper.getCurrentLocation(new LocationHelper.LocationCallback() {
+            @Override
+            public void onLocationResult(Location Currentlocation) {
+                location = Currentlocation;
+                getCurrentAddress(location);
+                double lat = location.getLatitude();
+                double lon = location.getLongitude();
+                Log.d("Location", "Lat: " + lat + ", Lon: " + lon);
+                Log.d("Testing", "stage 1");
+            }
+
+            @Override
+            public void onLocationError(String error) {
+                Log.e("Location", "Error: " + error);
+                Log.d("Testing", "stage 2");
+                Toast.makeText(getContext(), "Failed to get Location", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void getCurrentAddress(Location location){
+        locationHelper.getAddressFromLocation(location, new LocationHelper.AddressCallback() {
+            @Override
+            public void onAddressResult(String country, String state, String city) {
+                Log.d("Address", "Address: " + city + state + country);
+                addressTextView.setText("Location:\n"+ city + ", " + state + ", " + country);
+            }
+
+            @Override
+            public void onAddressError(String error) {
+                Log.e("Address", "Error: " + error);
+            }
+        });
+    }
 }

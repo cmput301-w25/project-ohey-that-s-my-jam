@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.android.application)
 
@@ -90,6 +91,10 @@ dependencies {
     testImplementation("org.mockito:mockito-core:5.7.0")
     testImplementation("org.mockito:mockito-inline:5.2.0")
     implementation("net.bytebuddy:byte-buddy:1.17.1")
+
+    // for getting location
+    implementation("com.google.android.gms:play-services-maps:19.1.0")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 
     implementation("io.github.ParkSangGwon:tedimagepicker:1.6.1") {
         exclude(group = "com.android.support")

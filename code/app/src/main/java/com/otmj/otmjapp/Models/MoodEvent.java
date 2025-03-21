@@ -36,7 +36,7 @@ public class MoodEvent extends DatabaseObject {
     @PropertyName("emotionalState")
     private String emotionalStateText;
     private SocialSituation socialSituation;
-    private Location location;
+    private SimpleLocation simpleLocation;
     private String reason;
     private String imageLink;
 
@@ -132,12 +132,12 @@ public class MoodEvent extends DatabaseObject {
         this.socialSituation = socialSituation;
     }
 
-    public Location getLocation() {
-        return location;
+    public SimpleLocation getLocation() {
+        return simpleLocation;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLocation(SimpleLocation location) {
+        this.simpleLocation = location;
     }
 
     public String getReason() {
@@ -187,7 +187,7 @@ public class MoodEvent extends DatabaseObject {
                 ", createdDate=" + createdDate +
                 ", emotionalState=" + emotionalState +
                 ", socialSituation=" + socialSituation +
-                ", location=" + location +
+                ", location=" + simpleLocation +
                 ", reason='" + reason + '\'' +
                 ", imageLink='" + imageLink + '\'' +
                 ", privacy=" + privacy +
