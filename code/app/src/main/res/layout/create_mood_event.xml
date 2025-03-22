@@ -343,7 +343,7 @@
                 android:id="@+id/add_image_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/add_photo"
+                android:src="@drawable/ic_gallery"
                 android:contentDescription="Add Image"
                 android:clickable="true"
                 android:focusable="true"
@@ -359,18 +359,9 @@
                 app:srcCompat="@drawable/ic_add_location"
                 android:contentDescription="@string/ic_add_location_desc"/>
 
-            <ImageButton
-                android:id="@+id/DeletePostButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                android:padding="2dp"
-                app:srcCompat="@drawable/ic_trash"
-                android:contentDescription="@string/ic_delete_detail"/>
-
             <TextView
                 android:id="@+id/textview_address"
+                android:layout_marginStart="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
@@ -378,18 +369,85 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- ADD Button (Placed Below Image Buttons) -->
-    <Button
-        android:id="@+id/SubmitPostButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="#4D193F80"
-        android:elevation="20dp"
-        android:text="ADD"
-        android:layout_gravity="end"
-        android:textColor="@color/white"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Image Frame on the Left -->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/image_container"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- Image on the left -->
+            <ImageView
+                android:id="@+id/selected_image_view"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/selected_image"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Remove button beside the image -->
+            <ImageButton
+                android:id="@+id/remove_image_button"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/remove_image"
+                android:src="@drawable/remove_image"
+                app:layout_constraintStart_toEndOf="@id/selected_image_view"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        <!-- ADD Button on the Right -->
+        <Button
+            android:id="@+id/DeletePostButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#4D193F80"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="@string/delete"
+            android:elevation="4dp"
+            android:textColor="@color/white"
+            android:minWidth="0dp"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/SubmitPostButton"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded" />
+
+        <Button
+            android:id="@+id/SubmitPostButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ADD"
+            android:textColor="@color/white"
+            android:backgroundTint="#4D193F80"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:minWidth="0dp"
+            android:elevation="4dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
 
 
