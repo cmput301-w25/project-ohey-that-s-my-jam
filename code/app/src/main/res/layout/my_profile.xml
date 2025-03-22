@@ -167,10 +167,12 @@
                 <ListView
                     android:id="@+id/listview_moodEventList"
                     android:layout_width="match_parent"
-                    android:layout_height="445dp" />
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="80dp"
+                    android:clipToPadding="false"
+                    android:fillViewport="true" />
 
                 <!-- Recent Events List (RecyclerView) -->
-
             </LinearLayout>
         </ScrollView>
 

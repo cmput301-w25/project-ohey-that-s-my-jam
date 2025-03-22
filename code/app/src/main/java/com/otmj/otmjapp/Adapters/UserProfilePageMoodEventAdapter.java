@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.otmj.otmjapp.Fragments.MoodEventAddEditDialogFragment;
+import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.LocationHelper;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.MoodEvent;
@@ -54,13 +55,12 @@ public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         TextView textview_emotionalState = view.findViewById(R.id.textView_emotionalState);
         ImageView image_emoji = view.findViewById(R.id.image_emoji);
         TextView textView_date = view.findViewById(R.id.event_timestamp);
-        ImageView imageView_image = view.findViewById(R.id.reason_why_image);
-        TextView textView_feeling = view.findViewById(R.id.textview_feeling);
+        ImageView moodEventImage = view.findViewById(R.id.reason_why_image);
         TextView textView_reason = view.findViewById(R.id.textview_reason);
-        TextView textView_socialStatus =view.findViewById(R.id.textview_socialStatus);
         TextView textView_location = view.findViewById(R.id.event_location);
         //
-        if(m.getLocation() != null) {
+        if (m.getLocation() != null) {
+            textView_location.setVisibility(View.VISIBLE);
             LocationHelper locationHelper = new LocationHelper(activity);
             locationHelper.getAddressFromLocation(m.getLocation().toLocation(), new LocationHelper.AddressCallback(){
                 @Override
@@ -73,25 +73,47 @@ public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
                     Log.e("Address", "Error: " + error);
                 }
             });
+        } else {
+            textView_location.setVisibility(View.GONE);
         }
         textview_emotionalState.setText(m.getEmotionalState().getDescription());
         image_emoji.setImageResource(m.getEmotionalState().getEmoji());
         textView_date.setText(m.getCreatedDate().toString());
+
+
         EmotionalState emotionalState = m.getEmotionalState();
-        SpannableString spannable = new SpannableString("Feeling: " + emotionalState.toString());
+        String emotion = emotionalState.toString();
+        String fullText;
+        if (m.getSocialSituation() != null) {
+            String social = m.getSocialSituation().toString().toLowerCase();
+            fullText = emotion + " " + social;
+        } else {
+            fullText = emotion;
+        }
+
+        SpannableString spannable = new SpannableString(fullText);
+
+        // Apply color span to the emotion part only
         spannable.setSpan(
                 new ForegroundColorSpan(ContextCompat.getColor(getContext(), emotionalState.color)),
-                9, // Start index (after "Feeling: ")
-                spannable.length(), // End index
+                0,
+                emotion.length(), // just style the emotion part
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         );
 
-        textView_feeling.setText(spannable);
+        textview_emotionalState.setText(spannable);
+        if (m.getReason() != null && !m.getReason().isEmpty()) {
+            textView_reason.setVisibility(View.VISIBLE);
+            textView_reason.setText(m.getReason());
+        } else {
+            textView_reason.setVisibility(View.GONE);
+        }
 
-
-        textView_reason.setText("Reason: " + Objects.toString(m.getReason(), ""));
-        if (m.getSocialSituation() != null) {
-            textView_socialStatus.setText("Social Situation: " + m.getSocialSituation().toString());
+        if (m.getImageLink() != null) {
+            moodEventImage.setVisibility(View.VISIBLE);
+            ImageHandler.loadImage(getContext(), m.getImageLink(), moodEventImage);
+        } else {
+            moodEventImage.setVisibility(View.GONE);
         }
 
         ImageButton editButton = view.findViewById(R.id.my_mood_edit_button);
