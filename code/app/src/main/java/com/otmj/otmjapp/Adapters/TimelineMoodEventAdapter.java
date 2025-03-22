@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.otmj.otmjapp.Helper.CommentHandler;
 import com.otmj.otmjapp.Helper.CustomImageSpan;
 import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Models.MoodEvent;
@@ -89,6 +90,14 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
             locationText.setVisibility(View.GONE);
         }
 
+        TextView commentCountText = view.findViewById(R.id.timeline_comment_count);
+        CommentHandler commentHandler = new CommentHandler();
+        commentHandler.getCommentCount(m.getID(), new CommentHandler.CommentCountsCallback() {
+            @Override
+            public void result(int count) {
+                commentCountText.setText(String.valueOf(count));
+            }
+        });
 
         return view;
     }
