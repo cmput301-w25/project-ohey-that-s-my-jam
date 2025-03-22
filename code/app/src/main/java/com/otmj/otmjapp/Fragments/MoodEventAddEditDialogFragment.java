@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -20,6 +21,7 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
@@ -65,9 +67,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
     private TextView addressTextView;
     private String imageLink;
 
-
-    // Will be implemented in project part 4
-    // private boolean addLocation
+    private ConstraintLayout selectedImageContainer;
+    private ImageView selectedImageView;
 
     private final ActivityResultLauncher<PickVisualMediaRequest> galleryLauncher =
             registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
@@ -79,6 +80,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                             public void onSuccess(String imageUrl) {
                                 Log.d("Image Upload", "Image successfully uploaded: " + imageUrl);
                                 imageLink = imageUrl;  // ✅ Set the image link
+                                selectedImageContainer.setVisibility(View.VISIBLE);
+                                ImageHandler.loadImage(requireContext(), imageLink, selectedImageView);
                             }
 
                             @Override
@@ -135,16 +138,23 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 socialSituationChipGroup = view.findViewById(R.id.social_situation_chip_group);
 
         ImageButton closeFragmentButton = view.findViewById(R.id.ExitCreateMoodEvent);
-        Button submitPostButton = view.findViewById(R.id.SubmitPostButton);
-        Button deletePostButton = view.findViewById(R.id.DeletePostButton);
+        Button submitPostButton = view.findViewById(R.id.SubmitPostButton),
+                deletePostButton = view.findViewById(R.id.DeletePostButton);
+
         ImageView uploadImage = view.findViewById(R.id.add_image_button);
-        ImageButton addLocationBottom = view.findViewById(R.id.add_location_button);
+        ImageButton addLocationBottom = view.findViewById(R.id.add_location_button),
+                detachImageButton = view.findViewById(R.id.remove_image_button);
+        selectedImageView = view.findViewById(R.id.selected_image_view);
         addressTextView = view.findViewById(R.id.textview_address);
+        selectedImageContainer = view.findViewById(R.id.image_container);
 
         // using SwitchCompat makes the app crash when the 'addMoodEvent' button is clicked
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch privacySwitch = view.findViewById(R.id.privacy_switch);
         // Hide delete button by default
         deletePostButton.setVisibility(View.GONE);
+        // Hide selected image container by default
+        selectedImageContainer.setVisibility(View.GONE);
+
 
         // Retrieve arguments for editing existing event
         String tag = getTag();
@@ -168,7 +178,9 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     setSelectedChip(socialSituationChipGroup, moodEvent.getSocialSituation());
                 }
                 if (moodEvent.getImageLink() != null) {
+                    selectedImageContainer.setVisibility(View.VISIBLE);
                     imageLink = moodEvent.getImageLink();
+                    ImageHandler.loadImage(requireContext(), imageLink, selectedImageView);
                 }
                 if (moodEvent.getLocation() != null) {
                     getCurrentAddress(moodEvent.getLocation().toLocation());
@@ -207,15 +219,11 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             }
         });
 
+        // upload image (optional)
         uploadImage.setOnClickListener(v -> {
-            Log.d("ImageLink Check", "Current imageLink: " + imageLink);
-
-            // Directly launch the image picker instead of calling setImageLink()
             galleryLauncher.launch(new PickVisualMediaRequest.Builder()
                     .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                     .build());
-
-            Log.d("ImageLink Check", "Gallery picker launched");
         });
 
 
@@ -241,6 +249,13 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                                 Toast.LENGTH_SHORT)
                         .show();
             }
+        });
+
+        // Detach Image Button (Only if an image is chosen)
+        detachImageButton.setOnClickListener(v -> {
+            imageLink = null;
+            selectedImageContainer.setVisibility(View.GONE); // Hide the image container
+            selectedImageView.setImageDrawable(null);        // Clear the image from the ImageView
         });
 
         // Delete button (Only in Edit Mode)
@@ -422,7 +437,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             @Override
             public void onAddressResult(String country, String state, String city) {
                 Log.d("Address", "Address: " + city + state + country);
-                addressTextView.setText("Location:\n"+ city + ", " + state + ", " + country);
+                addressTextView.setText(city + ", " + state + ", " + country);
             }
 
             @Override
