@@ -334,8 +334,9 @@
         android:padding="8dp">
 
         <!-- Container for Add Image & Add Location buttons -->
+
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="136dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
@@ -343,30 +344,38 @@
                 android:id="@+id/add_image_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_gallery"
-                android:contentDescription="Add Image"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
+                android:contentDescription="Add Image"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"/>
+                android:src="@drawable/ic_gallery" />
+
+            <ImageView
+                android:id="@+id/add_music"
+                android:layout_width="54dp"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                app:srcCompat="@drawable/add_music" />
 
             <ImageButton
                 android:id="@+id/add_location_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
+                android:contentDescription="@string/ic_add_location_desc"
                 android:padding="2dp"
-                app:srcCompat="@drawable/ic_add_location"
-                android:contentDescription="@string/ic_add_location_desc"/>
-
-            <TextView
-                android:id="@+id/textview_address"
-                android:layout_marginStart="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_add_location" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/textview_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1" />
+
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -445,10 +454,6 @@
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
 
 
 </LinearLayout>
