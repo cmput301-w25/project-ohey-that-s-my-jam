@@ -109,5 +109,8 @@
     <string name="edit_button_text">EDIT</string>
     <string name="ic_delete_detail">Deletes the mood event</string>
     <string name="add_comment">Add Comment</string>
+    <string name="selected_image">Selected Image</string>
+    <string name="remove_image">Remove Image</string>
+    <string name="delete">DELETE</string>
 
 </resources>

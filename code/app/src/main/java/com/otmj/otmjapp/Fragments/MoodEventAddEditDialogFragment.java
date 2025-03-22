@@ -136,7 +136,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
 
         ImageButton closeFragmentButton = view.findViewById(R.id.ExitCreateMoodEvent);
         Button submitPostButton = view.findViewById(R.id.SubmitPostButton);
-        ImageButton deletePostButton = view.findViewById(R.id.DeletePostButton);
+        Button deletePostButton = view.findViewById(R.id.DeletePostButton);
         ImageView uploadImage = view.findViewById(R.id.add_image_button);
         ImageButton addLocationBottom = view.findViewById(R.id.add_location_button);
         addressTextView = view.findViewById(R.id.textview_address);
