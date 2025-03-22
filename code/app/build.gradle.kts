@@ -96,10 +96,5 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:19.1.0")
     implementation("com.google.android.gms:play-services-location:21.3.0")
 
-    implementation("io.github.ParkSangGwon:tedimagepicker:1.6.1") {
-        exclude(group = "com.android.support")
-    }
-
     implementation("com.google.android.gms:play-services-maps:19.1.0")
-
 }
