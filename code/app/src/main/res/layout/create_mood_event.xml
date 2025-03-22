@@ -29,7 +29,7 @@
 
     <!-- TextView to show selected chip text -->
     <TextView
-        android:id="@+id/selected_chip_text"
+        android:id="@+id/fragment_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/select_mood_status"
@@ -239,7 +239,7 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/reason_why_input_box"
+        android:id="@+id/find_song_input_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:counterEnabled="true"

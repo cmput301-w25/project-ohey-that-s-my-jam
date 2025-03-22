@@ -3,6 +3,7 @@ package com.otmj.otmjapp.Fragments;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -36,6 +37,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.LocationHelper;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
+import com.otmj.otmjapp.Helper.TextValidator;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.MoodEvent;
@@ -43,9 +45,6 @@ import com.otmj.otmjapp.Models.SimpleLocation;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
-import com.otmj.otmjapp.Helper.TextValidator;
-import android.Manifest;
-
 
 import java.util.List;
 import java.util.Map;
@@ -139,7 +138,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         );
 
         // Initialize UI components
-        TextInputLayout reasonWhyInputLayout = view.findViewById(R.id.reason_why_input_box);
+        TextInputLayout reasonWhyInputLayout = view.findViewById(R.id.find_song_input_box);
         TextInputEditText reasonWhyInputText = view.findViewById(R.id.reason_why_edit_text);
         ChipGroup moodChipGroup = view.findViewById(R.id.emotional_state_chip_group),
                 socialSituationChipGroup = view.findViewById(R.id.social_situation_chip_group);
@@ -154,6 +153,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         selectedImageView = view.findViewById(R.id.selected_image_view);
         addressTextView = view.findViewById(R.id.textview_address);
         selectedImageContainer = view.findViewById(R.id.image_container);
+
+        Button
 
         // using SwitchCompat makes the app crash when the 'addMoodEvent' button is clicked
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch privacySwitch = view.findViewById(R.id.privacy_switch);
