@@ -91,6 +91,8 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         }
 
         TextView commentCountText = view.findViewById(R.id.timeline_comment_count);
+        commentCountText.setText(String.valueOf(0));
+
         CommentHandler commentHandler = new CommentHandler();
         commentHandler.getCommentCount(m.getID(), new CommentHandler.CommentCountsCallback() {
             @Override
