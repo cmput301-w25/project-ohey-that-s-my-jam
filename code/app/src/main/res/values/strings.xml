@@ -113,4 +113,7 @@
     <string name="remove_image">Remove Image</string>
     <string name="delete">DELETE</string>
 
+    <string name="follower_count">%1$d FOLLOWERS</string>
+    <string name="following_count">%1$d FOLLOWING</string>
+
 </resources>
