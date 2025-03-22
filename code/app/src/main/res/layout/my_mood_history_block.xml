@@ -62,7 +62,9 @@
             android:id="@+id/textview_reason"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Reason" />
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:text="@string/reason_why"/>
 
     </LinearLayout>
 

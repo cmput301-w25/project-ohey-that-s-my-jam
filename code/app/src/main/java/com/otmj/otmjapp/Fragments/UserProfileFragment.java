@@ -88,10 +88,10 @@ public class UserProfileFragment extends Fragment {
         //get follower count and follwee count
         FollowHandler followHandler = new FollowHandler();
         followHandler.getFollowCount(user.getID(), FollowHandler.FollowType.Followers,
-                amount -> binding.numFollowersTextView.setText(String.valueOf(amount)));
+                amount -> binding.followersButton.setText(getString(R.string.follower_count, amount)));
 
         followHandler.getFollowCount(user.getID(), FollowHandler.FollowType.Following,
-                amount -> binding.numFollowingTextview.setText(String.valueOf(amount)));
+                amount -> binding.followingButton.setText(getString(R.string.following_count, amount)));
 
         // Set data to views using binding.
         //binding.profileImage.setImageBitmap(bitmapProfileImage);
