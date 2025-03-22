@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -46,6 +47,7 @@ import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.databinding.FragmentMoodEventDetailsBinding;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Displays the details of a MoodEvent (user information, timestamp, etc.)
@@ -91,14 +93,24 @@ public class MoodEventDetailsFragment extends Fragment {
         TextView eventLocationText = binding.detailsEventLocation;
         TextView detailsEmotionAndSocialSituation = binding.detailsEmotionAndSocialSituation;
         ListView commentsListView = binding.commentsListView;
+        Button unfollowButton = binding.detailsUnfollowButton;
 
         // Get the passed arguments using Safe Args
         MoodEventDetailsFragmentArgs args = MoodEventDetailsFragmentArgs.fromBundle(getArguments());
         MoodEvent moodEvent = args.getMoodEvent();
         assert moodEvent != null;
 
+        String loggedInUsername = UserManager.getInstance().getCurrentUser().getUsername(),
+                moodEventUsername = moodEvent.getUser().getUsername();
+
+        if (Objects.equals(loggedInUsername, moodEventUsername)) {
+            unfollowButton.setVisibility(View.GONE);
+        } else {
+            unfollowButton.setVisibility(View.VISIBLE);
+        }
+
         // Set the username text
-        usernameText.setText(moodEvent.getUser().getUsername());
+        usernameText.setText(moodEventUsername);
 
         // Set timestamp text
         eventTimestampText.setText(moodEvent.getCreatedDate().toString());
