@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/reason_why_song"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:backgroundTintMode="src_atop"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="15dp"
+    android:scaleX="1"
+    android:scaleY="1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/ExitCreateMoodEvent"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@string/ic_close_desc"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_close" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/fragment_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:gravity="start"
+        android:padding="8dp"
+        android:text="@string/add_music_fragment"
+        android:textColor="@color/black"
+        android:textSize="30dp"
+        android:translationX="-10dp"
+        app:selectionRequired="false" />
+
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:queryHint="@string/search_music_hint" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/find_song_input_box"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:boxBackgroundMode="filled"
+        app:boxStrokeColor="@color/blue_nav_bar"
+        app:counterEnabled="false"
+        app:counterMaxLength="200"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="225dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/reason_why_song"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/reason_why_song_hint" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="378dp"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="76dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="296dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#4D193F80"
+            android:elevation="4dp"
+            android:fontFeatureSettings="s"
+            android:minWidth="0dp"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="4dp"
+            android:text="@string/save_button_text"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Rounded" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
