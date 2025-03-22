@@ -1,11 +1,16 @@
 package com.otmj.otmjapp.Fragments;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +25,7 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
@@ -59,26 +65,30 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
     private MoodEvent moodEvent;
     private MoodEvent.Privacy privacy;
     private Map<String, SocialSituation> socialSituationMapping;
-    private  Location location;
+
+    private boolean attachLocation;
+    private Location location;
     private LocationHelper locationHelper;
     private ActivityResultLauncher<String> permissionLauncher;
     private TextView addressTextView;
     private String imageLink;
 
-
-    // Will be implemented in project part 4
-    // private boolean addLocation
+    private ConstraintLayout selectedImageContainer;
+    private ImageView selectedImageView;
 
     private final ActivityResultLauncher<PickVisualMediaRequest> galleryLauncher =
             registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                 if (uri != null) {
                     long imageSize = ImageHandler.getImageSize(requireContext(), uri);
                     if (imageSize <= 65536) {
+                        Toast.makeText(requireContext(), "Loading image...", Toast.LENGTH_SHORT).show();
                         ImageHandler.uploadToFirebaseStorage(requireContext(), uri, new ImageHandler.UploadCallback() {
                             @Override
                             public void onSuccess(String imageUrl) {
                                 Log.d("Image Upload", "Image successfully uploaded: " + imageUrl);
-                                imageLink = imageUrl;  // ✅ Set the image link
+                                imageLink = imageUrl;  // Set the image link
+                                selectedImageContainer.setVisibility(View.VISIBLE);
+                                ImageHandler.loadImage(requireContext(), imageLink, selectedImageView);
                             }
 
                             @Override
@@ -135,16 +145,23 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 socialSituationChipGroup = view.findViewById(R.id.social_situation_chip_group);
 
         ImageButton closeFragmentButton = view.findViewById(R.id.ExitCreateMoodEvent);
-        Button submitPostButton = view.findViewById(R.id.SubmitPostButton);
-        ImageButton deletePostButton = view.findViewById(R.id.DeletePostButton);
+        Button submitPostButton = view.findViewById(R.id.SubmitPostButton),
+                deletePostButton = view.findViewById(R.id.DeletePostButton);
+
         ImageView uploadImage = view.findViewById(R.id.add_image_button);
-        ImageButton addLocationBottom = view.findViewById(R.id.add_location_button);
+        ImageButton addLocationBottom = view.findViewById(R.id.add_location_button),
+                detachImageButton = view.findViewById(R.id.remove_image_button);
+        selectedImageView = view.findViewById(R.id.selected_image_view);
         addressTextView = view.findViewById(R.id.textview_address);
+        selectedImageContainer = view.findViewById(R.id.image_container);
 
         // using SwitchCompat makes the app crash when the 'addMoodEvent' button is clicked
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch privacySwitch = view.findViewById(R.id.privacy_switch);
         // Hide delete button by default
         deletePostButton.setVisibility(View.GONE);
+        // Hide selected image container by default
+        selectedImageContainer.setVisibility(View.GONE);
+
 
         // Retrieve arguments for editing existing event
         String tag = getTag();
@@ -168,14 +185,17 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     setSelectedChip(socialSituationChipGroup, moodEvent.getSocialSituation());
                 }
                 if (moodEvent.getImageLink() != null) {
+                    selectedImageContainer.setVisibility(View.VISIBLE);
                     imageLink = moodEvent.getImageLink();
+                    ImageHandler.loadImage(requireContext(), imageLink, selectedImageView);
                 }
                 if (moodEvent.getLocation() != null) {
+                    attachLocation = TRUE;
                     getCurrentAddress(moodEvent.getLocation().toLocation());
+                    addLocationBottom.setImageResource(R.drawable.detach_location);
                 }
 
                 privacySwitch.setChecked(privacy == MoodEvent.Privacy.Public);
-                // setting boolean location and string imageLink will be added in project part 4
             }
         }
 
@@ -207,15 +227,11 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             }
         });
 
+        // upload image (optional)
         uploadImage.setOnClickListener(v -> {
-            Log.d("ImageLink Check", "Current imageLink: " + imageLink);
-
-            // Directly launch the image picker instead of calling setImageLink()
             galleryLauncher.launch(new PickVisualMediaRequest.Builder()
                     .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                     .build());
-
-            Log.d("ImageLink Check", "Gallery picker launched");
         });
 
 
@@ -243,6 +259,13 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             }
         });
 
+        // Detach Image Button (Only if an image is chosen)
+        detachImageButton.setOnClickListener(v -> {
+            imageLink = null;
+            selectedImageContainer.setVisibility(View.GONE); // Hide the image container
+            selectedImageView.setImageDrawable(null);        // Clear the image from the ImageView
+        });
+
         // Delete button (Only in Edit Mode)
         deletePostButton.setOnClickListener(v -> {
             if (moodEvent != null) {
@@ -262,12 +285,21 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         });
 
         addLocationBottom.setOnClickListener(v -> {
-            addressTextView.setText("Please wait a moment");
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            if (attachLocation == FALSE) {
+                addressTextView.setText("Please wait a moment");
+                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+                } else {
+                    getCurrentLocation();
+                }
+                addLocationBottom.setImageResource(R.drawable.detach_location);
+                attachLocation = TRUE;
             } else {
-                getCurrentLocation();
+                addressTextView.setText("");
+                attachLocation = FALSE;
+                addLocationBottom.setImageResource(R.drawable.ic_add_location);
+                location = null;
             }
         });
 
@@ -300,6 +332,12 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             moodEvent.setSocialSituation(selectedSocialSituation);
             moodEvent.setPrivacy(privacy);
             moodEvent.setImageLink(imageLink);
+            if (location != null){
+                SimpleLocation temp_simpleLocation = new SimpleLocation(location.getLatitude(),location.getLongitude());
+                moodEvent.setLocation(temp_simpleLocation);
+            } else {
+                moodEvent.setLocation(null);
+            }
             moodEventsManager.updateMoodEvent(moodEvent);
         } else {
             if(privacy == null) { // privacy is null by default. If user doesn't toggle switch, set it to private
@@ -309,7 +347,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     user.getID(),
                     selectedEmotionalState,
                     selectedSocialSituation,
-                    true,
+                    attachLocation,
                     reason,
                     imageLink,
                     privacy
@@ -317,6 +355,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             if (location != null){
                 SimpleLocation temp_simpleLocation = new SimpleLocation(location.getLatitude(),location.getLongitude());
                 temp_moodEvent.setLocation(temp_simpleLocation);
+            } else {
+                temp_moodEvent.setLocation(null);
             }
             moodEventsManager.addMoodEvent(temp_moodEvent);
         }
@@ -422,7 +462,10 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             @Override
             public void onAddressResult(String country, String state, String city) {
                 Log.d("Address", "Address: " + city + state + country);
-                addressTextView.setText("Location:\n"+ city + ", " + state + ", " + country);
+                addressTextView.setText(city + ", " + state + ", " + country);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    addressTextView.setText(""); // or addressTextView.setText("");
+                }, 2000);
             }
 
             @Override
