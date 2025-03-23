@@ -22,7 +22,7 @@ public class MoodHistoryFilter {
         createdDate,
         userID,
         emotionalState,
-        reason
+        location
     }
 
     private Filter filter;
@@ -75,6 +75,13 @@ public class MoodHistoryFilter {
         return new MoodHistoryFilter(
             Filter.inArray(MoodEventFields.userID.name(), userIDs),
             new DBSortOption(MoodEventFields.createdDate.name(), true)
+        );
+    }
+
+    public static MoodHistoryFilter HasLocation() {
+        return new MoodHistoryFilter(
+                Filter.notEqualTo(MoodEventFields.location.name(), null),
+                null
         );
     }
 
