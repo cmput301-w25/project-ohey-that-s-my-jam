@@ -7,7 +7,7 @@
 
     <!-- Profile Picture -->
     <ImageButton
-        android:id="@+id/timelineMoodEventProfilePic"
+        android:id="@+id/timeline_mood_event_profile_pic"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:contentDescription="@string/users_profile_picture"
@@ -27,7 +27,7 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/mood_image"
-        app:layout_constraintStart_toEndOf="@id/timelineMoodEventProfilePic"
+        app:layout_constraintStart_toEndOf="@id/timeline_mood_event_profile_pic"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Mood Event Description -->
@@ -70,7 +70,7 @@
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timelineMoodEventProfilePic" />
+        app:layout_constraintTop_toBottomOf="@+id/timeline_mood_event_profile_pic" />
 
 
     <TextView

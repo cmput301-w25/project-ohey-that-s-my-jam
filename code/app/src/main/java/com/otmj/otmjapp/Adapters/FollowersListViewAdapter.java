@@ -86,6 +86,17 @@ public class FollowersListViewAdapter extends ArrayAdapter<User> {
                 .transform(new CircleTransform()) // Apply the circular transformation
                 .into(profileImageView);
 
+        // Set the click listener on the profile
+        profileImageView.setOnClickListener(v -> {
+            String clickedUsername = user.getUsername();
+            Log.d("UserProfileFragment", "Clicked username: " + clickedUsername);
+
+            Bundle args = new Bundle();
+            args.putString("username", clickedUsername);
+
+            Navigation.findNavController(v).navigate(R.id.action_followersListFragment_to_unfollowedProfileFragment, args);
+        });
+
         return listItemView;
     }
 }

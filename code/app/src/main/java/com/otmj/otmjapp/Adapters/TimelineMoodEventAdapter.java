@@ -97,16 +97,16 @@ public TimelineMoodEventAdapter(@NonNull Activity activity, @NonNull ArrayList<M
             TextView usernameText = view.findViewById(R.id.timeline_mood_event_username);
             setMoodEventHeaderText(usernameText, m);
 
-            // Set the click listener on the username too
-            usernameText.setOnClickListener(v -> {
-                String clickedUsername = m.getUser().getUsername();
-                Log.d("UserProfileFragment", "Clicked username: " + clickedUsername);
+            // Set the click listener on the username to navigate to their profile
+            //usernameText.setOnClickListener(v -> {
+            //    String clickedUsername = m.getUser().getUsername();
+            //    Log.d("UserProfileFragment", "Clicked username: " + clickedUsername);
 
-                Bundle args = new Bundle();
-                args.putString("username", clickedUsername);
+            //    Bundle args = new Bundle();
+            //    args.putString("username", clickedUsername);
 
-                Navigation.findNavController(v).navigate(R.id.action_followersListFragment_to_unfollowedProfileFragment, args);
-            });
+            //    Navigation.findNavController(v).navigate(R.id.action_followersListFragment_to_unfollowedProfileFragment, args);
+            //});
         }
 
 
