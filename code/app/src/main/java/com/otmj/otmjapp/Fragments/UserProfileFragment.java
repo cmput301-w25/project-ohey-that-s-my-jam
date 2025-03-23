@@ -62,8 +62,6 @@ public class UserProfileFragment extends Fragment {
             User currentUser = userManager.getCurrentUser();  // Get the current user
             FollowHandler followHandler = new FollowHandler();
 
-
-
             // Add user's profile picture and username
             userManager.getUser(username, new UserManager.AuthenticationCallback() {@Override
             public void onAuthenticated(ArrayList<User> users) {
@@ -104,8 +102,7 @@ public class UserProfileFragment extends Fragment {
                             } else {
 
                                 Log.d("UserProfileFragment", "User is NOT following the username.");
-                                // Update the UI to show "Follow" button or other appropriate UI elements
-                                // Hide profile content initially
+                                // Update the UI
                                 binding.followersButton.setVisibility(View.GONE);
                                 binding.followingButton.setVisibility(View.GONE);
                                 binding.requestsButton.setVisibility(View.GONE);
@@ -115,6 +112,19 @@ public class UserProfileFragment extends Fragment {
                             }
                         }
                     });
+
+                    binding.sendRequestButton.setOnClickListener(v -> {
+                        if (user != null) {
+                            followHandler.sendFollowRequest(user.getID());
+                            Log.d("UserProfileFragment", "Follow request sent to: " + user.getUsername());
+
+                            // Optionally, update UI to reflect the request has been sent
+                            binding.sendRequestButton.setVisibility(View.GONE);
+                        } else {
+                            Log.e("UserProfileFragment", "User is null, cannot send follow request.");
+                        }
+                    });
+
                 } else {
                     Log.d("UserProfileFragment", "No user found with the username: " + username);
                 }
