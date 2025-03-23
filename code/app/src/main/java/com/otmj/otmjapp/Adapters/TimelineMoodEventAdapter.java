@@ -1,5 +1,6 @@
 package com.otmj.otmjapp.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -24,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.otmj.otmjapp.Helper.CommentHandler;
 import com.otmj.otmjapp.Helper.CustomImageSpan;
 import com.otmj.otmjapp.Helper.ImageHandler;
+import com.otmj.otmjapp.Helper.LocationHelper;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.R;
@@ -32,9 +34,15 @@ import java.util.ArrayList;
 
 
 public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
-    public TimelineMoodEventAdapter(@NonNull Context context, @NonNull ArrayList<MoodEvent> objects) {
-        super(context,0, objects);
-    }
+//    public TimelineMoodEventAdapter(@NonNull Context context, @NonNull ArrayList<MoodEvent> objects) {
+//        super(context,0, objects);
+//    }
+private final Activity activity;
+public TimelineMoodEventAdapter(@NonNull Activity activity, @NonNull ArrayList<MoodEvent> objects) {
+    super(activity, 0, objects);
+    this.activity = activity;
+}
+
 
     @NonNull
     @Override
@@ -82,13 +90,31 @@ public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
             moodEventImage.setVisibility(View.GONE);
         }
 
-
-        // TODO: Set location
-        // do not show for now
         TextView locationText = view.findViewById(R.id.timeline_mood_event_location);
-        if (m.getLocation() == null) {
+
+        if (m.getLocation() != null) {
+            locationText.setVisibility(View.VISIBLE);
+
+            LocationHelper locationHelper = new LocationHelper(activity);
+
+            locationHelper.getAddressFromLocation(m.getLocation().toLocation(), new LocationHelper.AddressCallback() {
+                @Override
+                public void onAddressResult(String country, String state, String city) {
+                    Log.d("Address", "Address: " + city + ", " + state + ", " + country);
+                    locationText.setText(city + ", " + state + ", " + country);
+                }
+
+                @Override
+                public void onAddressError(String error) {
+                    Log.e("Address", "Error: " + error);
+                    locationText.setText("Location unavailable");
+                }
+            });
+
+        } else {
             locationText.setVisibility(View.GONE);
         }
+
 
         TextView commentCountText = view.findViewById(R.id.timeline_comment_count);
         commentCountText.setText(String.valueOf(0));
