@@ -49,7 +49,8 @@ public class TimelineFragment extends Fragment {
         binding = FragmentTimelineBinding.inflate(inflater, container, false);
 
         ListView moodEventListView = binding.timelineList;
-        moodEventAdapter = new TimelineMoodEventAdapter(requireContext(), allMoodEvents);
+        //moodEventAdapter = new TimelineMoodEventAdapter(requireContext(), allMoodEvents);
+        moodEventAdapter = new TimelineMoodEventAdapter(requireActivity(), allMoodEvents);
         moodEventListView.setAdapter(moodEventAdapter);
 
         moodEventListView.setOnItemClickListener(((adapterView, view1, i, l) -> {

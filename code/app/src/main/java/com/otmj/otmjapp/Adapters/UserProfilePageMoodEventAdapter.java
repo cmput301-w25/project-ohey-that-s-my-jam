@@ -66,7 +66,7 @@ public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
                 @Override
                 public void onAddressResult(String country, String state, String city) {
                     Log.d("Address", "Address: " + city + state + country);
-                    textView_location.setText("Location: "+ city + ", " + state + ", " + country);
+                    textView_location.setText(city + ", " + state + ", " + country);
                 }
                 @Override
                 public void onAddressError(String error) {
