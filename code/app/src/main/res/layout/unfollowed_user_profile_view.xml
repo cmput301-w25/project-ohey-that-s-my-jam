@@ -52,7 +52,7 @@
                 android:textStyle="bold" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/send_request_button"
+                android:id="@+id/requestButton"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:backgroundTint="#26193F80"
