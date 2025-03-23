@@ -73,7 +73,6 @@ public class TimelineFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.action_timelineFragment_to_peopleYouMayKnowFragment, args);
         });
 
-
         return binding.getRoot();
     }
 
