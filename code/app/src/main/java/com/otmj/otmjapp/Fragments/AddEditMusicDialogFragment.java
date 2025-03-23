@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,9 @@ public class AddEditMusicDialogFragment extends DialogFragment {
 
         TextInputLayout searchQuery = view.findViewById(R.id.find_song_input_box);
         TextInputEditText reasonWhy = view.findViewById(R.id.reason_for_song);
+
+        ImageView closeButton = view.findViewById(R.id.ExitCreateMoodEvent);
+        closeButton.setOnClickListener(v -> dismiss());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         AlertDialog dialog = builder.setView(view).create();
