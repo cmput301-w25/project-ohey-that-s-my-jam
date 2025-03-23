@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +14,7 @@ import androidx.lifecycle.LiveData;
 import androidx.navigation.Navigation;
 
 import com.otmj.otmjapp.Adapters.UserProfilePageMoodEventAdapter;
+import com.otmj.otmjapp.Helper.CircleTransform;
 import com.otmj.otmjapp.Helper.FilterOptions;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.FollowHandler;
@@ -21,6 +23,7 @@ import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.databinding.MyProfileBinding;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,90 +48,151 @@ public class UserProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Enable the buttons
-        binding.followersButton.setClickable(true);
-        binding.followingButton.setClickable(true);
+        // Collect the argument passed to this fragment
+        Bundle args = getArguments();
 
-        // Navigate to Followers List when Followers Button is clicked
-        binding.followersButton.setOnClickListener(v -> {
-            Bundle args = new Bundle();
-            args.putString("buttonClicked", "followers");  // Add an argument indicating which button was clicked
+        // Check if "notfollowing" argument is passed
+        if (args != null && args.containsKey("notfollowing") && args.getBoolean("notfollowing")) {
+            // Hide the profile content if "notfollowing" argument is true
+            binding.followersButton.setVisibility(View.GONE);
+            binding.followingButton.setVisibility(View.GONE);
+            binding.requestsButton.setVisibility(View.GONE);
+            binding.listviewMoodEventList.setVisibility(View.GONE);
+            binding.sendRequestButton.setVisibility(View.VISIBLE);
+            binding.visibilityOff.setVisibility(View.VISIBLE);
 
-            // Navigate to Followers List using Navigation Component
-            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followersListFragment, args);
-        });
 
-        // Navigate to Followers List when Following Button is clicked
-        binding.followingButton.setOnClickListener(v -> {
-            Bundle args = new Bundle();
-            args.putString("buttonClicked", "following");  // Add an argument indicating which button was clicked
+            // Get the username from the arguments
+            String username = null;
+            if (args != null && args.containsKey("username")) {
+                username = args.getString("username");
+                Log.d("UserProfileFragment", "Username from arguments: " + username);  // Log the username
+            } else {
+                Log.d("UserProfileFragment", "No username passed in arguments.");
+            }
 
-            // Navigate to Following List using Navigation Component
-            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, args);
-        });
+            // Add user's profile picture and username
+            UserManager user_manager = UserManager.getInstance();
+            user_manager.getUser(username, new UserManager.AuthenticationCallback() {
+                @Override
+                public void onAuthenticated(ArrayList<User> users) {
+                    if (users != null && !users.isEmpty()) {
+                        User user = users.get(0); // Assuming you get one user from the list
+                        Log.d("UserProfileFragment", "Collected username: " + user.getUsername());  // Log the username
 
-        // Navigate to Requests List when Requests Button is clicked
-        binding.requestsButton.setOnClickListener(v -> {
-            Bundle args = new Bundle();
-            args.putString("buttonClicked", "requests");  // Add an argument indicating which button was clicked
+                        // Set the username
+                        binding.username.setText(user.getUsername());  // Set the username
 
-            // Navigate to Requests List using Navigation Component
-            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, args);
-        });
+                        // Get the profile picture URL
+                        String profilePicUrl = user.getProfilePictureLink();
 
-        // Get UserID
-        UserManager user_manager = UserManager.getInstance();
-        User user = user_manager.getCurrentUser();
+                        // Check if the profile picture URL is null or empty
+                        if (profilePicUrl == null || profilePicUrl.isEmpty()) {
+                            profilePicUrl = "android.resource://com.otmj.otmjapp/drawable/placeholder_image"; // Use a placeholder image
+                        }
 
-        // get MoodEvents
-        ArrayList<String> idOfUser = new ArrayList<>(List.of(user.getID()));
-        final MoodEventsManager mood_event_controller = new MoodEventsManager(idOfUser);
+                        // Load the profile picture dynamically using Picasso
+                        Picasso.get()
+                                .load(profilePicUrl)  // Load the profile image URL
+                                .placeholder(R.drawable.profile_placeholder) // Placeholder image while loading
+                                .error(R.drawable.profile_placeholder) // Error image if loading fails
+                                .transform(new CircleTransform()) // Apply circular transformation
+                                .into(binding.profileImage);  // Bind the image to the ImageView
 
-        moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
-        if (moodEventsLiveData != null) {
-            getMoodEventFromDB();
-        }
+                    } else {
+                        Log.d("UserProfileFragment", "No user found with the username: username");
+                    }
+                }
 
-        //get follower count and follwee count
-        FollowHandler followHandler = new FollowHandler();
-        followHandler.getFollowCount(user.getID(), FollowHandler.FollowType.Followers,
-                amount -> binding.followersButton.setText(getString(R.string.follower_count, amount)));
-
-        followHandler.getFollowCount(user.getID(), FollowHandler.FollowType.Following,
-                amount -> binding.followingButton.setText(getString(R.string.following_count, amount)));
-
-        // Set data to views using binding.
-        //binding.profileImage.setImageBitmap(bitmapProfileImage);
-        binding.username.setText(user.getUsername());
-        moodEventAdapter = new UserProfilePageMoodEventAdapter(
-                requireContext(),
-                R.layout.my_mood_history_block,
-                new ArrayList<>(),
-                requireActivity()
-        );
-        binding.listviewMoodEventList.setAdapter(moodEventAdapter);
-
-        binding.filterButton.setOnClickListener(v -> {
-            FilterFragment popup = new FilterFragment(filterOptions, newFilterOptions -> {
-                // Save filter options
-                filterOptions = newFilterOptions;
-                // Get new mood events with specified filter
-                moodEventsLiveData = mood_event_controller.getUserMoodEvents(
-                        newFilterOptions.buildFilter(idOfUser));
-                if (moodEventsLiveData != null) {
-                    getMoodEventFromDB();
+                @Override
+                public void onAuthenticationFailure(String error) {
+                    // Handle failure (e.g., show a message to the user)
+                    Log.e("UserProfileFragment", "Failed to fetch user: " + error);
                 }
             });
-            popup.show(getParentFragmentManager(), null);
-        });
 
+
+
+    } else {
+            binding.sendRequestButton.setVisibility(View.GONE);
+
+            // Set up the profile buttons and mood events if not "notfollowing"
+            // Enable the buttons
+            binding.followersButton.setClickable(true);
+            binding.followingButton.setClickable(true);
+
+            // Navigate to Followers List when Followers Button is clicked
+            binding.followersButton.setOnClickListener(v -> {
+                Bundle buttonArgs = new Bundle();
+                buttonArgs.putString("buttonClicked", "followers");
+                Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followersListFragment, buttonArgs);
+            });
+
+            // Navigate to Following List when Following Button is clicked
+            binding.followingButton.setOnClickListener(v -> {
+                Bundle buttonArgs = new Bundle();
+                buttonArgs.putString("buttonClicked", "following");
+                Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, buttonArgs);
+            });
+
+            // Navigate to Requests List when Requests Button is clicked
+            binding.requestsButton.setOnClickListener(v -> {
+                Bundle buttonArgs = new Bundle();
+                buttonArgs.putString("buttonClicked", "requests");
+                Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, buttonArgs);
+            });
+
+            // Get UserID
+            UserManager user_manager = UserManager.getInstance();
+            User user = user_manager.getCurrentUser();
+
+            // Get MoodEvents
+            ArrayList<String> idOfUser = new ArrayList<>(List.of(user.getID()));
+            final MoodEventsManager mood_event_controller = new MoodEventsManager(idOfUser);
+
+            moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
+            if (moodEventsLiveData != null) {
+                getMoodEventFromDB();
+            }
+
+            // Get follower count and following count
+            FollowHandler followHandler = new FollowHandler();
+            followHandler.getFollowCount(user.getID(), FollowHandler.FollowType.Followers,
+                    amount -> binding.followersButton.setText(getString(R.string.follower_count, amount)));
+
+            followHandler.getFollowCount(user.getID(), FollowHandler.FollowType.Following,
+                    amount -> binding.followingButton.setText(getString(R.string.following_count, amount)));
+
+            // Set user data to views
+            binding.username.setText(user.getUsername());
+            // Optionally set the profile image here
+
+            moodEventAdapter = new UserProfilePageMoodEventAdapter(
+                    requireContext(),
+                    R.layout.my_mood_history_block,
+                    new ArrayList<>(),
+                    requireActivity()
+            );
+            binding.listviewMoodEventList.setAdapter(moodEventAdapter);
+
+            binding.filterButton.setOnClickListener(v -> {
+                FilterFragment popup = new FilterFragment(filterOptions, newFilterOptions -> {
+                    filterOptions = newFilterOptions;
+                    moodEventsLiveData = mood_event_controller.getUserMoodEvents(newFilterOptions.buildFilter(idOfUser));
+                    if (moodEventsLiveData != null) {
+                        getMoodEventFromDB();
+                    }
+                });
+                popup.show(getParentFragmentManager(), null);
+            });
+        }
     }
 
-    public void getMoodEventFromDB(){
+    public void getMoodEventFromDB() {
         moodEventsLiveData.observe(getViewLifecycleOwner(), moodEvents -> {
-            // Update the adapter's data:
+            // Update the adapter's data
             moodEventAdapter.clear();
-            if(moodEvents != null){
+            if (moodEvents != null) {
                 moodEventAdapter.addAll(moodEvents);
             }
             moodEventAdapter.notifyDataSetChanged();

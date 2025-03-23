@@ -56,9 +56,19 @@
         android:name="com.otmj.otmjapp.Fragments.FollowListFragment"
         android:label="fragment_followers_list"
         tools:layout="@layout/list_screen" />
+    <action
+        android:id="@+id/action_followersListFragment_to_unfollowedProfileFragment"
+        app:destination="@id/unfollowedProfileFragment" />
+
     <fragment
         android:id="@+id/mapsFragment"
         android:name="com.otmj.otmjapp.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps" />
+
+    <fragment
+        android:id="@+id/unfollowedProfileFragment"
+        android:name="com.otmj.otmjapp.Fragments.UserProfileFragment"
+        android:label="fragment_unfollowed_profile"
+        tools:layout="@layout/my_profile" />
 </navigation>
