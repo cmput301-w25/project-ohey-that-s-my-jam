@@ -39,6 +39,7 @@ import com.otmj.otmjapp.Adapters.CommentAdapter;
 import com.otmj.otmjapp.Helper.CommentHandler;
 import com.otmj.otmjapp.Helper.CustomImageSpan;
 import com.otmj.otmjapp.Helper.ImageHandler;
+import com.otmj.otmjapp.Helper.LocationHelper;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
@@ -140,12 +141,29 @@ public class MoodEventDetailsFragment extends Fragment {
         }
 
         // Set location if available
-        LinearLayout locationIconAndTextLayout = binding.locationIconAndTextLayout;
-        if (moodEvent.getLocation() != null ){
-            eventLocationText.setText(moodEvent.getLocation().toString());
+        if (moodEvent.getLocation() != null) {
+            eventLocationText.setVisibility(View.VISIBLE);
+
+            LocationHelper locationHelper = new LocationHelper(requireActivity());
+
+            locationHelper.getAddressFromLocation(moodEvent.getLocation().toLocation(), new LocationHelper.AddressCallback() {
+                @Override
+                public void onAddressResult(String country, String state, String city) {
+                    Log.d("Address", "Address: " + city + ", " + state + ", " + country);
+                    eventLocationText.setText(city + ", " + state + ", " + country);
+                }
+
+                @Override
+                public void onAddressError(String error) {
+                    Log.e("Address", "Error: " + error);
+                    eventLocationText.setText("Location unavailable");
+                }
+            });
+
         } else {
-            locationIconAndTextLayout.setVisibility(View.GONE);
+            eventLocationText.setVisibility(View.GONE);
         }
+
 
         // Initialize the CommentHandler
         CommentHandler commentHandler = new CommentHandler();
