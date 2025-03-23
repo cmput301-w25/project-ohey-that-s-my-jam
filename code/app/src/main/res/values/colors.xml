@@ -41,16 +41,13 @@
     <color name="BackgroundColorSurprise">#33FFA500</color>
     <color name="TextColorSurprise">#FFA500</color>
 
-    <!-- Create Mood Event Colors -->
-    <!-- Text Colors -->
-    <color name="SocialSituationTextColor">#A6000000</color>     <!-- Social Situation -->
+
+    <color name="SocialSituationTextColor">#A6000000</color>
 
     <color name="chip_selected">#228B22</color>
     <color name="chip_selection_required">#C21E56</color>
     <color name="error_background">#4DFFD6D6</color>
 
-
-
-
-
+    <color name="selectedBgColor">#3342A5F5</color>
+    <color name="rippleColor">@android:color/transparent</color>
 </resources>
