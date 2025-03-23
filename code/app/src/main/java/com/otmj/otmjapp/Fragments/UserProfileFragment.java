@@ -1,6 +1,7 @@
 package com.otmj.otmjapp.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.lifecycle.LiveData;
 import androidx.navigation.Navigation;
 
 import com.otmj.otmjapp.Adapters.UserProfilePageMoodEventAdapter;
+import com.otmj.otmjapp.Helper.FilterOptions;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.FollowHandler;
 import com.otmj.otmjapp.Helper.UserManager;
@@ -28,6 +30,7 @@ public class UserProfileFragment extends Fragment {
     private MyProfileBinding binding;
     private UserProfilePageMoodEventAdapter moodEventAdapter;
     private LiveData<ArrayList<MoodEvent>> moodEventsLiveData;
+    private FilterOptions filterOptions;
 
 
     @Override
@@ -78,7 +81,8 @@ public class UserProfileFragment extends Fragment {
         User user = user_manager.getCurrentUser();
 
         // get MoodEvents
-        MoodEventsManager mood_event_controller = new MoodEventsManager(List.of(user.getID()));
+        ArrayList<String> idOfUser = new ArrayList<>(List.of(user.getID()));
+        final MoodEventsManager mood_event_controller = new MoodEventsManager(idOfUser);
 
         moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
         if (moodEventsLiveData != null) {
@@ -103,13 +107,28 @@ public class UserProfileFragment extends Fragment {
                 requireActivity()
         );
         binding.listviewMoodEventList.setAdapter(moodEventAdapter);
+
+        binding.filterButton.setOnClickListener(v -> {
+            FilterFragment popup = new FilterFragment(filterOptions, newFilterOptions -> {
+                // Save filter options
+                filterOptions = newFilterOptions;
+                // Get new mood events with specified filter
+                moodEventsLiveData = mood_event_controller.getUserMoodEvents(
+                        newFilterOptions.buildFilter(idOfUser));
+                if (moodEventsLiveData != null) {
+                    getMoodEventFromDB();
+                }
+            });
+            popup.show(getParentFragmentManager(), null);
+        });
+
     }
 
     public void getMoodEventFromDB(){
         moodEventsLiveData.observe(getViewLifecycleOwner(), moodEvents -> {
             // Update the adapter's data:
             moodEventAdapter.clear();
-            if(moodEvents != null && !moodEvents.isEmpty()){
+            if(moodEvents != null){
                 moodEventAdapter.addAll(moodEvents);
             }
             moodEventAdapter.notifyDataSetChanged();
