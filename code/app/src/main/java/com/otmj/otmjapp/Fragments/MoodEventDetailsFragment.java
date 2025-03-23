@@ -102,17 +102,17 @@ public class MoodEventDetailsFragment extends Fragment {
         MoodEvent moodEvent = args.getMoodEvent();
         assert moodEvent != null;
 
-        String loggedInUsername = UserManager.getInstance().getCurrentUser().getUsername(),
-                moodEventUsername = moodEvent.getUser().getUsername();
+        User loggedInUser = UserManager.getInstance().getCurrentUser(),
+                moodEventUser = moodEvent.getUser();
 
-        if (Objects.equals(loggedInUsername, moodEventUsername)) {
+        if (Objects.equals(loggedInUser, moodEventUser)) {
             unfollowButton.setVisibility(View.GONE);
         } else {
             unfollowButton.setVisibility(View.VISIBLE);
         }
 
         // Set the username text
-        usernameText.setText(moodEventUsername);
+        usernameText.setText(moodEventUser.getUsername());
 
         // Set timestamp text
         eventTimestampText.setText(moodEvent.getCreatedDate().toString());
@@ -166,12 +166,15 @@ public class MoodEventDetailsFragment extends Fragment {
         }
 
         profileImage.setOnClickListener(v -> {
-            MoodEventDetailsFragmentDirections.ActionMoodEventDetailsFragmentToUserProfileFragment showUserProfile =
-                    MoodEventDetailsFragmentDirections.actionMoodEventDetailsFragmentToUserProfileFragment();
-            showUserProfile.setUser(moodEvent.getUser());
+            // Only view profile of other users
+            if (!Objects.equals(loggedInUser, moodEventUser)) {
+                MoodEventDetailsFragmentDirections.ActionMoodEventDetailsFragmentToUserProfileFragment showUserProfile =
+                        MoodEventDetailsFragmentDirections.actionMoodEventDetailsFragmentToUserProfileFragment();
+                showUserProfile.setUser(moodEvent.getUser());
 
-            NavHostFragment.findNavController(MoodEventDetailsFragment.this)
-                    .navigate(showUserProfile);
+                NavHostFragment.findNavController(MoodEventDetailsFragment.this)
+                        .navigate(showUserProfile);
+            }
         });
 
         // Initialize the CommentHandler
