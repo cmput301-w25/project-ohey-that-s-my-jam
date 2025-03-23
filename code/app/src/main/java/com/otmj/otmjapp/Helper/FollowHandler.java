@@ -225,15 +225,11 @@ public class FollowHandler {
                 fetchFollowing(currentUser.getID(), new FollowCallback() {
                     @Override
                     public void onSuccess(ArrayList<User> followingUsers) {
-                        ArrayList<String> followingIDs = new ArrayList<>();
-                        for (User user : followingUsers) {
-                            followingIDs.add(user.getID());
-                        }
-
                         // Step 3: Filter out users that are in the following list
                         ArrayList<User> notFollowingUsers = new ArrayList<>();
                         for (User user : allUsers) {
-                            if (!followingIDs.contains(user.getID()) && !user.getID().equals(currentUser.getID())) {
+                            // If the current user is not being followed
+                            if (!followingUsers.contains(user)) {
                                 notFollowingUsers.add(user);
                             }
                         }

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * User class extends Entity class
@@ -122,29 +123,29 @@ public class User extends DatabaseObject {
     public void setProfilePictureLink(String profilePictureLink) {
         this.profilePictureLink = profilePictureLink;
     }
-//
-//    /**
-//     * User's class implementation. This static method creates a User
-//     * from a map.
-//     */
-//    public static User fromMap(Map<String, Object> map) {
-//        return new User(
-//                (String) map.get("username"),
-//                (String) map.get("emailAddress"),
-//                (String) map.get("password"),
-//                (String) map.get("profilePictureLink")
-//        );
-//    }
-//
-//    @Override
-//    public Map<String, Object> toMap() {
-//        return Map.of(
-//            "username", username,
-//            "emailAddress", emailAddress,
-//            "password", password,
-//            "profilePictureLink", profilePictureLink
-//        );
-//    }
+
+    /**
+     * Two `User`s are equal if they have the same property values.
+     * It is necessary to implement this because the default implementation
+     * does an instance comparison
+     * @param o Object to compare with
+     * @return True if the object has the same values as this object
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(username, user.username)
+                && Objects.equals(emailAddress, user.emailAddress)
+                && Objects.equals(password, user.password)
+                && Objects.equals(profilePictureLink, user.profilePictureLink);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, emailAddress, password);
+    }
 
     /**
      * return the string of username
