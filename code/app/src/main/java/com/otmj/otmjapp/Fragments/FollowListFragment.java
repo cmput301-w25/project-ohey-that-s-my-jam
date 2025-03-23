@@ -5,11 +5,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.otmj.otmjapp.Adapters.FollowersListViewAdapter;
 import com.otmj.otmjapp.Adapters.RequestsListViewAdapter;
@@ -49,8 +51,11 @@ public class FollowListFragment extends Fragment {
         // Find the TextView for the list title
         TextView listTitle = rootView.findViewById(R.id.list_title);
 
+
         // Find the SearchView
         SearchView searchView = rootView.findViewById(R.id.search_view);
+
+
 
         // Set up the SearchView listener (for text changes)
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -67,6 +72,7 @@ public class FollowListFragment extends Fragment {
                 return false;
             }
         });
+
 
         // Get the arguments passed from the previous fragment
         Bundle arguments = getArguments();
