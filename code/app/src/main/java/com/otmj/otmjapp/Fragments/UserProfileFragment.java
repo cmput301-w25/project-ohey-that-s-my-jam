@@ -14,7 +14,6 @@ import androidx.navigation.Navigation;
 
 import com.otmj.otmjapp.Adapters.UserProfilePageMoodEventAdapter;
 import com.otmj.otmjapp.Helper.FilterOptions;
-import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.FollowHandler;
 import com.otmj.otmjapp.Helper.UserManager;
@@ -87,15 +86,6 @@ public class UserProfileFragment extends Fragment {
             user = user_manager.getCurrentUser();
         }
 
-        // TODO: load the profile image if available in binding.profileImage
-        // Load the profile image if available
-        if (user.getProfilePictureLink() != null && !user.getProfilePictureLink().isEmpty()) {
-            ImageHandler.loadCircularImage(requireContext(), user.getProfilePictureLink(), binding.profileImage);
-        } else {
-            binding.profileImage.setImageResource(R.drawable.profile_placeholder); // fallback image
-        }
-
-
         // Get follower count and follwee count
         FollowHandler followHandler = new FollowHandler();
         followHandler.getFollowCount(user.getID(), FollowHandler.FollowType.Followers,
@@ -134,35 +124,21 @@ public class UserProfileFragment extends Fragment {
         );
         binding.listviewMoodEventList.setAdapter(moodEventAdapter);
 
-        boolean isCurrentUserProfile = user.getID().equals(user_manager.getCurrentUser().getID());
-        moodEventAdapter.setIsCurrentUserProfile(isCurrentUserProfile);
-
         // Show mood events
+
         User loggedInUser = user_manager.getCurrentUser();
         if (user != loggedInUser) {
             // For now, disable all views
-            binding.filterButton.setVisibility(View.GONE);
-            binding.recentEventsTitle.setVisibility(View.VISIBLE);
-            binding.listviewMoodEventList.setVisibility(View.VISIBLE);
+            binding.listviewMoodEventList.setVisibility(View.INVISIBLE);
+            binding.filterButton.setVisibility(View.INVISIBLE);
+            binding.recentEventsTitle.setVisibility(View.INVISIBLE);
+            binding.requestsButton.setVisibility(View.INVISIBLE);
 
-            moodEventsLiveData = mood_event_controller.getPublicMoodEvents(null);
-            if (moodEventsLiveData != null) {
-                getMoodEventFromDB();
-            }
+            // TODO: Show mood events if logged in user is following current user
 
-            followHandler.isFollowing(user.getID(), isFollowing -> {
-                if (isFollowing) {
-                    moodEventAdapter.setBlurText(false);
-                    binding.blurOverlay.setVisibility(View.GONE);
-                    binding.requestButton.setVisibility(View.GONE);
-                    binding.unfollowButton.setVisibility(View.VISIBLE);
-                } else {
-                    moodEventAdapter.setBlurText(true);
-                    binding.blurOverlay.setVisibility(View.VISIBLE);
-                    binding.unfollowButton.setVisibility(View.GONE);
-                    binding.requestButton.setVisibility(View.VISIBLE);
-                }
-            });
+            // TODO: Show correct button depending on whether following or not
+            binding.requestButton.setVisibility(View.VISIBLE);
+//            binding.unfollowButton.setVisibility(View.VISIBLE);
         } else {
             moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
             if (moodEventsLiveData != null) {
