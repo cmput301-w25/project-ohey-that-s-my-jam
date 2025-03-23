@@ -138,7 +138,7 @@ public class MoodEventsManager {
         if (customFilter == null) {
             customFilter = MoodHistoryFilter.Default(userIDs);
         }
-        customFilter.addFilter(Filter.equalTo("privacy", MoodEvent.Privacy.Public));
+        customFilter.addFilter(MoodHistoryFilter.PublicMoodEvents());
 
         return getMoodEvents(customFilter);
     }
@@ -155,6 +155,16 @@ public class MoodEventsManager {
         return getMoodEvents((null != customFilter)
                 ? customFilter
                 : MoodHistoryFilter.Default(userIDs));
+    }
+
+    public LiveData<ArrayList<MoodEvent>> getMoodEventsWithLocation() {
+        MoodHistoryFilter filter = MoodHistoryFilter.Default(userIDs);
+        // Get only public mood events
+        filter.addFilter(MoodHistoryFilter.PublicMoodEvents());
+        // That have a location
+        filter.addFilter(MoodHistoryFilter.HasLocation());
+
+        return getMoodEvents(filter);
     }
 
     /**
