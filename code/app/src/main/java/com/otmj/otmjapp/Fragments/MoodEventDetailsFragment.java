@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -164,6 +165,14 @@ public class MoodEventDetailsFragment extends Fragment {
             eventLocationText.setVisibility(View.GONE);
         }
 
+        profileImage.setOnClickListener(v -> {
+            MoodEventDetailsFragmentDirections.ActionMoodEventDetailsFragmentToUserProfileFragment showUserProfile =
+                    MoodEventDetailsFragmentDirections.actionMoodEventDetailsFragmentToUserProfileFragment();
+            showUserProfile.setUser(moodEvent.getUser());
+
+            NavHostFragment.findNavController(MoodEventDetailsFragment.this)
+                    .navigate(showUserProfile);
+        });
 
         // Initialize the CommentHandler
         CommentHandler commentHandler = new CommentHandler();

@@ -24,6 +24,7 @@ import com.otmj.otmjapp.databinding.MyProfileBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class UserProfileFragment extends Fragment {
@@ -76,20 +77,16 @@ public class UserProfileFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, args);
         });
 
+        UserProfileFragmentArgs args = UserProfileFragmentArgs.fromBundle(getArguments());
+
         // Get UserID
         UserManager user_manager = UserManager.getInstance();
-        User user = user_manager.getCurrentUser();
-
-        // get MoodEvents
-        ArrayList<String> idOfUser = new ArrayList<>(List.of(user.getID()));
-        final MoodEventsManager mood_event_controller = new MoodEventsManager(idOfUser);
-
-        moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
-        if (moodEventsLiveData != null) {
-            getMoodEventFromDB();
+        User user = args.getUser();
+        if (user == null ) {
+            user = user_manager.getCurrentUser();
         }
 
-        //get follower count and follwee count
+        // Get follower count and follwee count
         FollowHandler followHandler = new FollowHandler();
         followHandler.getFollowCount(user.getID(), FollowHandler.FollowType.Followers,
                 amount -> binding.followersButton.setText(getString(R.string.follower_count, amount)));
@@ -97,17 +94,13 @@ public class UserProfileFragment extends Fragment {
         followHandler.getFollowCount(user.getID(), FollowHandler.FollowType.Following,
                 amount -> binding.followingButton.setText(getString(R.string.following_count, amount)));
 
-        // Set data to views using binding.
-        //binding.profileImage.setImageBitmap(bitmapProfileImage);
         binding.username.setText(user.getUsername());
-        moodEventAdapter = new UserProfilePageMoodEventAdapter(
-                requireContext(),
-                R.layout.my_mood_history_block,
-                new ArrayList<>(),
-                requireActivity()
-        );
-        binding.listviewMoodEventList.setAdapter(moodEventAdapter);
 
+        // Set up mood events manager
+        ArrayList<String> idOfUser = new ArrayList<>(List.of(user.getID()));
+        final MoodEventsManager mood_event_controller = new MoodEventsManager(idOfUser);
+
+        // Set up filter button
         binding.filterButton.setOnClickListener(v -> {
             FilterFragment popup = new FilterFragment(filterOptions, newFilterOptions -> {
                 // Save filter options
@@ -122,6 +115,36 @@ public class UserProfileFragment extends Fragment {
             popup.show(getParentFragmentManager(), null);
         });
 
+        // Set up mood event list adapter
+        moodEventAdapter = new UserProfilePageMoodEventAdapter(
+                requireContext(),
+                R.layout.my_mood_history_block,
+                new ArrayList<>(),
+                requireActivity()
+        );
+        binding.listviewMoodEventList.setAdapter(moodEventAdapter);
+
+        // Show mood events
+
+        User loggedInUser = user_manager.getCurrentUser();
+        if (user != loggedInUser) {
+            // For now, disable all views
+            binding.listviewMoodEventList.setVisibility(View.INVISIBLE);
+            binding.filterButton.setVisibility(View.INVISIBLE);
+            binding.recentEventsTitle.setVisibility(View.INVISIBLE);
+            binding.requestsButton.setVisibility(View.INVISIBLE);
+
+            // TODO: Show mood events if logged in user is following current user
+
+            // TODO: Show correct button depending on whether following or not
+            binding.requestButton.setVisibility(View.VISIBLE);
+//            binding.unfollowButton.setVisibility(View.VISIBLE);
+        } else {
+            moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
+            if (moodEventsLiveData != null) {
+                getMoodEventFromDB();
+            }
+        }
     }
 
     public void getMoodEventFromDB(){
