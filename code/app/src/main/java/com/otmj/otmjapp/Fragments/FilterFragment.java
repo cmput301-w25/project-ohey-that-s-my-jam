@@ -67,8 +67,8 @@ public class FilterFragment extends DialogFragment {
 
         chipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
             filterOptions.setLast7Days(checkedIds.contains(R.id.recent_week_chip));
+            filterOptions.resetEmotionalStates();
             if (!checkedIds.isEmpty()) {
-                filterOptions.resetEmotionalStates();
                 // Handle emotional states
                 for (int id : checkedIds) {
                     // Recent week chip is already handled above
