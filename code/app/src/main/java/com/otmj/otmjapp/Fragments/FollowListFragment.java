@@ -8,8 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.otmj.otmjapp.Adapters.FollowersListViewAdapter;
 import com.otmj.otmjapp.Adapters.RequestsListViewAdapter;
@@ -195,11 +198,17 @@ public class FollowListFragment extends Fragment {
         originalList = followList; // Save the original list
 
         ListView listView = rootView.findViewById(R.id.user_list_view);
+        listView.setOnItemClickListener((adapterView, view, i, l) -> {
+            FollowListFragmentDirections.ActionFollowersListFragmentToUserProfileFragment toUserProfile =
+                    FollowListFragmentDirections.actionFollowersListFragmentToUserProfileFragment();
+            toUserProfile.setUser(followList.get(i));
+
+            NavHostFragment.findNavController(FollowListFragment.this).navigate(toUserProfile);
+        });
 
         // Populate the list
         FollowersListViewAdapter adapter = new FollowersListViewAdapter(getContext(), followList);
         listView.setAdapter(adapter);
-
     }
 
     private void setUpRequestsList(View rootView, ArrayList<User> requestList) {
