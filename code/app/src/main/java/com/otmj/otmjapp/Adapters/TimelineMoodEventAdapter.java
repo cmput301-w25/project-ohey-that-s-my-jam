@@ -2,10 +2,8 @@ package com.otmj.otmjapp.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.format.DateUtils;
@@ -22,10 +20,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
-import com.otmj.otmjapp.Helper.CircleTransform;
 import com.otmj.otmjapp.Helper.CommentHandler;
 import com.otmj.otmjapp.Helper.CustomImageSpan;
 import com.otmj.otmjapp.Helper.ImageHandler;
@@ -33,7 +29,6 @@ import com.otmj.otmjapp.Helper.LocationHelper;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -60,55 +55,10 @@ public TimelineMoodEventAdapter(@NonNull Activity activity, @NonNull ArrayList<M
         MoodEvent m = getItem(position);
         assert m != null;
 
-        if (null != m.getUser()) {
-            // Get the ImageView where the profile picture will be set
-            ImageView timeline_mood_event_profile_pic = view.findViewById(R.id.timeline_mood_event_profile_pic);
-
-            // Get the profile picture link from the User object
-            String profilePicUrl = m.getUser().getProfilePictureLink();
-
-            // If the URL is null or empty, use a default placeholder image
-            if (profilePicUrl == null || profilePicUrl.isEmpty()) {
-                profilePicUrl = "android.resource://com.otmj.otmjapp/drawable/placeholder_image"; // Default placeholder
-            }
-
-            // Use Picasso to load the image
-            Picasso.get()
-                    .load(profilePicUrl) // Load the profile image URL
-                    .placeholder(R.drawable.profile_placeholder) // Placeholder image while loading
-                    .error(R.drawable.profile_placeholder) // Error image if loading fails
-                    .transform(new CircleTransform()) // Apply circular transformation
-                    .into(timeline_mood_event_profile_pic); // Set the image to the ImageView
-
-            // Set the click listener on the profile
-            timeline_mood_event_profile_pic.setOnClickListener(v -> {
-                String clickedUsername = m.getUser().getUsername();
-                Log.d("UserProfileFragment", "Clicked username: " + clickedUsername);
-
-                Bundle args = new Bundle();
-                args.putString("username", clickedUsername);
-
-                Navigation.findNavController(v).navigate(R.id.action_followersListFragment_to_unfollowedProfileFragment, args);
-            });
-        }
-
-        // Set username and make clickable
-        if (null != m.getUser()) {
+        if(null != m.getUser()) {
             TextView usernameText = view.findViewById(R.id.timeline_mood_event_username);
             setMoodEventHeaderText(usernameText, m);
-
-            // Set the click listener on the username too
-            usernameText.setOnClickListener(v -> {
-                String clickedUsername = m.getUser().getUsername();
-                Log.d("UserProfileFragment", "Clicked username: " + clickedUsername);
-
-                Bundle args = new Bundle();
-                args.putString("username", clickedUsername);
-
-                Navigation.findNavController(v).navigate(R.id.action_followersListFragment_to_unfollowedProfileFragment, args);
-            });
         }
-
 
         TextView description = view.findViewById(R.id.timeline_mood_event_desc);
         if (m.getReason() != null && !m.getReason().isEmpty()) {
