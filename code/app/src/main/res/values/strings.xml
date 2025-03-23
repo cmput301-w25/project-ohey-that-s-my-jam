@@ -99,9 +99,10 @@
     <string name="mood_event_example_with_full_details">Feeling confuse 😊</string>
     <string name="users_profile_picture">User profile picture</string>
     <string name="add_music_fragment">Set the Tone</string>
-    <string name="search_music_hint">Find a song that matches your mood…</string>
+    <string name="search_music_hint">Search for a song…</string>
     <string name="reason_why_song_hint">Why does this song fit your mood?</string>
     <string name="save_button_text">Save</string>
+    <string name="song_title">%s by %s</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

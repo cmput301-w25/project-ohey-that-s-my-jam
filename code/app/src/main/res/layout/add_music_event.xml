@@ -55,26 +55,37 @@
         app:counterEnabled="false"
         app:counterMaxLength="200"/>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="225dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:orientation="vertical" />
-    </ScrollView>
-
-    <com.google.android.material.textfield.TextInputLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/reason_why_song"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/reason_why_song_hint" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="225dp"
+            android:layout_marginTop="10dp"
+            android:background="#F0F2F0"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/reason_for_song"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="@string/reason_why_song_hint" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="378dp"
@@ -84,8 +95,8 @@
             android:id="@+id/save_button"
             android:layout_width="76dp"
             android:layout_height="50dp"
-            android:layout_marginStart="296dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="275dp"
+            android:layout_marginTop="25dp"
             android:backgroundTint="#4D193F80"
             android:elevation="4dp"
             android:fontFeatureSettings="s"
