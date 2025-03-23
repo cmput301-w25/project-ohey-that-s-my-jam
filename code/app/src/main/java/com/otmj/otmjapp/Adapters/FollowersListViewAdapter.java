@@ -59,10 +59,10 @@ public class FollowersListViewAdapter extends ArrayAdapter<User> {
             String clickedUsername = userNameTextView.getText().toString();
             Log.d("UserProfileFragment", "Clicked username: " + clickedUsername); // Log the clicked username
 
+
             // Create a Bundle to pass the username
             Bundle args = new Bundle();
             args.putString("username", clickedUsername); // Pass the clicked username to the Bundle
-            args.putBoolean("notfollowing", true);  // Add the argument to the Bundle
 
             // Navigate to the Unfollowed Profile Fragment using Navigation Component
             Navigation.findNavController(v).navigate(R.id.action_followersListFragment_to_unfollowedProfileFragment, args);
