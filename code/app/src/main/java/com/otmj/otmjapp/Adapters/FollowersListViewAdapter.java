@@ -1,6 +1,8 @@
 package com.otmj.otmjapp.Adapters;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +12,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.Navigation;
 
 
 import com.otmj.otmjapp.Helper.CircleTransform;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 import java.util.ArrayList;
+import java.util.Set;
+
 import com.squareup.picasso.Picasso;  // Import Picasso
 
 public class FollowersListViewAdapter extends ArrayAdapter<User> {
@@ -45,6 +50,24 @@ public class FollowersListViewAdapter extends ArrayAdapter<User> {
         // Set the username
         TextView userNameTextView = listItemView.findViewById(R.id.username);
         userNameTextView.setText(user.getUsername());  // Assuming `getUsername()` is a method in the User class
+
+        // Set the click listener on the username
+        userNameTextView.setOnClickListener(v -> {
+            // Handle the click event here
+            // You can navigate to a profile fragment or any action you want
+            // Get the username text that was clicked
+            String clickedUsername = userNameTextView.getText().toString();
+            Log.d("UserProfileFragment", "Clicked username: " + clickedUsername); // Log the clicked username
+
+
+            // Create a Bundle to pass the username
+            Bundle args = new Bundle();
+            args.putString("username", clickedUsername); // Pass the clicked username to the Bundle
+
+            // Navigate to the Unfollowed Profile Fragment using Navigation Component
+            Navigation.findNavController(v).navigate(R.id.action_followersListFragment_to_unfollowedProfileFragment, args);
+        });
+
 
         // Get the profile picture URL
         String profilePicUrl = user.getProfilePictureLink();
