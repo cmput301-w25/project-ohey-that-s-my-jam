@@ -210,6 +210,10 @@ public class FollowHandler {
         }));
     }
 
+    /**
+     * Gets the number of user that have requested to follow the current user
+     * @param callback The callback to handle the result
+     */
     public void getRequestCount(FollowCountCallback callback) {
         getRequestIDs(ids -> callback.result(ids.size()));
     }
