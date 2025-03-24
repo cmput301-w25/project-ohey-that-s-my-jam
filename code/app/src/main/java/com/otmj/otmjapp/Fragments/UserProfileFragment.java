@@ -137,8 +137,15 @@ public class UserProfileFragment extends Fragment {
             // TODO: Show mood events if logged in user is following current user
 
             // TODO: Show correct button depending on whether following or not
-            binding.requestButton.setVisibility(View.VISIBLE);
-//            binding.unfollowButton.setVisibility(View.VISIBLE);
+            followHandler.isFollowing(user.getID(), isFollowing -> {
+                if (isFollowing) {
+                    binding.requestButton.setVisibility(View.GONE);
+                    binding.unfollowButton.setVisibility(View.VISIBLE);
+                } else {
+                    binding.unfollowButton.setVisibility(View.GONE);
+                    binding.requestButton.setVisibility(View.VISIBLE);
+                }
+            });
         } else {
             moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
             if (moodEventsLiveData != null) {
