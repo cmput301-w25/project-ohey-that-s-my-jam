@@ -70,6 +70,7 @@ public class UserProfileFragment extends Fragment {
 
         // Navigate to Requests List when Requests Button is clicked
         binding.requestsButton.setOnClickListener(v -> {
+
             Bundle args = new Bundle();
             args.putString("buttonClicked", "requests");  // Add an argument indicating which button was clicked
 
@@ -81,10 +82,14 @@ public class UserProfileFragment extends Fragment {
 
         // Get UserID
         UserManager user_manager = UserManager.getInstance();
-        User user = args.getUser();
-        if (user == null ) {
-            user = user_manager.getCurrentUser();
+        User tempUser = args.getUser();  // Store initial value in a temporary variable
+
+        if (tempUser == null) {
+            tempUser = user_manager.getCurrentUser();
         }
+
+        final User user = tempUser; // Make user final AFTER deciding which user to use
+
 
         // Get follower count and follwee count
         FollowHandler followHandler = new FollowHandler();
@@ -138,6 +143,17 @@ public class UserProfileFragment extends Fragment {
 
             // TODO: Show correct button depending on whether following or not
             binding.requestButton.setVisibility(View.VISIBLE);
+
+            //TODO: Allow user to request to follow each other
+
+            binding.requestButton.setOnClickListener(v -> {
+                if (user != null && loggedInUser != null) {
+                    followHandler.sendFollowRequest(user.getID());
+                    binding.requestButton.setText("Request Sent");
+                    Log.e("userProfileFragment","sent request!");
+                }
+            });
+
 //            binding.unfollowButton.setVisibility(View.VISIBLE);
         } else {
             moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
@@ -145,6 +161,7 @@ public class UserProfileFragment extends Fragment {
                 getMoodEventFromDB();
             }
         }
+
     }
 
     public void getMoodEventFromDB(){

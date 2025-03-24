@@ -144,10 +144,6 @@ public class FollowListFragment extends Fragment {
                 // Log the button click event for following
                 Log.d("FollowListFragment", "peopleYouMayKnow button clicked");
 
-                // Log the button click event for "People You May Know"
-                Log.d("FollowersListFragment", "People You May Know button clicked");
-
-
                 // Fetch users the current user is not following
                 followHandler.fetchNotFollowingUsers(new FollowHandler.FollowCallback() {
                     @Override
@@ -163,7 +159,6 @@ public class FollowListFragment extends Fragment {
                     public void onFailure(Exception e) {
                         // Log the error if fetching fails
                         Log.e("FollowListFragment", "Error fetching following", e);
-                        // Optionally, show an error message
                     }
                 });
             } else if("requests".equals(buttonClicked)) {
