@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -161,12 +162,25 @@ public class UserProfileFragment extends Fragment {
                     binding.blurOverlay.setVisibility(View.GONE);
                     binding.requestButton.setVisibility(View.GONE);
                     binding.unfollowButton.setVisibility(View.VISIBLE);
+                    //Add functionality to unfollow button
+
                 } else {
                     moodEventAdapter.setBlurText(true);
                     binding.blurOverlay.setVisibility(View.VISIBLE);
                     binding.unfollowButton.setVisibility(View.GONE);
                     binding.requestButton.setVisibility(View.VISIBLE);
                 }
+            });
+
+            // Set the onClickListener for the unfollow button
+            binding.unfollowButton.setOnClickListener(v -> {
+                // Call the unfollowUser method to unfollow the target user
+                followHandler.unfollowUser(user.getID());
+
+                // After unfollowing, hide the unfollow button and show the follow request button
+                binding.unfollowButton.setVisibility(View.GONE);
+                binding.requestButton.setVisibility(View.VISIBLE);
+
             });
 
 

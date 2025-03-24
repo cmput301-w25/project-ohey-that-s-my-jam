@@ -303,4 +303,34 @@ public class FollowHandler {
         });
     }
 
+    /**
+     * Unfollows a user by removing the follow relationship from the database.
+     *
+     * @param followeeID The ID of the user to unfollow.
+     */
+    public void unfollowUser(String followeeID) {
+        // Define a filter to identify the follow relationship between the current user and the target user
+        Filter filter = Filter.and(
+                Filter.equalTo("followerID", currentUser.getID()),
+                Filter.equalTo("followeeID", followeeID)
+        );
+
+        // Get the follow relationship from the database
+        followDB.getDocuments(filter, Follow.class, new FirestoreDB.DBCallback<Follow>() {
+            @Override
+            public void onSuccess(ArrayList<Follow> result) {
+                if (!result.isEmpty()) {
+                    // If a follow relationship exists, remove it
+                    followDB.deleteDocument(result.get(0));
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // Handle any failure during the unfollow operation
+            }
+        });
+    }
+
+
 }
