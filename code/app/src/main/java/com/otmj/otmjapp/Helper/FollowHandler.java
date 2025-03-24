@@ -55,6 +55,32 @@ public class FollowHandler {
     }
 
     /**
+     * Checks if a follow request has already been sent by the current user to a target user.
+     *
+     * @param targetUserID The ID of the user receiving the request.
+     * @param callback     A callback to handle the result (true if request exists, false otherwise).
+     */
+    public void hasFollowRequestBeenSent(String followeeID, Consumer<Boolean> callback) {
+        Filter filter = Filter.and(
+                Filter.equalTo("followerID", currentUser.getID()),
+                Filter.equalTo("followeeID", followeeID)
+        );
+
+        requestDB.getDocuments(filter, FollowRequest.class, new FirestoreDB.DBCallback<>() {
+            @Override
+            public void onSuccess(ArrayList<FollowRequest> result) {
+                callback.accept(!result.isEmpty()); // Returns true if any request exists
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                callback.accept(false); // If the query fails, assume no request was sent
+            }
+        });
+    }
+
+
+    /**
      * Creates a 'follow' relationship between two users.
      *
      * @param followerID the ID of the user who sends the request
@@ -213,7 +239,7 @@ public class FollowHandler {
     }
 
     /**
-     * Fetches all the users that the current user is NOT following
+     * Fetches all the users that the current user is NOT following, excluding the current user.
      *
      * @param callback      the callback to handle the result, passing the list of followers or an error
      */
@@ -226,11 +252,11 @@ public class FollowHandler {
                 fetchFollowing(currentUser.getID(), new FollowCallback() {
                     @Override
                     public void onSuccess(ArrayList<User> followingUsers) {
-                        // Step 3: Filter out users that are in the following list
+                        // Step 3: Filter out users that are in the following list and the current user
                         ArrayList<User> notFollowingUsers = new ArrayList<>();
                         for (User user : allUsers) {
-                            // If the current user is not being followed
-                            if (!followingUsers.contains(user)) {
+                            // Exclude the current user and users the current user is following
+                            if (!user.equals(currentUser) && !followingUsers.contains(user)) {
                                 notFollowingUsers.add(user);
                             }
                         }
@@ -251,6 +277,7 @@ public class FollowHandler {
             }
         });
     }
+
     /**
      * Checks if the current user is following a specific user.
      *

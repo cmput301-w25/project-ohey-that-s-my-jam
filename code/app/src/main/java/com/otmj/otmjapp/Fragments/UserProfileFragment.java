@@ -168,20 +168,31 @@ public class UserProfileFragment extends Fragment {
                     binding.requestButton.setVisibility(View.VISIBLE);
                 }
             });
-            // TODO: Show correct button depending on whether following or not
-            binding.requestButton.setVisibility(View.VISIBLE);
 
-            //TODO: Allow user to request to follow each other
 
-            binding.requestButton.setOnClickListener(v -> {
-                if (user != null && loggedInUser != null) {
-                    followHandler.sendFollowRequest(user.getID());
-                    binding.requestButton.setText("Request Sent");
-                    Log.e("userProfileFragment","sent request!");
+            followHandler.hasFollowRequestBeenSent(user.getID(), requestExists -> {
+                if (requestExists) {
+                    // Set button to "Requested" and make it unclickable
+                    binding.requestButton.setText("Requested");
+                    binding.requestButton.setEnabled(false); // Disable clicks
+                    binding.requestButton.setAlpha(0.5f); // Make it look disabled
+                    binding.requestButton.setVisibility(View.VISIBLE); // Show the button
+                } else {
+                    binding.requestButton.setVisibility(View.VISIBLE); // Show if not sent
                 }
             });
 
-//            binding.unfollowButton.setVisibility(View.VISIBLE);
+            binding.requestButton.setOnClickListener(v -> {
+                followHandler.sendFollowRequest(user.getID());
+                Log.e("UserProfileFragment", "user.getID() =" + user.getID());
+
+                // Set button to "Requested" and make it unclickable
+                binding.requestButton.setText("Requested");
+                binding.requestButton.setEnabled(false); // Disable clicks
+                binding.requestButton.setAlpha(0.5f); // Make it look disabled
+                binding.requestButton.setVisibility(View.VISIBLE); // Show the button
+            });
+
         } else {
             moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
             if (moodEventsLiveData != null) {
