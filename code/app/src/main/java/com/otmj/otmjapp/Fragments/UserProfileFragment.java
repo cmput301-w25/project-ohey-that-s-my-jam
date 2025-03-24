@@ -124,24 +124,32 @@ public class UserProfileFragment extends Fragment {
         );
         binding.listviewMoodEventList.setAdapter(moodEventAdapter);
 
+        boolean isCurrentUserProfile = user.getID().equals(user_manager.getCurrentUser().getID());
+        moodEventAdapter.setIsCurrentUserProfile(isCurrentUserProfile);
+
         // Show mood events
 
         User loggedInUser = user_manager.getCurrentUser();
         if (user != loggedInUser) {
             // For now, disable all views
-            binding.listviewMoodEventList.setVisibility(View.INVISIBLE);
-            binding.filterButton.setVisibility(View.INVISIBLE);
-            binding.recentEventsTitle.setVisibility(View.INVISIBLE);
-            binding.requestsButton.setVisibility(View.INVISIBLE);
+            binding.filterButton.setVisibility(View.GONE);
+            binding.recentEventsTitle.setVisibility(View.VISIBLE);
+            binding.listviewMoodEventList.setVisibility(View.VISIBLE);
 
-            // TODO: Show mood events if logged in user is following current user
+            moodEventsLiveData = mood_event_controller.getPublicMoodEvents(null);
+            if (moodEventsLiveData != null) {
+                getMoodEventFromDB();
+            }
 
-            // TODO: Show correct button depending on whether following or not
             followHandler.isFollowing(user.getID(), isFollowing -> {
                 if (isFollowing) {
+                    moodEventAdapter.setBlurText(false);
+                    binding.blurOverlay.setVisibility(View.GONE);
                     binding.requestButton.setVisibility(View.GONE);
                     binding.unfollowButton.setVisibility(View.VISIBLE);
                 } else {
+                    moodEventAdapter.setBlurText(true);
+                    binding.blurOverlay.setVisibility(View.VISIBLE);
                     binding.unfollowButton.setVisibility(View.GONE);
                     binding.requestButton.setVisibility(View.VISIBLE);
                 }
