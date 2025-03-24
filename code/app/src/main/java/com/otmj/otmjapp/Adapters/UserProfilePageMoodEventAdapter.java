@@ -183,6 +183,7 @@ public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
 
         if (isCurrentUserProfile) {
             editButton.setVisibility(View.VISIBLE);
+            editButton.setFocusable(false); // This is necessary for the list item to be clickable
             editButton.setOnClickListener(v -> {
                 MoodEventAddEditDialogFragment popup = MoodEventAddEditDialogFragment.newInstance(m);
                 popup.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "edit");
