@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -82,10 +83,14 @@ public class UserProfileFragment extends Fragment {
 
         // Get UserID
         UserManager user_manager = UserManager.getInstance();
-        User user = args.getUser();
-        if (user == null ) {
-            user = user_manager.getCurrentUser();
+        User tempUser = args.getUser();  // Store initial value in a temporary variable
+
+        if (tempUser == null) {
+            tempUser = user_manager.getCurrentUser();
         }
+
+        final User user = tempUser; // Make user final AFTER deciding which user to use
+
 
         // TODO: load the profile image if available in binding.profileImage
         // Load the profile image if available
@@ -138,6 +143,7 @@ public class UserProfileFragment extends Fragment {
         moodEventAdapter.setIsCurrentUserProfile(isCurrentUserProfile);
 
         // Show mood events
+
         User loggedInUser = user_manager.getCurrentUser();
         if (user != loggedInUser) {
             // For now, disable all views
@@ -156,6 +162,7 @@ public class UserProfileFragment extends Fragment {
                     binding.blurOverlay.setVisibility(View.GONE);
                     binding.requestButton.setVisibility(View.GONE);
                     binding.unfollowButton.setVisibility(View.VISIBLE);
+
                 } else {
                     moodEventAdapter.setBlurText(true);
                     binding.blurOverlay.setVisibility(View.VISIBLE);
@@ -163,6 +170,51 @@ public class UserProfileFragment extends Fragment {
                     binding.requestButton.setVisibility(View.VISIBLE);
                 }
             });
+
+            // onClickListener for the unfollow button
+            binding.unfollowButton.setOnClickListener(v -> {
+                followHandler.unfollowUser(user.getID());
+
+                // Replace the unfollow button with the request button
+                binding.unfollowButton.setVisibility(View.GONE);
+                binding.requestButton.setVisibility(View.VISIBLE);
+
+            });
+
+
+            followHandler.hasFollowRequestBeenSent(user.getID(), requestExists -> {
+                if (requestExists) {
+                    // Set button to "Requested" and make it unclickable
+                    binding.requestButton.setText("REQUESTED");
+                    binding.requestButton.setEnabled(false); // Disable clicks
+                    binding.requestButton.setAlpha(0.5f); // Make it look disabled
+                    binding.requestButton.setVisibility(View.VISIBLE);
+                } else {
+                    // Check if already following
+                    followHandler.isFollowing(user.getID(), isFollowing -> {
+                        if (isFollowing) {
+                            binding.requestButton.setVisibility(View.GONE);
+                        } else {
+                            // Show request button
+                            binding.requestButton.setEnabled(true);
+                            binding.requestButton.setAlpha(1.0f);
+
+                        }
+                    });
+                }
+            });
+
+            binding.requestButton.setOnClickListener(v -> {
+                followHandler.sendFollowRequest(user.getID());
+                Log.e("UserProfileFragment", "user.getID() =" + user.getID());
+
+                // Set button to "Requested" and make it unclickable
+                binding.requestButton.setText("REQUESTED");
+                binding.requestButton.setEnabled(false); // Disable clicks
+                binding.requestButton.setAlpha(0.5f); // Make it look disabled
+                binding.requestButton.setVisibility(View.VISIBLE); // Show the button
+            });
+
         } else {
             moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
             if (moodEventsLiveData != null) {
