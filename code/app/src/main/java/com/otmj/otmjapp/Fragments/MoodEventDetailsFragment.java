@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -101,17 +102,17 @@ public class MoodEventDetailsFragment extends Fragment {
         MoodEvent moodEvent = args.getMoodEvent();
         assert moodEvent != null;
 
-        String loggedInUsername = UserManager.getInstance().getCurrentUser().getUsername(),
-                moodEventUsername = moodEvent.getUser().getUsername();
+        User loggedInUser = UserManager.getInstance().getCurrentUser(),
+                moodEventUser = moodEvent.getUser();
 
-        if (Objects.equals(loggedInUsername, moodEventUsername)) {
+        if (Objects.equals(loggedInUser, moodEventUser)) {
             unfollowButton.setVisibility(View.GONE);
         } else {
             unfollowButton.setVisibility(View.VISIBLE);
         }
 
         // Set the username text
-        usernameText.setText(moodEventUsername);
+        usernameText.setText(moodEventUser.getUsername());
 
         // Set timestamp text
         eventTimestampText.setText(moodEvent.getCreatedDate().toString());
@@ -164,6 +165,17 @@ public class MoodEventDetailsFragment extends Fragment {
             eventLocationText.setVisibility(View.GONE);
         }
 
+        profileImage.setOnClickListener(v -> {
+            // Only view profile of other users
+            if (!Objects.equals(loggedInUser, moodEventUser)) {
+                MoodEventDetailsFragmentDirections.ActionMoodEventDetailsFragmentToUserProfileFragment showUserProfile =
+                        MoodEventDetailsFragmentDirections.actionMoodEventDetailsFragmentToUserProfileFragment();
+                showUserProfile.setUser(moodEvent.getUser());
+
+                NavHostFragment.findNavController(MoodEventDetailsFragment.this)
+                        .navigate(showUserProfile);
+            }
+        });
 
         // Initialize the CommentHandler
         CommentHandler commentHandler = new CommentHandler();
