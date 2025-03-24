@@ -162,7 +162,6 @@ public class UserProfileFragment extends Fragment {
                     binding.blurOverlay.setVisibility(View.GONE);
                     binding.requestButton.setVisibility(View.GONE);
                     binding.unfollowButton.setVisibility(View.VISIBLE);
-                    //Add functionality to unfollow button
 
                 } else {
                     moodEventAdapter.setBlurText(true);
@@ -172,12 +171,11 @@ public class UserProfileFragment extends Fragment {
                 }
             });
 
-            // Set the onClickListener for the unfollow button
+            // onClickListener for the unfollow button
             binding.unfollowButton.setOnClickListener(v -> {
-                // Call the unfollowUser method to unfollow the target user
                 followHandler.unfollowUser(user.getID());
 
-                // After unfollowing, hide the unfollow button and show the follow request button
+                // Replace the unfollow button with the request button
                 binding.unfollowButton.setVisibility(View.GONE);
                 binding.requestButton.setVisibility(View.VISIBLE);
 
@@ -197,7 +195,7 @@ public class UserProfileFragment extends Fragment {
                         if (isFollowing) {
                             binding.requestButton.setVisibility(View.GONE);
                         } else {
-                            // Show regular follow request button
+                            // Show request button
                             binding.requestButton.setEnabled(true);
                             binding.requestButton.setAlpha(1.0f);
 
@@ -211,7 +209,7 @@ public class UserProfileFragment extends Fragment {
                 Log.e("UserProfileFragment", "user.getID() =" + user.getID());
 
                 // Set button to "Requested" and make it unclickable
-                binding.requestButton.setText("Requested");
+                binding.requestButton.setText("REQUESTED");
                 binding.requestButton.setEnabled(false); // Disable clicks
                 binding.requestButton.setAlpha(0.5f); // Make it look disabled
                 binding.requestButton.setVisibility(View.VISIBLE); // Show the button
