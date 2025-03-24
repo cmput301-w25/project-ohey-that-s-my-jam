@@ -9,13 +9,14 @@ import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.UUID;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 /**
  * ImageHandler class that manages image uploading, fetching, loading, and deleting.
@@ -118,6 +119,36 @@ public class ImageHandler {
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         String mimeType = contentResolver.getType(uri);
         return mime.getExtensionFromMimeType(mimeType);
+    }
+
+    /**
+     * Loads an image from a URL into the specified ImageView with a blur effect applied.
+     * This method uses Glide with a BlurTransformation to visually obscure the image.
+     * @param context    The context from which this method is called.
+     * @param imageUrl   The URL of the image to load.
+     * @param imageView  The ImageView where the blurred image will be displayed.
+     * @param blurRadius The radius of the blur to apply (higher values = more intense blur).
+     */
+    public static void loadBlurredImage(Context context, String imageUrl, ImageView imageView, int blurRadius) {
+        Glide.with(context)
+                .load(imageUrl)
+                .apply(RequestOptions.bitmapTransform(
+                        new jp.wasabeef.glide.transformations.BlurTransformation(blurRadius, 3)))
+                .into(imageView);
+    }
+
+    /**
+     * Loads an image into a circular ImageView using Glide.
+     *
+     * @param context   The context from which this method is called.
+     * @param imageUrl  The URL of the image to load.
+     * @param imageView The ImageView where the circular image will be displayed.
+     */
+    public static void loadCircularImage(Context context, String imageUrl, ImageView imageView) {
+        Glide.with(context)
+                .load(imageUrl)
+                .apply(RequestOptions.circleCropTransform())
+                .into(imageView);
     }
 
     /**

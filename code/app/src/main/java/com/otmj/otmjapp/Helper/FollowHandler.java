@@ -6,6 +6,7 @@ import com.otmj.otmjapp.Models.FollowRequest;
 import com.otmj.otmjapp.Models.User;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /**
  * Manages follow requests and follow relationships between users.
@@ -250,4 +251,29 @@ public class FollowHandler {
             }
         });
     }
+    /**
+     * Checks if the current user is following a specific user.
+     *
+     * @param targetUserID The ID of the user to check.
+     * @param callback A callback to receive the result (true if following, false otherwise).
+     */
+    public void isFollowing(String targetUserID, Consumer<Boolean> callback) {
+        Filter filter = Filter.and(
+                Filter.equalTo("followerID", currentUser.getID()),
+                Filter.equalTo("followeeID", targetUserID)
+        );
+
+        followDB.getDocuments(filter, Follow.class, new FirestoreDB.DBCallback<>() {
+            @Override
+            public void onSuccess(ArrayList<Follow> result) {
+                callback.accept(!result.isEmpty());
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                callback.accept(false); // fallback if query fails
+            }
+        });
+    }
+
 }
