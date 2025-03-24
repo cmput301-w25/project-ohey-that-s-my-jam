@@ -3,10 +3,15 @@ package com.otmj.otmjapp.Helper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.Filter;
+import com.otmj.otmjapp.Fragments.UserProfileFragment;
 import com.otmj.otmjapp.Models.User;
+import com.otmj.otmjapp.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,6 +121,18 @@ public class UserManager {
                 callback.onAuthenticationFailure("User already exists");
             }
         });
+    }
+
+    /**
+     * Logout current user and navigate back to welcome screen
+     */
+    public void logout(Fragment page) {
+        if (!(page instanceof UserProfileFragment)) {
+           Log.e("UserManager", "Can only logout from profile page!");
+        } else if (currentUser != null) {
+            currentUser = null;
+            NavHostFragment.findNavController(page).navigate(R.id.logoutFromApp);
+        }
     }
 
     public void getUsers(List<String> userIDs, @NonNull AuthenticationCallback callback) {

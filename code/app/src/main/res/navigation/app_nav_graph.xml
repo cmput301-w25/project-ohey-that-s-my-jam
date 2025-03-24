@@ -59,6 +59,9 @@
         <action
             android:id="@+id/action_userProfileFragment_to_moodEventDetailsFragment"
             app:destination="@id/moodEventDetailsFragment" />
+        <action
+            android:id="@+id/logoutFromApp"
+            app:destination="@id/initialActivity" />
     </fragment>
 
     <!-- Followers List Fragment -->
@@ -76,4 +79,9 @@
         android:name="com.otmj.otmjapp.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps" />
+    <activity
+        android:id="@+id/initialActivity"
+        android:name="com.otmj.otmjapp.InitialActivity"
+        android:label="activity_initial"
+        tools:layout="@layout/activity_initial" />
 </navigation>

@@ -70,7 +70,7 @@ public class UserProfileFragment extends Fragment {
         });
 
         // Navigate to Requests List when Requests Button is clicked
-        binding.requestsButton.setOnClickListener(v -> {
+        binding.viewRequestsButton.setOnClickListener(v -> {
             Bundle args = new Bundle();
             args.putString("buttonClicked", "requests");  // Add an argument indicating which button was clicked
 
@@ -108,6 +108,9 @@ public class UserProfileFragment extends Fragment {
         followHandler.getFollowCount(user.getID(), FollowHandler.FollowType.Following,
                 amount -> binding.followingButton.setText(getString(R.string.following_count, amount)));
 
+        followHandler.getRequestCount(amount ->
+                binding.viewRequestsButton.setText(getString(R.string.requests_count, amount)));
+
         binding.username.setText(user.getUsername());
 
         // Set up mood events manager
@@ -137,6 +140,14 @@ public class UserProfileFragment extends Fragment {
                 requireActivity()
         );
         binding.listviewMoodEventList.setAdapter(moodEventAdapter);
+        binding.listviewMoodEventList.setOnItemClickListener(
+                (adapterView, view1, i, l) -> {
+                    UserProfileFragmentDirections.ActionUserProfileFragmentToMoodEventDetailsFragment toDetails =
+                            UserProfileFragmentDirections.actionUserProfileFragmentToMoodEventDetailsFragment();
+                    toDetails.setMoodEvent(moodEventAdapter.getItem(i));
+
+                    NavHostFragment.findNavController(UserProfileFragment.this).navigate(toDetails);
+                });
 
         boolean isCurrentUserProfile = user.getID().equals(user_manager.getCurrentUser().getID());
         moodEventAdapter.setIsCurrentUserProfile(isCurrentUserProfile);
@@ -146,7 +157,7 @@ public class UserProfileFragment extends Fragment {
         User loggedInUser = user_manager.getCurrentUser();
         if (user != loggedInUser) {
             binding.filterButton.setVisibility(View.GONE);
-            binding.requestsButton.setVisibility(View.INVISIBLE);
+            binding.viewRequestsButton.setVisibility(View.INVISIBLE);
 
             moodEventsLiveData = mood_event_controller.getPublicMoodEvents(null);
             if (moodEventsLiveData != null) {
@@ -162,6 +173,8 @@ public class UserProfileFragment extends Fragment {
 
                 } else {
                     moodEventAdapter.setBlurText(true);
+                    // Don't allow it to be clickable
+                    binding.listviewMoodEventList.setOnItemClickListener(null);
                     binding.blurOverlay.setVisibility(View.VISIBLE);
                     binding.unfollowButton.setVisibility(View.GONE);
                     binding.requestButton.setVisibility(View.VISIBLE);
@@ -214,16 +227,10 @@ public class UserProfileFragment extends Fragment {
 
         } else {
             moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
+            binding.logoutButton.setVisibility(View.VISIBLE);
+            binding.logoutButton.setOnClickListener(v -> user_manager.logout(this));
             if (moodEventsLiveData != null) {
                 getMoodEventFromDB();
-                binding.listviewMoodEventList.setOnItemClickListener(
-                        (adapterView, view1, i, l) -> {
-                            UserProfileFragmentDirections.ActionUserProfileFragmentToMoodEventDetailsFragment toDetails =
-                                    UserProfileFragmentDirections.actionUserProfileFragmentToMoodEventDetailsFragment();
-                            toDetails.setMoodEvent(moodEventAdapter.getItem(i));
-
-                            NavHostFragment.findNavController(UserProfileFragment.this).navigate(toDetails);
-                        });
             }
         }
     }

@@ -149,7 +149,7 @@ public class FollowHandler {
      *
      * @param callback  A callback to handle the result of the operation. The callback provides a list of user IDs.
      */
-    public void getRequestIDs(FollowIDCallback callback) {
+    private void getRequestIDs(FollowIDCallback callback) {
         Filter filter = Filter.equalTo("followeeID", currentUser.getID());
 
         requestDB.getDocuments(filter, FollowRequest.class, new FirestoreDB.DBCallback<>() {
@@ -208,6 +208,10 @@ public class FollowHandler {
                 callback.onFailure(new Exception(reason));
             }
         }));
+    }
+
+    public void getRequestCount(FollowCountCallback callback) {
+        getRequestIDs(ids -> callback.result(ids.size()));
     }
 
     /**
