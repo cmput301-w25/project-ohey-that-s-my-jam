@@ -57,7 +57,7 @@ public class FollowHandler {
     /**
      * Checks if a follow request has already been sent by the current user to a target user.
      *
-     * @param targetUserID The ID of the user receiving the request.
+     * @param followeeID The ID of the user receiving the request.
      * @param callback     A callback to handle the result (true if request exists, false otherwise).
      */
     public void hasFollowRequestBeenSent(String followeeID, Consumer<Boolean> callback) {

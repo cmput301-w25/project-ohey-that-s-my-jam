@@ -173,12 +173,22 @@ public class UserProfileFragment extends Fragment {
             followHandler.hasFollowRequestBeenSent(user.getID(), requestExists -> {
                 if (requestExists) {
                     // Set button to "Requested" and make it unclickable
-                    binding.requestButton.setText("Requested");
+                    binding.requestButton.setText("REQUESTED");
                     binding.requestButton.setEnabled(false); // Disable clicks
                     binding.requestButton.setAlpha(0.5f); // Make it look disabled
-                    binding.requestButton.setVisibility(View.VISIBLE); // Show the button
+                    binding.requestButton.setVisibility(View.VISIBLE);
                 } else {
-                    binding.requestButton.setVisibility(View.VISIBLE); // Show if not sent
+                    // Check if already following
+                    followHandler.isFollowing(user.getID(), isFollowing -> {
+                        if (isFollowing) {
+                            binding.requestButton.setVisibility(View.GONE);
+                        } else {
+                            // Show regular follow request button
+                            binding.requestButton.setEnabled(true);
+                            binding.requestButton.setAlpha(1.0f);
+
+                        }
+                    });
                 }
             });
 
