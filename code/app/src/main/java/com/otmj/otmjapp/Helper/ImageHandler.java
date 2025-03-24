@@ -137,6 +137,19 @@ public class ImageHandler {
                 .into(imageView);
     }
 
+    /**
+     * Loads an image into a circular ImageView using Glide.
+     *
+     * @param context   The context from which this method is called.
+     * @param imageUrl  The URL of the image to load.
+     * @param imageView The ImageView where the circular image will be displayed.
+     */
+    public static void loadCircularImage(Context context, String imageUrl, ImageView imageView) {
+        Glide.with(context)
+                .load(imageUrl)
+                .apply(RequestOptions.circleCropTransform())
+                .into(imageView);
+    }
 
     /**
      * Retrieves the file size of a given image from its Uri.

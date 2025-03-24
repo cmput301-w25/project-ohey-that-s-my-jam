@@ -34,15 +34,11 @@ import java.util.ArrayList;
 
 
 public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
-//    public TimelineMoodEventAdapter(@NonNull Context context, @NonNull ArrayList<MoodEvent> objects) {
-//        super(context,0, objects);
-//    }
 private final Activity activity;
 public TimelineMoodEventAdapter(@NonNull Activity activity, @NonNull ArrayList<MoodEvent> objects) {
     super(activity, 0, objects);
     this.activity = activity;
 }
-
 
     @NonNull
     @Override
@@ -55,9 +51,19 @@ public TimelineMoodEventAdapter(@NonNull Activity activity, @NonNull ArrayList<M
         MoodEvent m = getItem(position);
         assert m != null;
 
-        if(null != m.getUser()) {
+        if (m.getUser() != null) {
             TextView usernameText = view.findViewById(R.id.timeline_mood_event_username);
             setMoodEventHeaderText(usernameText, m);
+
+            ImageView profilePic = view.findViewById(R.id.timeline_mood_event_profile_pic);
+
+            String profileImageUrl = m.getUser().getProfilePictureLink(); // Make sure this returns a proper URL
+
+            if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                ImageHandler.loadCircularImage(getContext(), profileImageUrl, profilePic);
+            } else {
+                profilePic.setImageResource(R.drawable.profile_placeholder); // fallback default image
+            }
         }
 
         TextView description = view.findViewById(R.id.timeline_mood_event_desc);
