@@ -5,13 +5,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.otmj.otmjapp.Adapters.UserProfilePageMoodEventAdapter;
 import com.otmj.otmjapp.Helper.FilterOptions;
@@ -26,7 +26,6 @@ import com.otmj.otmjapp.databinding.MyProfileBinding;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 public class UserProfileFragment extends Fragment {
@@ -146,10 +145,8 @@ public class UserProfileFragment extends Fragment {
 
         User loggedInUser = user_manager.getCurrentUser();
         if (user != loggedInUser) {
-            // For now, disable all views
             binding.filterButton.setVisibility(View.GONE);
-            binding.recentEventsTitle.setVisibility(View.VISIBLE);
-            binding.listviewMoodEventList.setVisibility(View.VISIBLE);
+            binding.requestsButton.setVisibility(View.INVISIBLE);
 
             moodEventsLiveData = mood_event_controller.getPublicMoodEvents(null);
             if (moodEventsLiveData != null) {
@@ -185,7 +182,7 @@ public class UserProfileFragment extends Fragment {
             followHandler.hasFollowRequestBeenSent(user.getID(), requestExists -> {
                 if (requestExists) {
                     // Set button to "Requested" and make it unclickable
-                    binding.requestButton.setText("REQUESTED");
+                    binding.requestButton.setText(R.string.requested_text);
                     binding.requestButton.setEnabled(false); // Disable clicks
                     binding.requestButton.setAlpha(0.5f); // Make it look disabled
                     binding.requestButton.setVisibility(View.VISIBLE);
@@ -209,7 +206,7 @@ public class UserProfileFragment extends Fragment {
                 Log.e("UserProfileFragment", "user.getID() =" + user.getID());
 
                 // Set button to "Requested" and make it unclickable
-                binding.requestButton.setText("REQUESTED");
+                binding.requestButton.setText(R.string.requested_text);
                 binding.requestButton.setEnabled(false); // Disable clicks
                 binding.requestButton.setAlpha(0.5f); // Make it look disabled
                 binding.requestButton.setVisibility(View.VISIBLE); // Show the button
@@ -219,6 +216,14 @@ public class UserProfileFragment extends Fragment {
             moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
             if (moodEventsLiveData != null) {
                 getMoodEventFromDB();
+                binding.listviewMoodEventList.setOnItemClickListener(
+                        (adapterView, view1, i, l) -> {
+                            UserProfileFragmentDirections.ActionUserProfileFragmentToMoodEventDetailsFragment toDetails =
+                                    UserProfileFragmentDirections.actionUserProfileFragmentToMoodEventDetailsFragment();
+                            toDetails.setMoodEvent(moodEventAdapter.getItem(i));
+
+                            NavHostFragment.findNavController(UserProfileFragment.this).navigate(toDetails);
+                        });
             }
         }
     }
