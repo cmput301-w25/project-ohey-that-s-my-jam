@@ -189,6 +189,8 @@ public class MoodEventAddEditTest {
         MockPublicMoodEvent(userManager);
         SystemClock.sleep(5000);
 
+        onView(withId(R.id.timeline_mood_event_username)).perform(click());
+
         // Fetch data
         FirebaseFirestore.getInstance()
                 .collection("mood_events")
@@ -206,8 +208,8 @@ public class MoodEventAddEditTest {
 
         // Check if data is consistent with actual data
         SystemClock.sleep(5000); // Extra wait
-        onView(withId(R.id.timeline_mood_event_username)).check(matches(withText("Tester feels Happy 😊 while alone")));
-        onView(withId(R.id.timeline_mood_event_desc)).check(matches(withText("Got ice Cream!")));
+        onView(withId(R.id.details_emotion_and_social_situation)).check(matches(withText("Tester feels Happy 😊 while alone")));
+        onView(withId(R.id.details_reason_why)).check(matches(withText("Got ice Cream!")));
     }
 
 
