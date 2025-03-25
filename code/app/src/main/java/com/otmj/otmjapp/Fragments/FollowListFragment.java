@@ -8,8 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.otmj.otmjapp.Adapters.FollowersListViewAdapter;
 import com.otmj.otmjapp.Adapters.RequestsListViewAdapter;
@@ -141,10 +144,6 @@ public class FollowListFragment extends Fragment {
                 // Log the button click event for following
                 Log.d("FollowListFragment", "peopleYouMayKnow button clicked");
 
-                // Log the button click event for "People You May Know"
-                Log.d("FollowersListFragment", "People You May Know button clicked");
-
-
                 // Fetch users the current user is not following
                 followHandler.fetchNotFollowingUsers(new FollowHandler.FollowCallback() {
                     @Override
@@ -160,7 +159,6 @@ public class FollowListFragment extends Fragment {
                     public void onFailure(Exception e) {
                         // Log the error if fetching fails
                         Log.e("FollowListFragment", "Error fetching following", e);
-                        // Optionally, show an error message
                     }
                 });
             } else if("requests".equals(buttonClicked)) {
@@ -195,11 +193,17 @@ public class FollowListFragment extends Fragment {
         originalList = followList; // Save the original list
 
         ListView listView = rootView.findViewById(R.id.user_list_view);
+        listView.setOnItemClickListener((adapterView, view, i, l) -> {
+            FollowListFragmentDirections.ActionFollowersListFragmentToUserProfileFragment toUserProfile =
+                    FollowListFragmentDirections.actionFollowersListFragmentToUserProfileFragment();
+            toUserProfile.setUser(followList.get(i));
+
+            NavHostFragment.findNavController(FollowListFragment.this).navigate(toUserProfile);
+        });
 
         // Populate the list
         FollowersListViewAdapter adapter = new FollowersListViewAdapter(getContext(), followList);
         listView.setAdapter(adapter);
-
     }
 
     private void setUpRequestsList(View rootView, ArrayList<User> requestList) {

@@ -6,6 +6,7 @@ import com.otmj.otmjapp.Models.FollowRequest;
 import com.otmj.otmjapp.Models.User;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /**
  * Manages follow requests and follow relationships between users.
@@ -52,6 +53,32 @@ public class FollowHandler {
         FollowRequest followRequest = new FollowRequest(currentUser.getID(), followerID);
         requestDB.addDocument(followRequest, null); // callback can be implemented later
     }
+
+    /**
+     * Checks if a follow request has already been sent by the current user to a target user.
+     *
+     * @param followeeID The ID of the user receiving the request.
+     * @param callback     A callback to handle the result (true if request exists, false otherwise).
+     */
+    public void hasFollowRequestBeenSent(String followeeID, Consumer<Boolean> callback) {
+        Filter filter = Filter.and(
+                Filter.equalTo("followerID", currentUser.getID()),
+                Filter.equalTo("followeeID", followeeID)
+        );
+
+        requestDB.getDocuments(filter, FollowRequest.class, new FirestoreDB.DBCallback<>() {
+            @Override
+            public void onSuccess(ArrayList<FollowRequest> result) {
+                callback.accept(!result.isEmpty()); // Returns true if any request exists
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                callback.accept(false); // If the query fails, assume no request was sent
+            }
+        });
+    }
+
 
     /**
      * Creates a 'follow' relationship between two users.
@@ -122,7 +149,7 @@ public class FollowHandler {
      *
      * @param callback  A callback to handle the result of the operation. The callback provides a list of user IDs.
      */
-    public void getRequestIDs(FollowIDCallback callback) {
+    private void getRequestIDs(FollowIDCallback callback) {
         Filter filter = Filter.equalTo("followeeID", currentUser.getID());
 
         requestDB.getDocuments(filter, FollowRequest.class, new FirestoreDB.DBCallback<>() {
@@ -184,6 +211,14 @@ public class FollowHandler {
     }
 
     /**
+     * Gets the number of user that have requested to follow the current user
+     * @param callback The callback to handle the result
+     */
+    public void getRequestCount(FollowCountCallback callback) {
+        getRequestIDs(ids -> callback.result(ids.size()));
+    }
+
+    /**
      * Gets the number of followers or following the user.
      *
      * @param followType either 'followers' or 'following'
@@ -212,7 +247,7 @@ public class FollowHandler {
     }
 
     /**
-     * Fetches all the users that the current user is NOT following
+     * Fetches all the users that the current user is NOT following, excluding the current user.
      *
      * @param callback      the callback to handle the result, passing the list of followers or an error
      */
@@ -225,15 +260,11 @@ public class FollowHandler {
                 fetchFollowing(currentUser.getID(), new FollowCallback() {
                     @Override
                     public void onSuccess(ArrayList<User> followingUsers) {
-                        ArrayList<String> followingIDs = new ArrayList<>();
-                        for (User user : followingUsers) {
-                            followingIDs.add(user.getID());
-                        }
-
-                        // Step 3: Filter out users that are in the following list
+                        // Step 3: Filter out users that are in the following list and the current user
                         ArrayList<User> notFollowingUsers = new ArrayList<>();
                         for (User user : allUsers) {
-                            if (!followingIDs.contains(user.getID()) && !user.getID().equals(currentUser.getID())) {
+                            // Exclude the current user and users the current user is following
+                            if (!user.equals(currentUser) && !followingUsers.contains(user)) {
                                 notFollowingUsers.add(user);
                             }
                         }
@@ -254,4 +285,60 @@ public class FollowHandler {
             }
         });
     }
+
+    /**
+     * Checks if the current user is following a specific user.
+     *
+     * @param targetUserID The ID of the user to check.
+     * @param callback A callback to receive the result (true if following, false otherwise).
+     */
+    public void isFollowing(String targetUserID, Consumer<Boolean> callback) {
+        Filter filter = Filter.and(
+                Filter.equalTo("followerID", currentUser.getID()),
+                Filter.equalTo("followeeID", targetUserID)
+        );
+
+        followDB.getDocuments(filter, Follow.class, new FirestoreDB.DBCallback<>() {
+            @Override
+            public void onSuccess(ArrayList<Follow> result) {
+                callback.accept(!result.isEmpty());
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                callback.accept(false); // fallback if query fails
+            }
+        });
+    }
+
+    /**
+     * Unfollows a user by removing the follow relationship from the database.
+     *
+     * @param followeeID The ID of the user to unfollow.
+     */
+    public void unfollowUser(String followeeID) {
+        // Define a filter to identify the follow relationship between the current user and the target user
+        Filter filter = Filter.and(
+                Filter.equalTo("followerID", currentUser.getID()),
+                Filter.equalTo("followeeID", followeeID)
+        );
+
+        // Get the follow relationship from the database
+        followDB.getDocuments(filter, Follow.class, new FirestoreDB.DBCallback<Follow>() {
+            @Override
+            public void onSuccess(ArrayList<Follow> result) {
+                if (!result.isEmpty()) {
+                    // If a follow relationship exists, remove it
+                    followDB.deleteDocument(result.get(0));
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // Handle any failure during the unfollow operation
+            }
+        });
+    }
+
+
 }

@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -38,6 +40,7 @@ import com.otmj.otmjapp.Adapters.CommentAdapter;
 import com.otmj.otmjapp.Helper.CommentHandler;
 import com.otmj.otmjapp.Helper.CustomImageSpan;
 import com.otmj.otmjapp.Helper.ImageHandler;
+import com.otmj.otmjapp.Helper.LocationHelper;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
@@ -46,6 +49,7 @@ import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.databinding.FragmentMoodEventDetailsBinding;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Displays the details of a MoodEvent (user information, timestamp, etc.)
@@ -91,14 +95,32 @@ public class MoodEventDetailsFragment extends Fragment {
         TextView eventLocationText = binding.detailsEventLocation;
         TextView detailsEmotionAndSocialSituation = binding.detailsEmotionAndSocialSituation;
         ListView commentsListView = binding.commentsListView;
+        Button unfollowButton = binding.detailsUnfollowButton;
 
         // Get the passed arguments using Safe Args
         MoodEventDetailsFragmentArgs args = MoodEventDetailsFragmentArgs.fromBundle(getArguments());
         MoodEvent moodEvent = args.getMoodEvent();
         assert moodEvent != null;
 
+        User loggedInUser = UserManager.getInstance().getCurrentUser(),
+                moodEventUser = moodEvent.getUser();
+
+        if (Objects.equals(loggedInUser, moodEventUser)) {
+            unfollowButton.setVisibility(View.GONE);
+        } else {
+            unfollowButton.setVisibility(View.VISIBLE);
+        }
+
+        String profileImageUrl = moodEvent.getUser().getProfilePictureLink(); // Make sure this returns a proper URL
+
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            ImageHandler.loadCircularImage(requireContext(), profileImageUrl, profileImage);
+        } else {
+            profileImage.setImageResource(R.drawable.profile_placeholder); // fallback default image
+        }
+
         // Set the username text
-        usernameText.setText(moodEvent.getUser().getUsername());
+        usernameText.setText(moodEventUser.getUsername());
 
         // Set timestamp text
         eventTimestampText.setText(moodEvent.getCreatedDate().toString());
@@ -128,12 +150,40 @@ public class MoodEventDetailsFragment extends Fragment {
         }
 
         // Set location if available
-        LinearLayout locationIconAndTextLayout = binding.locationIconAndTextLayout;
-        if (moodEvent.getLocation() != null ){
-            eventLocationText.setText(moodEvent.getLocation().toString());
+        if (moodEvent.getLocation() != null) {
+            eventLocationText.setVisibility(View.VISIBLE);
+
+            LocationHelper locationHelper = new LocationHelper(requireActivity());
+
+            locationHelper.getAddressFromLocation(moodEvent.getLocation().toLocation(), new LocationHelper.AddressCallback() {
+                @Override
+                public void onAddressResult(String country, String state, String city) {
+                    Log.d("Address", "Address: " + city + ", " + state + ", " + country);
+                    eventLocationText.setText(city + ", " + state + ", " + country);
+                }
+
+                @Override
+                public void onAddressError(String error) {
+                    Log.e("Address", "Error: " + error);
+                    eventLocationText.setText("Location unavailable");
+                }
+            });
+
         } else {
-            locationIconAndTextLayout.setVisibility(View.GONE);
+            eventLocationText.setVisibility(View.GONE);
         }
+
+        profileImage.setOnClickListener(v -> {
+            // Only view profile of other users
+            if (!Objects.equals(loggedInUser, moodEventUser)) {
+                MoodEventDetailsFragmentDirections.ActionMoodEventDetailsFragmentToUserProfileFragment showUserProfile =
+                        MoodEventDetailsFragmentDirections.actionMoodEventDetailsFragmentToUserProfileFragment();
+                showUserProfile.setUser(moodEvent.getUser());
+
+                NavHostFragment.findNavController(MoodEventDetailsFragment.this)
+                        .navigate(showUserProfile);
+            }
+        });
 
         // Initialize the CommentHandler
         CommentHandler commentHandler = new CommentHandler();

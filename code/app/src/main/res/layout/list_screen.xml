@@ -16,20 +16,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Added Title TextView inside the header -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="32dp">
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
         <TextView
             android:id="@+id/list_title"
-            android:layout_width="370dp"
-            android:layout_height="53dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingVertical="30dp"
             android:text="@string/temp_list_title"
             android:textAlignment="center"
             android:textColor="@android:color/black"
@@ -42,22 +34,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:queryHint="Search people..."
-        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/list_view_header"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"/>
-
-    <ListView
-        android:id="@+id/user_list_view"
-        android:layout_width="408dp"
-        android:layout_height="596dp"
-        android:nestedScrollingEnabled="false"
-        android:padding="20dp"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_view" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/no_followers_message"
@@ -67,8 +46,20 @@
         android:textSize="16sp"
         android:textColor="@android:color/black"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/user_list_view"
+        app:layout_constraintTop_toTopOf="@+id/user_list_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <ListView
+        android:id="@+id/user_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="72dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

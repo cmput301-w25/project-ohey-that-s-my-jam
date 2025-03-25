@@ -28,27 +28,34 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:animationCache="true"
-        app:itemIconSize="36dp"
-        app:itemIconTint="@color/black"
+        android:paddingTop="10dp"
         app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/for_you_bottom_nav_menu" >
+        style="@style/CustomBottomNavigationView"
+        app:itemIconSize="36dp"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:menu="@menu/for_you_bottom_nav_menu"
+        app:backgroundTint="@color/white">
+
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             style="@style/Widget.MaterialComponents.FloatingActionButton"
             android:id="@+id/add_mood_event_button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="0dp"
-            android:layout_marginBottom="30dp"
             android:clickable="true"
             android:contentDescription="@string/add_icon_desc"
             android:focusable="true"
+            android:elevation="0dp"
+            android:backgroundTint="#FFFFFF"
+            app:elevation="0dp"
             app:tint="@color/black"
-            app:backgroundTint="@color/white"
+            app:backgroundTint="@color/black"
             app:layout_anchor="@+id/bottom_navigation"
-            app:layout_anchorGravity="center"
-            app:srcCompat="@drawable/ic_add" />
+            app:srcCompat="@drawable/ic_add"
+            app:maxImageSize="30dp" />
+
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

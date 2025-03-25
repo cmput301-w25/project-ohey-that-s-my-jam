@@ -2,6 +2,7 @@ package com.otmj.otmjapp.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.BlurMaskFilter;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -21,6 +22,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.otmj.otmjapp.Fragments.MoodEventAddEditDialogFragment;
 import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.LocationHelper;
@@ -33,8 +36,24 @@ import org.w3c.dom.Text;
 import java.util.List;
 import java.util.Objects;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
+
 public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
+    private boolean blurText = false;
     private Activity activity;
+
+    private boolean isCurrentUserProfile = false;
+
+    public void setIsCurrentUserProfile(boolean isCurrentUserProfile) {
+        this.isCurrentUserProfile = isCurrentUserProfile;
+        notifyDataSetChanged();
+    }
+
+
+    public void setBlurText(boolean blur) {
+        this.blurText = blur;
+        notifyDataSetChanged();
+    }
 
     public UserProfilePageMoodEventAdapter(@NonNull Context context, int resource, @NonNull List<MoodEvent> objects, @NonNull Activity activity) {
         super(context, resource, objects);
@@ -66,7 +85,7 @@ public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
                 @Override
                 public void onAddressResult(String country, String state, String city) {
                     Log.d("Address", "Address: " + city + state + country);
-                    textView_location.setText("Location: "+ city + ", " + state + ", " + country);
+                    textView_location.setText(city + ", " + state + ", " + country);
                 }
                 @Override
                 public void onAddressError(String error) {
@@ -77,7 +96,6 @@ public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
             textView_location.setVisibility(View.GONE);
         }
         textview_emotionalState.setText(m.getEmotionalState().getDescription());
-        image_emoji.setImageResource(m.getEmotionalState().getEmoji());
         textView_date.setText(m.getCreatedDate().toString());
 
 
@@ -109,18 +127,70 @@ public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
             textView_reason.setVisibility(View.GONE);
         }
 
-        if (m.getImageLink() != null) {
-            moodEventImage.setVisibility(View.VISIBLE);
-            ImageHandler.loadImage(getContext(), m.getImageLink(), moodEventImage);
+        if (blurText) {
+            textView_reason.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            textView_reason.getPaint().setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.NORMAL));
+
+            textView_date.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            textView_date.getPaint().setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.NORMAL));
+
+            textview_emotionalState.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            textview_emotionalState.getPaint().setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.NORMAL));
+
+            textView_location.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            textView_location.getPaint().setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.NORMAL));
         } else {
-            moodEventImage.setVisibility(View.GONE);
+            textView_reason.setLayerType(View.LAYER_TYPE_NONE, null);
+            textView_reason.getPaint().setMaskFilter(null);
+
+            textView_date.setLayerType(View.LAYER_TYPE_NONE, null);
+            textView_date.getPaint().setMaskFilter(null);
+
+            textview_emotionalState.setLayerType(View.LAYER_TYPE_NONE, null);
+            textview_emotionalState.getPaint().setMaskFilter(null);
+
+            textView_location.setLayerType(View.LAYER_TYPE_NONE, null);
+            textView_location.getPaint().setMaskFilter(null);
+        }
+
+        if (blurText) {
+            // Blur mood image
+            if (m.getImageLink() != null) {
+                moodEventImage.setVisibility(View.VISIBLE);
+                ImageHandler.loadBlurredImage(getContext(), m.getImageLink(), moodEventImage, 25); // 25 is the blur radius
+            } else {
+                moodEventImage.setVisibility(View.GONE);
+            }
+
+            // Blur emoji too
+            Glide.with(getContext())
+                    .load(m.getEmotionalState().getEmoji())
+                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(20, 3)))
+                    .into(image_emoji);
+        } else {
+            // Load regular image
+            if (m.getImageLink() != null) {
+                moodEventImage.setVisibility(View.VISIBLE);
+                ImageHandler.loadImage(getContext(), m.getImageLink(), moodEventImage);
+            } else {
+                moodEventImage.setVisibility(View.GONE);
+            }
+
+            image_emoji.setImageResource(m.getEmotionalState().getEmoji());
         }
 
         ImageButton editButton = view.findViewById(R.id.my_mood_edit_button);
-        editButton.setOnClickListener(v -> {
-            MoodEventAddEditDialogFragment popup = MoodEventAddEditDialogFragment.newInstance(m);
-            popup.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "edit");
-        });
+
+        if (isCurrentUserProfile) {
+            editButton.setVisibility(View.VISIBLE);
+            editButton.setFocusable(false); // This is necessary for the list item to be clickable
+            editButton.setOnClickListener(v -> {
+                MoodEventAddEditDialogFragment popup = MoodEventAddEditDialogFragment.newInstance(m);
+                popup.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "edit");
+            });
+        } else {
+            editButton.setVisibility(View.GONE);
+        }
 
         return view;
     }

@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.otmj.otmjapp.Fragments.UserProfileFragment;
+import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Models.Comment;
 import com.otmj.otmjapp.R;
 
@@ -59,17 +60,10 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
         if (comment.getUser() != null
                 && comment.getUser().getProfilePictureLink() != null
                 && !comment.getUser().getProfilePictureLink().isEmpty()) {
-            Glide.with(context).load(comment.getUser().getProfilePictureLink()).into(profileImageView);
+            ImageHandler.loadCircularImage(context, comment.getUser().getProfilePictureLink(), profileImageView);
         } else {
             profileImageView.setImageResource(R.drawable.profile_placeholder); // A default profile picture
         }
-
-        // Make the username clickable
-        usernameTextView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, UserProfileFragment.class);
-            intent.putExtra("userId", comment.getUserId());  // Pass user ID to profile page
-            context.startActivity(intent);
-        });
 
         return convertView;
     }

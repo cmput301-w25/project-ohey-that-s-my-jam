@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.Filter;
 import com.otmj.otmjapp.Models.EmotionalState;
+import com.otmj.otmjapp.Models.MoodEvent;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,7 +23,8 @@ public class MoodHistoryFilter {
         createdDate,
         userID,
         emotionalState,
-        reason
+        privacy,
+        location
     }
 
     private Filter filter;
@@ -75,6 +77,20 @@ public class MoodHistoryFilter {
         return new MoodHistoryFilter(
             Filter.inArray(MoodEventFields.userID.name(), userIDs),
             new DBSortOption(MoodEventFields.createdDate.name(), true)
+        );
+    }
+
+    public static MoodHistoryFilter PublicMoodEvents() {
+        return new MoodHistoryFilter(
+                Filter.equalTo(MoodEventFields.privacy.name(), MoodEvent.Privacy.Public),
+                null
+        );
+    }
+
+    public static MoodHistoryFilter HasLocation() {
+        return new MoodHistoryFilter(
+                Filter.notEqualTo(MoodEventFields.location.name(), null),
+                null
         );
     }
 

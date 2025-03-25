@@ -33,6 +33,9 @@
             app:argType="com.otmj.otmjapp.Models.MoodEvent"
             app:nullable="true"
             android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_moodEventDetailsFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
     </fragment>
 
     <!-- User Profile Fragment -->
@@ -48,6 +51,17 @@
         <action
             android:id="@+id/action_userProfileFragment_to_followingListFragment"
             app:destination="@id/followersListFragment" />
+        <argument
+            android:name="user"
+            app:argType="com.otmj.otmjapp.Models.User"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_userProfileFragment_to_moodEventDetailsFragment"
+            app:destination="@id/moodEventDetailsFragment" />
+        <action
+            android:id="@+id/logoutFromApp"
+            app:destination="@id/initialActivity" />
     </fragment>
 
     <!-- Followers List Fragment -->
@@ -55,10 +69,19 @@
         android:id="@+id/followersListFragment"
         android:name="com.otmj.otmjapp.Fragments.FollowListFragment"
         android:label="fragment_followers_list"
-        tools:layout="@layout/list_screen" />
+        tools:layout="@layout/list_screen" >
+        <action
+            android:id="@+id/action_followersListFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mapsFragment"
         android:name="com.otmj.otmjapp.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps" />
+    <activity
+        android:id="@+id/initialActivity"
+        android:name="com.otmj.otmjapp.InitialActivity"
+        android:label="activity_initial"
+        tools:layout="@layout/activity_initial" />
 </navigation>

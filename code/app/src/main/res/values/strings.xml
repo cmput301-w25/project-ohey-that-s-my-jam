@@ -67,6 +67,7 @@
     <string name="ic_visibility_off_desc">Signals that the current user does not have permission to view recent events of another user</string>
     <string name="send_request_text">REQUEST</string>
     <string name="unfollow_text">UNFOLLOW</string>
+    <string name="logout_text">LOGOUT</string>
 
     <string name="confirm_request_text">CONFIRM</string>
     <string name="temp_list_title">LIST TITLE</string>
@@ -99,9 +100,10 @@
     <string name="mood_event_example_with_full_details">Feeling confuse 😊</string>
     <string name="users_profile_picture">User profile picture</string>
     <string name="add_music_fragment">Set the Tone</string>
-    <string name="search_music_hint">Find a song that matches your mood…</string>
+    <string name="search_music_hint">Search for a song…</string>
     <string name="reason_why_song_hint">Why does this song fit your mood?</string>
     <string name="save_button_text">Save</string>
+    <string name="song_title">%s by %s</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -116,5 +118,10 @@
     <string name="selected_image">Selected Image</string>
     <string name="remove_image">Remove Image</string>
     <string name="delete">DELETE</string>
+
+    <string name="follower_count">%1$d FOLLOWERS</string>
+    <string name="following_count">%1$d FOLLOWING</string>
+    <string name="requests_count">%1$d REQUESTS</string>
+    <string name="requested_text">REQUESTED</string>
 
 </resources>
