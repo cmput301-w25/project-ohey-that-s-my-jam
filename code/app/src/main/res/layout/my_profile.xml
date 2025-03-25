@@ -192,7 +192,7 @@
                 android:id="@+id/listview_moodEventList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="80dp"
+                android:layout_marginBottom="90dp"
                 android:clipToPadding="false"
                 android:fillViewport="true"
                 android:paddingStart="10dp"
