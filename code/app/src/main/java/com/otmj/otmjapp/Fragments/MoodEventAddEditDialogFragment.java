@@ -154,7 +154,6 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         addressTextView = view.findViewById(R.id.textview_address);
         selectedImageContainer = view.findViewById(R.id.image_container);
 
-        Button
 
         // using SwitchCompat makes the app crash when the 'addMoodEvent' button is clicked
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch privacySwitch = view.findViewById(R.id.privacy_switch);

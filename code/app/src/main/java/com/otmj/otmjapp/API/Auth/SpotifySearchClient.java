@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import com.otmj.otmjapp.API.Models.Track;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,27 +18,20 @@ public class SpotifySearchClient {
         void onFailure(Throwable t);
     }
 
-    private static final SpotifySearchClient instance = new SpotifySearchClient();
-    private final SpotifySearchService client;
-    private ArrayList<Track> results;
+    private static final Retrofit retrofit =  new Retrofit.Builder()
+            .baseUrl("https://api.spotify.com/v1/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+    private static final SpotifySearchService service = retrofit.create(SpotifySearchService.class);
 
-    private SpotifySearchClient() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.spotify.com/v1/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        client = retrofit.create(SpotifySearchService.class);
-    }
-
-    public void getSearchResults(String query, SpotifySearchClientListener listener) {
-        Call<ArrayList<Track>> result = client.searchTracks(query, "track", 15);
+    public static void getSearchResults(String query, SpotifySearchClientListener listener) {
+        Call<ArrayList<Track>> result = service.searchTracks(query, "track", 15);
         result.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<ArrayList<Track>> call, @NonNull Response<ArrayList<Track>> response) {
                 if(response.isSuccessful()) {
                     ArrayList<Track> tracks = response.body();
-                    results.addAll(Objects.requireNonNull(tracks));
-                    listener.onSuccess(results);
+                    listener.onSuccess(tracks);
                 }
             }
 
@@ -48,17 +40,5 @@ public class SpotifySearchClient {
                 listener.onFailure(t);
             }
         });
-    }
-
-    public static SpotifySearchClient getInstance() {
-        return instance;
-    }
-
-    public ArrayList<Track> getResults() {
-        return results;
-    }
-
-    public void setResults(ArrayList<Track> results) {
-        this.results = results;
     }
 }
