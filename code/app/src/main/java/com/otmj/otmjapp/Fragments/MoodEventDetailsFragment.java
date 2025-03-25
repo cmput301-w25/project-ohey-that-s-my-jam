@@ -111,6 +111,14 @@ public class MoodEventDetailsFragment extends Fragment {
             unfollowButton.setVisibility(View.VISIBLE);
         }
 
+        String profileImageUrl = moodEvent.getUser().getProfilePictureLink(); // Make sure this returns a proper URL
+
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            ImageHandler.loadCircularImage(requireContext(), profileImageUrl, profileImage);
+        } else {
+            profileImage.setImageResource(R.drawable.profile_placeholder); // fallback default image
+        }
+
         // Set the username text
         usernameText.setText(moodEventUser.getUsername());
 
