@@ -68,22 +68,8 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            //LatLng sydney = new LatLng(-34, 151);
-            //googleMap.addMarker(new MarkerOptions().position(sydney)
-            //        .icon(bitmapDescriptorFromVector(getContext(),R.drawable.anger))
-            //        .title("This is testing"));
             gMap = googleMap;
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(53.52074251736023, -113.51185378614043), 14.0f));
-//            if (markerOptionsList != null) {
-//                for (MarkerOptions markerOption : markerOptionsList) {
-//                    Marker marker = gMap.addMarker(markerOption);
-//                    markerList.add(marker);
-//                }
-//                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerOptionsList.get(0).getPosition(), 15.0f));
-//            }
-//            else {
-//
-//            }
         }
     };
 
@@ -121,31 +107,6 @@ public class MapsFragment extends Fragment {
         //getting filter button
         ImageButton filterButton = view.findViewById(R.id.filter_button);
 
-
-        // dummy data
-        /*
-        MoodEvent moodEvent_1 = new MoodEvent(user.getUsername(), EmotionalState.Anger, SocialSituation.Alone, true, "This is Testing", null, MoodEvent.Privacy.Private);
-        moodEvent_1.setLocation(new SimpleLocation(53.5241094844906, -113.53191824188693));
-        MoodEvent moodEvent_2 = new MoodEvent(user.getUsername(), EmotionalState.Fear, SocialSituation.Alone, true, "This is Testing", null, MoodEvent.Privacy.Private);
-        moodEvent_2.setLocation(new SimpleLocation(53.52385159665378, -113.51762837701048));
-        MoodEvent moodEvent_3 = new MoodEvent(user.getUsername(), EmotionalState.Confuse, SocialSituation.Alone, true, "This is Testing", null, MoodEvent.Privacy.Private);
-        moodEvent_3.setLocation(new SimpleLocation(53.52157604769606, -113.51280554761468));
-        MoodEvent moodEvent_4 = new MoodEvent(user.getUsername(), EmotionalState.Disgust, SocialSituation.Alone, true, "This is Testing", null, MoodEvent.Privacy.Private);
-        moodEvent_4.setLocation(new SimpleLocation(53.5195127776507, -113.51747527131539));
-        MoodEvent moodEvent_5 = new MoodEvent(user.getUsername(), EmotionalState.Happy, SocialSituation.Alone, true, "This is Testing", null, MoodEvent.Privacy.Private);
-        moodEvent_5.setLocation(new SimpleLocation(53.527461883497445, -113.51262692430373));
-        MoodEvent moodEvent_6 = new MoodEvent(user.getUsername(), EmotionalState.Sad, SocialSituation.Alone, true, "This is Testing", null, MoodEvent.Privacy.Private);
-        moodEvent_6.setLocation(new SimpleLocation(53.51811849081261, -113.51177468252371));
-        moodEvents.add(moodEvent_1);
-        moodEvents.add(moodEvent_2);
-        moodEvents.add(moodEvent_3);
-        moodEvents.add(moodEvent_4);
-        moodEvents.add(moodEvent_5);
-        moodEvents.add(moodEvent_6);
-        */
-        // dummy data end
-
-//        markerOptionsList = createMapMarkers(moodEventList);
         getMyMoodEvents();
 
         SupportMapFragment mapFragment =
@@ -206,19 +167,22 @@ public class MapsFragment extends Fragment {
     private void getMyMoodEvents(){
         ArrayList<String> myId = new ArrayList<String>();
         myId.add(user.getID());
+        
         moodEventsManager = new MoodEventsManager(myId);
-        LiveData<ArrayList<MoodEvent>> myMoodEvents = moodEventsManager.getMyMoodEventsWithLocation();
-        myMoodEvents.observe(getViewLifecycleOwner(), moodEvents -> {
-           if (!moodEvents.isEmpty()) {
-               moodEventList = moodEvents;
-               updateMap();
-           }
+        moodEventsManager.getMyMoodEventsWithLocation().observe(
+            getViewLifecycleOwner(),
+            moodEvents -> {
+                if (!moodEvents.isEmpty()) {
+                    moodEventList = moodEvents;
+                    updateMap();
+                }
         });
     }
 
     private void getFollowingMoodEvents(ArrayList<String> userList){
         moodEventsManager = new MoodEventsManager(userList);
         LiveData<ArrayList<MoodEvent>> allMoodEvents = moodEventsManager.getMoodEventsWithLocation();
+        
         allMoodEvents.observe(getViewLifecycleOwner(), moodEvents -> {
             Log.d("mapFragment","moodevents: "+moodEvents.size());
             moodEventList.clear();
@@ -248,6 +212,7 @@ public class MapsFragment extends Fragment {
 
     private void getMostRecentMoodEvents(ArrayList<String> userList){
         moodEventsManager = new MoodEventsManager(userList);
+        
         LiveData<ArrayList<MoodEvent>> allMoodEvents = moodEventsManager.getMoodEventsWithLocation();
         allMoodEvents.observe(getViewLifecycleOwner(), moodEvents -> {
             Log.d("mapFragment","moodevents: "+moodEvents.size());
@@ -262,7 +227,7 @@ public class MapsFragment extends Fragment {
                     } else{
                         continue;
                     }
-                    // At this point, we're only adding a maximum of 3 mood events per user
+                    // At this point, we're only adding a maximum of 1 mood event per user
                     moodEventList.add(moodEvent);
                 }
                 getMoodEventsIn5km();
@@ -271,7 +236,7 @@ public class MapsFragment extends Fragment {
         });
     }
 
-    private void getCurrentLocation(){
+    private void getCurrentLocation() {
         LocationHelper locationHelper = new LocationHelper(requireActivity());
         locationHelper.getCurrentLocation(new LocationHelper.LocationCallback() {
             @Override
@@ -286,28 +251,29 @@ public class MapsFragment extends Fragment {
         });
     }
 
-    private void getMoodEventsIn5km(){
-        ArrayList<MoodEvent> deleteList = new ArrayList<MoodEvent>();
-        for (int i = 0; i < moodEventList.size(); i++){
-            if(currentLocation.distanceTo(moodEventList.get(i).getLocation().toLocation()) > 5000){
+    private void getMoodEventsIn5km() {
+        ArrayList<MoodEvent> deleteList = new ArrayList<>();
+        for (int i = 0; i < moodEventList.size(); i++) {
+            if(currentLocation.distanceTo(moodEventList.get(i).getLocation().toLocation()) > 5000) {
                 Log.d("mapfragment","moodEvent over: " + i);
                 deleteList.add(moodEventList.get(i));
             }
         }
-        for (MoodEvent m: deleteList) {
+        
+        for (MoodEvent m : deleteList) {
             moodEventList.remove(m);
         }
     }
 
 
-    private void updateMap(){
+    private void updateMap() {
         for (Marker marker : markerList) {
             marker.remove();
         }
         markerList.clear();
+        
         if(!moodEventList.isEmpty()) {
             ArrayList<MarkerOptions> markerOptions = createMapMarkers(moodEventList);
-
             for (MarkerOptions markerOption : markerOptions) {
                 Marker marker = gMap.addMarker(markerOption);
                 markerList.add(marker);
