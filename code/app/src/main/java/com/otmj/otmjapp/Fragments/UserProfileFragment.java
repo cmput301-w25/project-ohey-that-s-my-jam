@@ -26,6 +26,7 @@ import com.otmj.otmjapp.databinding.MyProfileBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class UserProfileFragment extends Fragment {
@@ -90,8 +91,6 @@ public class UserProfileFragment extends Fragment {
 
         final User user = tempUser; // Make user final AFTER deciding which user to use
 
-
-        // TODO: load the profile image if available in binding.profileImage
         // Load the profile image if available
         if (user.getProfilePictureLink() != null && !user.getProfilePictureLink().isEmpty()) {
             ImageHandler.loadCircularImage(requireContext(), user.getProfilePictureLink(), binding.profileImage);
@@ -153,7 +152,6 @@ public class UserProfileFragment extends Fragment {
         moodEventAdapter.setIsCurrentUserProfile(isCurrentUserProfile);
 
         // Show mood events
-
         User loggedInUser = user_manager.getCurrentUser();
         if (user != loggedInUser) {
             binding.filterButton.setVisibility(View.GONE);
@@ -170,7 +168,6 @@ public class UserProfileFragment extends Fragment {
                     binding.blurOverlay.setVisibility(View.GONE);
                     binding.requestButton.setVisibility(View.GONE);
                     binding.unfollowButton.setVisibility(View.VISIBLE);
-
                 } else {
                     moodEventAdapter.setBlurText(true);
                     // Don't allow it to be clickable
