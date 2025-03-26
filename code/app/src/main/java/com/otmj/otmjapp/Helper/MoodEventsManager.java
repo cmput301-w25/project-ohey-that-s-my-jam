@@ -175,7 +175,7 @@ public class MoodEventsManager {
 
         return getMoodEvents(filter);
     }
-
+  
     /**
      * Insert new mood event to database
      * @param moodEvent Mood event to insert

@@ -65,13 +65,6 @@ public class CommentAdapter extends ArrayAdapter<Comment> {
             profileImageView.setImageResource(R.drawable.profile_placeholder); // A default profile picture
         }
 
-        // Make the username clickable
-        usernameTextView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, UserProfileFragment.class);
-            intent.putExtra("userId", comment.getUserId());  // Pass user ID to profile page
-            context.startActivity(intent);
-        });
-
         return convertView;
     }
 }

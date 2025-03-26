@@ -26,6 +26,7 @@
     <string name="username_text">Username</string>
     <string name="followers">FOLLOWERS</string>
     <string name="following">FOLLOWING</string>
+    <string name="people_you_may_know">PEOPLE YOU MAY KNOW</string>
     <string name="requests">REQUESTS</string>
     <string name="recent_events">RECENT EVENTS</string>
     <string name="filter_desc">Initiates filter fragment for mood events list</string>
@@ -67,6 +68,7 @@
     <string name="ic_visibility_off_desc">Signals that the current user does not have permission to view recent events of another user</string>
     <string name="send_request_text">REQUEST</string>
     <string name="unfollow_text">UNFOLLOW</string>
+    <string name="logout_text">LOGOUT</string>
 
     <string name="confirm_request_text">CONFIRM</string>
     <string name="temp_list_title">LIST TITLE</string>
@@ -121,5 +123,6 @@
     <string name="follower_count">%1$d FOLLOWERS</string>
     <string name="following_count">%1$d FOLLOWING</string>
     <string name="requests_count">%1$d REQUESTS</string>
+    <string name="requested_text">REQUESTED</string>
 
 </resources>

@@ -44,6 +44,25 @@
                             android:textStyle="bold" />
 
                         <com.google.android.material.button.MaterialButton
+                            android:id="@+id/logoutButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:backgroundTint="@color/blue_nav_bar"
+                            android:paddingHorizontal="8dp"
+                            android:text="@string/logout_text"
+                            android:textColor="@color/white"
+                            android:visibility="gone"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="20dp"
+                            android:layout_marginStart="12dp"
+                            app:icon="@drawable/ic_logout"
+                            app:iconGravity="textStart"
+                            app:iconPadding="4dp"
+                            app:iconSize="30dp"
+                            app:iconTint="@color/white" />
+
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/unfollowButton"
                             android:layout_width="wrap_content"
                             android:layout_height="40dp"
@@ -123,7 +142,7 @@
                             app:cornerRadius="12dp" />
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/requests_button"
+                            android:id="@+id/view_requests_button"
                             android:layout_width="wrap_content"
                             android:layout_height="34dp"
                             android:layout_marginStart="6dp"
@@ -173,7 +192,7 @@
                 android:id="@+id/listview_moodEventList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="80dp"
+                android:layout_marginBottom="90dp"
                 android:clipToPadding="false"
                 android:fillViewport="true"
                 android:paddingStart="10dp"
