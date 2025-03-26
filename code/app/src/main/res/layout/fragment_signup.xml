@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginHorizontal="30dp"
-    tools:context=".Fragments.SignupFragment">
+    tools:context=".Fragments.SignupFragment"
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/imageView"

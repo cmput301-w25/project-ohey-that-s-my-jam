@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="#2B2D30"
+    android:background="@color/white"
     tools:context=".Fragments.TimelineFragment">
 
     <LinearLayout
@@ -13,10 +13,9 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -28,7 +27,9 @@
                 android:layout_marginEnd="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/filter_desc"
-                android:src="@drawable/ic_filter" />
+                android:src="@drawable/ic_filter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/recent_events_title"
@@ -38,28 +39,20 @@
                 android:text="@string/recent_events"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="141dp"
-                android:layout_height="match_parent">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="141dp"
-                    android:layout_height="match_parent">
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/filter_button"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageButton
                 android:id="@+id/peopleYouMayKnowButton"
                 android:layout_width="46dp"
                 android:layout_height="30dp"
-                android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
-                android:src="@drawable/group" />
-        </LinearLayout>
+                android:src="@drawable/group"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Recent Events List (RecyclerView) -->
         <ListView
