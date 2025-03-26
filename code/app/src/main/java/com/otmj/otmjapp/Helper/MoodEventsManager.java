@@ -167,6 +167,15 @@ public class MoodEventsManager {
         return getMoodEvents(filter);
     }
 
+    public LiveData<ArrayList<MoodEvent>> getMyMoodEventsWithLocation() {
+        // to get the moodevents with locations that current user has
+        MoodHistoryFilter filter = MoodHistoryFilter.Default(userIDs);
+        // That have a location
+        filter.addFilter(MoodHistoryFilter.HasLocation());
+
+        return getMoodEvents(filter);
+    }
+
     /**
      * Insert new mood event to database
      * @param moodEvent Mood event to insert
