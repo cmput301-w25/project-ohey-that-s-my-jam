@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/my_moodevents"
-        android:title="My MoodEvents" />
+        android:id="@+id/my_mood_events"
+        android:title="Only my mood events" />
     <item
-        android:id="@+id/following_moodevents"
-        android:title="Following MoodEvents" />
+        android:id="@+id/all_mood_events"
+        android:title="All mood events" />
     <item
-        android:id="@+id/following_users"
-        android:title="Following Users Moodevents" />
+        android:id="@+id/recent_mood_events"
+        android:title="Most recent mood events" />
 
 </menu>
