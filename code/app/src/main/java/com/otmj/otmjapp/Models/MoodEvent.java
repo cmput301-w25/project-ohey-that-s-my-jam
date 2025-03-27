@@ -115,6 +115,10 @@ public class MoodEvent extends DatabaseObject {
         return createdDate;
     }
 
+    public void setCreatedDate(Date date) {
+        this.createdDate = date;
+    }
+
     /**
      * Returns the emotional state of the user during the mood event.
      *
