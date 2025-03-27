@@ -55,10 +55,10 @@ public class UserManager {
     /**
      * Attempts to authenticate a user with the provided username and password.
      *
-     * @param enteredUsername the username entered by the user
-     * @param enteredPassword the password entered by the user
-     * @param callback        the callback provides an interface for handling
-     *                        authentication success and failure
+     * @param enteredUsername The username entered by the user.
+     * @param enteredPassword The password entered by the user.
+     * @param callback        The callback provides an interface for handling
+     *                        authentication success and failure.
      */
 
     public void login(String enteredUsername,
@@ -92,7 +92,7 @@ public class UserManager {
 
     /**
      * Adds a new user to the database and makes them the current user.
-     * @param user User to add
+     * @param user User to add.
      */
     public void signup(User user, @NonNull AuthenticationCallback callback) {
         // Check that username doesn't already exist
@@ -124,7 +124,7 @@ public class UserManager {
     }
 
     /**
-     * Logout current user and navigate back to welcome screen
+     * Logout current user and navigate back to welcome screen.
      */
     public void logout(Fragment page) {
         if (!(page instanceof UserProfileFragment)) {

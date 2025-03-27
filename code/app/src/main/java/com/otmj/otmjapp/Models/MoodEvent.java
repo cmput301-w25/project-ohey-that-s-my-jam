@@ -17,14 +17,14 @@ import java.util.Objects;
 public class MoodEvent extends DatabaseObject {
     private final String userID;
     /**
-     * Will be set when mood event is retrieved from database
-     * Should not be saved directly in database
+     * Will be set when mood event is retrieved from database.
+     * Should not be saved directly in database.
      */
     @Exclude // from database
     private User user = null;
     /**
      * ServerTimestamp annotation automatically grabs the date and time
-     * the model was added to the database
+     * the model was added to the database.
      */
     @ServerTimestamp
     private Date createdDate;
@@ -46,6 +46,10 @@ public class MoodEvent extends DatabaseObject {
     }
     private Privacy privacy;
 
+    /**
+     * Default constructor for a MoodEvent required for Firebase deserialization.
+     * Initializes the userID field as empty.
+     */
     MoodEvent() {
         userID = "";
     }
@@ -70,9 +74,15 @@ public class MoodEvent extends DatabaseObject {
     }
 
     /**
-     * Constructor used by database.
-     * @param emotionalState String representation of EmotionalState enum
-     * @param socialSituation String representation of SocialSituation enum
+     * Constructor for creating a new MoodEvent with the specified details.
+     *
+     * @param userID         The ID of the user associated with the mood event as a string.
+     * @param emotionalState The emotional state of the user as an enum.
+     * @param socialSituation The social situation olf the user during the event as a string.
+     * @param includeLocation Boolean value indicating whether to include location or not.
+     * @param reason         The reason behind the user's emotional state as a string.
+     * @param imageLink      A link to an image representing the event as a string.
+     * @param privacy        The privacy setting for the mood event as Private or Public.
      */
     public MoodEvent(String userID,
                      String emotionalState,
@@ -92,6 +102,12 @@ public class MoodEvent extends DatabaseObject {
         );
     }
 
+    /**
+     * Returns the date and time when the mood event was created.
+     * If the date is null, it returns the current date.
+     *
+     * @return The date and time the event was created as a Date object.
+     */
     public Date getCreatedDate() {
         if (createdDate == null) {
             createdDate = new Date();
@@ -99,6 +115,11 @@ public class MoodEvent extends DatabaseObject {
         return createdDate;
     }
 
+    /**
+     * Returns the emotional state of the user during the mood event.
+     *
+     * @return The emotional state of the user as an enum.
+     */
     public EmotionalState getEmotionalState() {
         return emotionalState;
     }

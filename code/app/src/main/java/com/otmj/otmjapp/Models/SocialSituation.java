@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 
 /**
- * Stores all the social situations accepted in the app
+ * Stores all the social situations accepted in the app.
  */
 public enum SocialSituation implements Serializable {
     Alone,
@@ -14,8 +14,9 @@ public enum SocialSituation implements Serializable {
     With_A_Crowd;
 
     /**
-     * Get enum value name without underscores
-     * @return Name without underscores
+     * Gets enum value name without underscores.
+     *
+     * @return Name without underscores.
      */
     @NonNull
     @Override
@@ -24,9 +25,10 @@ public enum SocialSituation implements Serializable {
     }
 
     /**
-     * Create SocialSituation from text
-     * @param text Raw text that might look like one of the social situations
-     * @return SocialSituation that closely resembles text (or Alone, by default)
+     * Creates SocialSituation from text.
+     *
+     * @param text Raw text that might look like one of the social situations.
+     * @return SocialSituation that closely resembles text (or Alone, by default).
      */
     public static SocialSituation fromText(String text) {
         for (SocialSituation s : values()) {

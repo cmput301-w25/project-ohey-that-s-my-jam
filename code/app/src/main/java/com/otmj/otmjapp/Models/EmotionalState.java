@@ -7,7 +7,10 @@ import java.io.Serializable;
 import java.security.InvalidParameterException;
 
 /**
- * Stores all the possible emotional states accepted in the app
+ * Stores all the possible emotional states accepted in the app.
+ *
+ * Represents an emotional state with an associated emoji and color.
+ * Each emotional state is linked to a drawable (emoji) and a color from 'colors.xml'.
  */
 public enum EmotionalState implements Serializable {
 
@@ -24,9 +27,10 @@ public enum EmotionalState implements Serializable {
     public final int color;
 
     /**
-     * Create an emotional state with given emoji text and colour
-     * @param emoji Emoji text of emotional state
-     * @param color Assigned colour for emotional state to ensure uniformity across the app
+     * Creates an emotional state with given emoji text and colour.
+     *
+     * @param emoji Emoji text of emotional state.
+     * @param color Assigned a colour for emotional state to ensure uniformity across the app.
      */
     EmotionalState(int emoji, int color) {
         this.emoji = emoji;
@@ -34,10 +38,11 @@ public enum EmotionalState implements Serializable {
     }
 
     /**
-     * Create emotional state from color. This is desired since all
-     * the colors are stored in the 'colors.xml` file
-     * @param color Color of emotional state (already specified in `colors.xml`)
-     * @return EmotionalState with the given color
+     * Creates an emotional state from color. This is desired since all
+     * the colors are stored in the 'colors.xml` file.
+     *
+     * @param color Color of emotional state (already specified in `colors.xml`).
+     * @return EmotionalState with the given color.
      */
     public static EmotionalState fromColor(int color) {
         for (EmotionalState e : values()) {
@@ -60,7 +65,8 @@ public enum EmotionalState implements Serializable {
     }
 
     /**
-     * Alias function for in-built name() function
+     * Alias function for in-built name() function.
+     *
      * @return String equivalent of enum
      */
     public String getDescription() {
@@ -68,13 +74,19 @@ public enum EmotionalState implements Serializable {
     }
 
     /**
-     * return emoji
-     * @return
+     * Gets the emoji resource ID for this emotional state.
+     *
+     * @return The drawable resource ID of the emoji.
      */
     public int getEmoji(){
         return this.emoji;
     }
 
+    /**
+     * Returns the uppercase string representation of this emotional state.
+     *
+     * @return The name of the emotional state in uppercase.
+     */
     @NonNull
     @Override
     public String toString() {
