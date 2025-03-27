@@ -205,7 +205,7 @@ public class UserProfilePageTest {
     }
 
     @Test
-    public void showUserProfilePage() throws InterruptedException {
+    public void viewMyProfilePageTest() throws InterruptedException {
         signupMockUser();
         UserManager userManager = UserManager.getInstance();
         Thread.sleep(2000);
@@ -220,7 +220,7 @@ public class UserProfilePageTest {
 
     // test for follower and following count display will be implement later
     @Test
-    public void showFollowingList() throws InterruptedException {
+    public void viewMyFollowingListTest() throws InterruptedException {
         signupMockUser();
         UserManager userManager = UserManager.getInstance();
         setUpFollowingList(userManager.getCurrentUser());
@@ -234,7 +234,7 @@ public class UserProfilePageTest {
     }
 
     @Test
-    public void showFollowersList() throws InterruptedException {
+    public void viewMyFollowersListTest() throws InterruptedException {
         signupMockUser();
         UserManager userManager = UserManager.getInstance();
         setUpFollowerList(userManager.getCurrentUser());
@@ -248,7 +248,7 @@ public class UserProfilePageTest {
     }
 
     @Test
-    public void showRequestsList() throws InterruptedException {
+    public void viewMyRequestsListTest() throws InterruptedException {
         signupMockUser();
         UserManager userManager = UserManager.getInstance();
         setUpRequestsList(userManager.getCurrentUser());
@@ -275,7 +275,7 @@ public class UserProfilePageTest {
     }
 
     @Test
-    public void deleteMoodEventTest() throws InterruptedException {
+    public void deleteMyMoodEventTest() throws InterruptedException {
         signupMockUser();
         UserManager userManager = UserManager.getInstance();
         addMockMoodEvent(userManager);
