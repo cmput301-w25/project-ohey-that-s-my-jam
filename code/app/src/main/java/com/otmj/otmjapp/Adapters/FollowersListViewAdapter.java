@@ -11,12 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-
 import com.otmj.otmjapp.Helper.CircleTransform;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
-import com.squareup.picasso.Picasso;  // Import Picasso
 
 public class FollowersListViewAdapter extends ArrayAdapter<User> {
 
@@ -24,7 +24,7 @@ public class FollowersListViewAdapter extends ArrayAdapter<User> {
         super(context, 0, followersList); // Pass context, layout resource, and the data
     }
 
-    @NonNull
+
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         // If the list is empty, return an empty view
