@@ -99,6 +99,10 @@ public class MoodEvent extends DatabaseObject {
         return createdDate;
     }
 
+    public void setCreatedDate(Date date) {
+        this.createdDate = date;
+    }
+
     public EmotionalState getEmotionalState() {
         return emotionalState;
     }
