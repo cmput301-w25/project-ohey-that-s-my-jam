@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.otmj.otmjapp.Fragments.MoodEventAddEditDialogFragment;
 import com.otmj.otmjapp.Helper.CommentHandler;
 import com.otmj.otmjapp.Helper.CustomImageSpan;
 import com.otmj.otmjapp.Helper.ImageHandler;
@@ -32,7 +33,20 @@ import com.otmj.otmjapp.R;
 
 import java.util.ArrayList;
 
-
+/**
+ * Adapter class for displaying mood events in the timeline.
+ *
+ * Each Mood Event includes:
+ * - The profile picture and username of the creator.
+ * - An emotional state with color-coded text and an associated emoji.
+ * - A reason why, if provided.
+ * - "Time Ago" it was posted
+ * - A User uploaded image, if provided.
+ * - The location, if available.
+ * - The comment count, updated dynamically.
+ *
+ * Essentially the bread and butter of the timeline.
+ */
 public class TimelineMoodEventAdapter extends ArrayAdapter<MoodEvent> {
 private final Activity activity;
 public TimelineMoodEventAdapter(@NonNull Activity activity, @NonNull ArrayList<MoodEvent> objects) {
@@ -136,6 +150,12 @@ public TimelineMoodEventAdapter(@NonNull Activity activity, @NonNull ArrayList<M
         return view;
     }
 
+    /**
+     * Puts together all the information for a single moodevent.
+     *
+     * @param textView The TextView to set the text on.
+     * @param event The mood event whose data will be used for the header.
+     */
     public void setMoodEventHeaderText(TextView textView, MoodEvent event) {
         String username = "username";
         if (event.getUser() != null) {
@@ -189,7 +209,11 @@ public TimelineMoodEventAdapter(@NonNull Activity activity, @NonNull ArrayList<M
         textView.setText(spannableString);
     }
 
-
+    /**
+     * Converts a timestamp into a "time ago" format for a mood event.
+     * @param timestamp The timestamp to convert.
+     * @return The formatted time ago string.
+     */
     public String getTimeAgo(long timestamp) {
         long now = System.currentTimeMillis();
         long diff = now - timestamp;

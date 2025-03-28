@@ -28,7 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
+/**
+ * Fragment for displaying the profile of a user,
+ * either passed through arguments or the currently logged-in user when the 'My Profile' button is clicked.
+ */
 public class UserProfileFragment extends Fragment {
     private MyProfileBinding binding;
     private UserProfilePageMoodEventAdapter moodEventAdapter;

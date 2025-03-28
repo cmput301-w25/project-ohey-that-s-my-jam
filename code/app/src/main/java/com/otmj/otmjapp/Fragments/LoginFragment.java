@@ -23,7 +23,7 @@ import com.otmj.otmjapp.databinding.FragmentLoginBinding;
 import java.util.ArrayList;
 
 /**
- * Handles the user login functionality (input validation and autnentication)
+ * Handles the user login functionality (input validation and authentication)
  * and navigation to the appropriate screen upon successful login.
  */
 public class LoginFragment extends Fragment {
@@ -102,6 +102,10 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    /**
+     *  Updates login button.
+     * @param loggingIn boolean which tells us if we are logging in or not.
+     */
     private void setButtonStatus(boolean loggingIn) {
         binding.loginButton.setEnabled(!loggingIn);
         binding.loginButton.setText(loggingIn

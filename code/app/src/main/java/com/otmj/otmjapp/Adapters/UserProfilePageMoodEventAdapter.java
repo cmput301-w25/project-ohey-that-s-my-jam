@@ -38,11 +38,19 @@ import java.util.Objects;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
+/**
+ * Adapter for displaying mood events in a user's profile page.
+ * -Populates a list view with mood events.
+ * -It also supports text blurring for privacy.
+ * -Allows the current user to edit their own mood events.
+ * -Colors the emotional state text according to the emotion.
+ */
 public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
     private boolean blurText = false;
     private Activity activity;
 
     private boolean isCurrentUserProfile = false;
+
 
     public void setIsCurrentUserProfile(boolean isCurrentUserProfile) {
         this.isCurrentUserProfile = isCurrentUserProfile;

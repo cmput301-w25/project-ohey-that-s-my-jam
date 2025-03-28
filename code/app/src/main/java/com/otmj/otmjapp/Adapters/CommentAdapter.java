@@ -19,6 +19,12 @@ import com.otmj.otmjapp.R;
 
 import java.util.List;
 
+/**
+ * Adapter for displaying the comments in a list.
+ *
+ * Shows each commenter's username, text, timestamp, and profile picture (if available).
+ * The profile picture is loaded using Glide and is displayed as a circular image.
+ */
 public class CommentAdapter extends ArrayAdapter<Comment> {
 
     private final Context context;

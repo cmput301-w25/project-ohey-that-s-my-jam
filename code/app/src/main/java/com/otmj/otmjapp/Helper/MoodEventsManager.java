@@ -42,6 +42,12 @@ public class MoodEventsManager {
     private final MutableLiveData<ArrayList<MoodEvent>> moodHistory;
     private MoodHistoryFilter lastFilter = null;
 
+    /**
+     * Constructor for MoodEventsManager.
+     * Initializes the manager with a list of user IDs and sets up a listener for database changes.
+     *
+     * @param userIDs List of user IDs whose mood events will be managed, can't be empty.
+     */
     public MoodEventsManager(List<String> userIDs) {
         assert !userIDs.isEmpty();
 
@@ -62,8 +68,8 @@ public class MoodEventsManager {
      * information before retrieving mood events.)
      *
      * @param filter    A filter specifies the condition for the mood event to be returned
-     *                  and how to sort it
-     * @return An observable that returns the filtered mood events
+     *                  and how to sort it.
+     * @return An observable that returns the filtered mood events.
      */
     private LiveData<ArrayList<MoodEvent>> getMoodEvents(@NonNull MoodHistoryFilter filter) {
         // We need the users associated with each mood event
@@ -129,7 +135,7 @@ public class MoodEventsManager {
     /**
      * Gets all public mood events from user(s)
      * @param customFilter A filter specifies the condition for the mood event to be returned
-     *                     and how to sort it
+     *                     and how to sort it.
      *
      * @return An observable value that returns all the mood events.
      * @see #getMoodEvents(MoodHistoryFilter)
@@ -157,6 +163,11 @@ public class MoodEventsManager {
                 : MoodHistoryFilter.Default(userIDs));
     }
 
+    /**
+     * Retrieves mood events that include a location.
+     *
+     * @return Array list of mood events with location.
+     */
     public LiveData<ArrayList<MoodEvent>> getMoodEventsWithLocation() {
         MoodHistoryFilter filter = MoodHistoryFilter.Default(userIDs);
         // Get only public mood events
@@ -167,6 +178,11 @@ public class MoodEventsManager {
         return getMoodEvents(filter);
     }
 
+    /**
+     * Retrieves mood events that include a location by current user.
+     *
+     * @return Array list of mood events with location of current user.
+     */
     public LiveData<ArrayList<MoodEvent>> getMyMoodEventsWithLocation() {
         // to get the moodevents with locations that current user has
         MoodHistoryFilter filter = MoodHistoryFilter.Default(userIDs);
@@ -177,7 +193,8 @@ public class MoodEventsManager {
     }
   
     /**
-     * Insert new mood event to database
+     * Insert new mood event to database.
+     *
      * @param moodEvent Mood event to insert
      */
     public void addMoodEvent(MoodEvent moodEvent) {
@@ -204,14 +221,18 @@ public class MoodEventsManager {
         });
     }
 
+    /**
+     * Updates an existing mood event in the database.
+     *
+     * @param moodEvent The mood event to update.
+     */
     public void updateMoodEvent(MoodEvent moodEvent) {
         db.updateDocument(moodEvent);
     }
 
     /**
-     * Downloads the image of a mood event to the user's local storage
+     * Downloads the image of a mood event to the user's local storage.
      * @param moodEvent A mood event retrieved from the database might have an image link property.
-     *                  So, we download the image specified by the link
      * @param downloadCallback Callback for handling success or failure of download operation
      */
     public void downloadMoodEventImage(MoodEvent moodEvent, ImageDownloadCallback downloadCallback) {

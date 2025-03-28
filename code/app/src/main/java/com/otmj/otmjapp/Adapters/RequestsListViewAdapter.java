@@ -22,8 +22,22 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter for displaying the follow requests of a user.
+ * Shows each user's profile picture, username, and an option to accept the request or swipe to delete.
+ */
 public class RequestsListViewAdapter extends ArrayAdapter<User> {
     private final FollowHandler followHandler;
+
+    /**
+     * Constructor for the RequestsListViewAdapter.
+     *
+     * Initializes the adapter with the context and the list of followers.
+     * Sets up the FollowHandler to manage the follow request operations.
+     *
+     * @param context The context in which the adapter is being used.
+     * @param followersList The list of user follow requests to display.
+     */
     public RequestsListViewAdapter(Context context, ArrayList<User> followersList) {
         super(context, 0, followersList); // Pass context, layout resource, and the data
         followHandler = new FollowHandler();

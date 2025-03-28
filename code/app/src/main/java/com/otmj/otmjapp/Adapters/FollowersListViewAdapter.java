@@ -18,6 +18,11 @@ import com.otmj.otmjapp.R;
 import java.util.ArrayList;
 import com.squareup.picasso.Picasso;  // Import Picasso
 
+/**
+ * Adapter for displaying a list of users used for the follow requests, following, followers, and people you may lists.
+ * Shows the user's profile image and username.
+ * The profile picture is loaded using Picasso.
+ */
 public class FollowersListViewAdapter extends ArrayAdapter<User> {
 
     public FollowersListViewAdapter(Context context, ArrayList<User> followersList) {

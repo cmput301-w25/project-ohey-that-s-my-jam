@@ -24,7 +24,7 @@ import com.otmj.otmjapp.databinding.FragmentSignupBinding;
 import java.util.ArrayList;
 
 /**
- * Handles the user signup functionality (input validation and user registration).
+ * The fragment that handles the user signup functionality (input validation and user registration).
  */
 public class SignupFragment extends Fragment {
 

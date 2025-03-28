@@ -31,6 +31,12 @@ public class MoodHistoryFilter {
     private final DBSortOption sortOption;
     private String queryText;
 
+    /**
+     * Constructs a MoodHistoryFilter with a specific filter and sorting option.
+     *
+     * @param filter     The Firestore filter criteria.
+     * @param sortOption The sorting option to be applied.
+     */
     private MoodHistoryFilter(Filter filter, DBSortOption sortOption) {
         this.filter = filter;
         this.sortOption = sortOption;
@@ -38,8 +44,9 @@ public class MoodHistoryFilter {
     }
 
     /**
-     * Specialized constructor for handling text search
-     * @param queryText Query to search for
+     * Specialized constructor for handling text search.
+     *
+     * @param queryText The search query text.
      */
     private MoodHistoryFilter(String queryText) {
         this.filter = null;
@@ -80,6 +87,11 @@ public class MoodHistoryFilter {
         );
     }
 
+    /**
+     * Filters for mood events that are public.
+     *
+     * @return A MoodHistoryFilter instance filtering for public events.
+     */
     public static MoodHistoryFilter PublicMoodEvents() {
         return new MoodHistoryFilter(
                 Filter.equalTo(MoodEventFields.privacy.name(), MoodEvent.Privacy.Public),
@@ -87,6 +99,11 @@ public class MoodHistoryFilter {
         );
     }
 
+    /**
+     * Filters for mood events that have locations.
+     *
+     * @return A MoodHistoryFilter instance filtering for events with a location.
+     */
     public static MoodHistoryFilter HasLocation() {
         return new MoodHistoryFilter(
                 Filter.notEqualTo(MoodEventFields.location.name(), null),
@@ -118,8 +135,8 @@ public class MoodHistoryFilter {
 
     /**
      * Get mood events that have an emotional state included in the list
-     * @param emotionalStates   List of desired emotional states
-     * @return                  Filter that specifies emotional states
+     * @param emotionalStates   List of desired emotional states.
+     * @return                  Filter that specifies emotional states.
      */
     public static MoodHistoryFilter OnlyEmotionalStates(List<EmotionalState> emotionalStates) {
         // Get names of emotional states
@@ -132,7 +149,11 @@ public class MoodHistoryFilter {
                 Filter.inArray(MoodEventFields.emotionalState.name(), emotionalStateNames),
                 null);
     }
-
+     /** Creates a filter for mood events that contains specific text query.
+      *
+      * @param text The text to search for.
+      * @return A MoodHistoryFilter instance filtering by text content.
+      * */
     public static MoodHistoryFilter ContainsText(String text) {
         return new MoodHistoryFilter(text);
     }

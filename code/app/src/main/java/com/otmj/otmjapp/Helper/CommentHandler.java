@@ -10,6 +10,10 @@ import com.otmj.otmjapp.Models.User;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Helper Class for comments
+ * Helps retrieve, add, and manage comments.
+ */
 public class CommentHandler {
 
     public interface CommentCountsCallback {
@@ -25,6 +29,7 @@ public class CommentHandler {
 
     /**
      * Retrieves comments from Firestore for a specific MoodEvent ID.
+     * @param callback A callback function that receives the list of comments.
      */
     private void getComments(String moodEventId, FirestoreDB.DBCallback<Comment> callback) {
         Filter filter = Filter.equalTo("moodEventId", moodEventId);
@@ -35,6 +40,9 @@ public class CommentHandler {
 
     /**
      * Get comments with the associated user details and send data to adapter
+     *
+     * @param commentsAdapter The adapter used to display the comments in the UI.
+     * @param moodEventId The ID of the MoodEvent for which comments are being retrieved.
      */
     public void loadComments(String moodEventId, CommentAdapter commentsAdapter) {
         getComments(moodEventId, new FirestoreDB.DBCallback<>() {
@@ -76,6 +84,11 @@ public class CommentHandler {
 
     /**
      * Saves a new comment to Firestore and ensures UI is updated only after successful save.
+     *
+     * @param commentText The text content of the comment.
+     * @param moodEventId The ID of the MoodEvent the comment belongs to.
+     * @param userId The ID of the user posting the comment.
+     * @param commentsAdapter The adapter that displays comments in the UI.
      */
     public void addComment(String commentText,
                            String moodEventId,
@@ -97,6 +110,12 @@ public class CommentHandler {
         });
     }
 
+    /**
+     * Gets the total number of comments for a specific MoodEvent.
+     *
+     * @param moodEventId The ID of the selected MoodEvent.
+     * @param callback Receives the comment count.
+     */
     public void getCommentCount(String moodEventId, CommentCountsCallback callback) {
         getComments(moodEventId, new FirestoreDB.DBCallback<>() {
             @Override

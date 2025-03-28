@@ -26,7 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Displays the timeline of mood events for the logged-in user and their followers.
+ * Fragment responsible for displaying the timeline
+ * of mood events for the logged-in user and their followers,
+ * allowing users to view and interact with posts related to their mood updates.
  */
 public class TimelineFragment extends Fragment {
     private FragmentTimelineBinding binding;
@@ -111,6 +113,13 @@ public class TimelineFragment extends Fragment {
         });
     }
 
+    /**
+     * Updates the list of mood events to only include a maximum of 3 mood events per user.
+     * Clears the existing list and processes adds each user's mood events to a map.
+     * If a user has less than 3 mood events, it adds them to the list.
+     * Notifies the adapter to refresh the displayed data.
+     * @param moodEvents List of Mood events.
+     */
     private void updateMoodEventsList(List<MoodEvent> moodEvents) {
         allMoodEvents.clear();
 

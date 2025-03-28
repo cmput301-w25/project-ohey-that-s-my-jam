@@ -7,7 +7,17 @@ import android.graphics.BitmapShader;
 import android.graphics.Shader;
 import com.squareup.picasso.Transformation;
 
+/**
+ * Used to crop profile images into circular shapes for display across the app.
+ * Typically used with the Picasso image loading library.
+ */
 public class CircleTransform implements Transformation {
+    /**
+     * Converts a given bitmap into a circular shape by cropping and masking it.
+     *
+     * @param source The original bitmap image.
+     * @return A new bitmap that's cropped into a circle.
+     */
     @Override
     public Bitmap transform(Bitmap source) {
         int size = Math.min(source.getWidth(), source.getHeight()); // Determine the size of the circle
@@ -38,6 +48,12 @@ public class CircleTransform implements Transformation {
         return bitmap; // Return the circular image
     }
 
+    /**
+     * Returns a unique key for this transformation.
+     * This is used for caching transformed images.
+     *
+     * @return The transformation key, which is "circle".
+     */
     @Override
     public String key() {
         return "circle"; // This is the key used to cache the transformation

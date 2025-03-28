@@ -202,7 +202,11 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 privacySwitch.setChecked(privacy == MoodEvent.Privacy.Public);
             }
         }
-
+        /**
+         * Real-time input validation for the 'Reason Why' field.
+         * If the user enters more than 200 characters, an error message is shown.
+         * If the input is valid (200 characters or fewer), the error message is cleared.
+         */
         // Input validation for "Reason Why"
         reasonWhyInputText.addTextChangedListener(new TextValidator(reasonWhyInputText, reasonWhyInputLayout) {
             @Override
@@ -324,6 +328,10 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         return dialog;
     }
 
+    /**
+     * Updates the moodevent.
+     * @param reason The user's 'reason why' as a string.
+     */
     private void setupMoodEvent(String reason) {
 
         User user = UserManager.getInstance().getCurrentUser();

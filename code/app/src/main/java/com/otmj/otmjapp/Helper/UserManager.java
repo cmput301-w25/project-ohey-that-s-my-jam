@@ -92,7 +92,9 @@ public class UserManager {
 
     /**
      * Adds a new user to the database and makes them the current user.
-     * @param user User to add.
+     *
+     * @param user The user to add.
+     * @param callback Callback to handle authentication results.
      */
     public void signup(User user, @NonNull AuthenticationCallback callback) {
         // Check that username doesn't already exist
@@ -124,7 +126,9 @@ public class UserManager {
     }
 
     /**
-     * Logout current user and navigate back to welcome screen.
+     * Logs out the current user and navigates back to the welcome screen.
+     *
+     * @param page The current fragment page from which to logout.
      */
     public void logout(Fragment page) {
         if (!(page instanceof UserProfileFragment)) {
@@ -135,6 +139,12 @@ public class UserManager {
         }
     }
 
+    /**
+     * Retrieves users based on a list of user IDs.
+     *
+     * @param userIDs List of user IDs to fetch.
+     * @param callback Callback to return the authenticated users or an error message.
+     */
     public void getUsers(List<String> userIDs, @NonNull AuthenticationCallback callback) {
         if (userIDs == null || userIDs.isEmpty()) {
             callback.onAuthenticated(new ArrayList<>()); // Return an empty list
@@ -163,7 +173,8 @@ public class UserManager {
     /**
      * Gets the corresponding user given their username.
      *
-     * @param username  The username of the user to retrieve
+     * @param username The username of the user to retrieve
+     * @param callback Callback to return the user or an error message.
      */
     public void getUser(String username, @NonNull AuthenticationCallback callback) {
         db.getDocuments(User.class, new FirestoreDB.DBCallback<>() {
@@ -187,10 +198,10 @@ public class UserManager {
     }
 
     /**
-     * Checks if a given user exists in DB
+     * Checks if a given user exists in the database by checking their username or email.
      *
-     * @param user            The user's details
-     * @param callback        Handles database response
+     * @param user The user's details to check.
+     * @param callback Callback to handle the result, returns true if user exists and false if not.
      */
     public void checkIfUserExists(User user, CheckCallback callback) {
         Filter byUsernameOrEmail = Filter.or(
@@ -213,16 +224,18 @@ public class UserManager {
     }
 
     /**
-     * Get currently logged in user
-     * @return A `User` object if there's a user that is logged in
+     * Gets the currently logged-in user.
+     *
+     * @return A `User` object representing the currently logged-in user.
      */
     public User getCurrentUser() {
         return currentUser;
     }
 
     /**
-     * Grabs all users in db
+     * Grabs all users from the database.
      *
+     * @param callback Callback to return the list of users or an error message.
      */
     public void getAllUsers(@NonNull AuthenticationCallback callback) {
         db.getDocuments(User.class, new FirestoreDB.DBCallback<>() {

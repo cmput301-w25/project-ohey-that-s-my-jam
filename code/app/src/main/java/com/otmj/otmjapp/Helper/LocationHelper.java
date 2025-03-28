@@ -19,6 +19,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Handles location-related tasks.
+ * -Converts format of locations.
+ */
 public class LocationHelper {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private final Activity activity;
@@ -38,6 +42,16 @@ public class LocationHelper {
         this.activity = activity;
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
     }
+
+    /**
+     *
+     * Gets the current location of the device.
+     * Checks if location permissions are granted.
+     * Uses FusedLocationProviderClient to fetch the location.
+     * Calls the callback with the location if successful, otherwise returns an error.
+     *
+     * @param callback Callback to handle the location result or error.
+     */
     public void getCurrentLocation(LocationCallback callback) {
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d("Location", "Location Permission denied");
@@ -54,6 +68,14 @@ public class LocationHelper {
                 .addOnFailureListener(e -> callback.onLocationError(e.getMessage()));
     }
 
+    /**
+     * Converts a location (longitude and latitude) into an address.
+     * - Uses Geocoder to get country, state, and city.
+     * - Calls the callback with the address if found, otherwise returns an error.
+     *
+     * @param location The longitude and latitude of a location as a string.
+     * @param callback Callback to handle the retrieved address or error.
+     */
     public void getAddressFromLocation(Location location, AddressCallback callback) {
         new Thread(() -> {
             Geocoder geocoder = new Geocoder(activity, Locale.getDefault());

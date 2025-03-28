@@ -25,7 +25,7 @@ import com.otmj.otmjapp.R;
 import java.util.ArrayList;
 
 /**
- * Displays a list of a user's follow requests, followers, or following users.
+ * Fragment that displays a list of a user's follow requests, followers, following users, or people you may know list.
  */
 public class FollowListFragment extends Fragment {
     private final FollowHandler followHandler;
@@ -178,9 +178,10 @@ public class FollowListFragment extends Fragment {
     }
 
     /**
-     * Sets up the {@link ListView} with the provided list of followers or users.
+     * Sets up the ListView with the provided list of followers or users.
+     * Used for followers, following, and people you may know.
      *
-     * @param rootView                 The root view of the fragment.
+     * @param rootView The root view of the fragment.
      * @param followList The list of followers or users that the current user is following.
      */
     // Set up the ListView with the followers data
@@ -199,6 +200,12 @@ public class FollowListFragment extends Fragment {
         listView.setAdapter(adapter);
     }
 
+    /**
+     * Sets up the ListView with the provided list of following requests.
+     *
+     * @param rootView The root view of the fragment.
+     * @param requestList The list of followers or users that the current user is following.
+     */
     private void setUpRequestsList(View rootView, ArrayList<User> requestList) {
         ListView listView = rootView.findViewById(R.id.user_list_view);
 
@@ -208,7 +215,12 @@ public class FollowListFragment extends Fragment {
         listView.setAdapter(adapter);
     }
 
-    // Method to filter the list based on search query
+    /**
+     * Sets up the updated filtered list based on the query from the user.
+     *
+     * @param query The searched text for the people you may know list.
+     * @param rootView The root view of the fragment.
+     */
     private void filterList(String query, View rootView) {
         ListView listView = rootView.findViewById(R.id.user_list_view);
         FollowersListViewAdapter listAdapter = (FollowersListViewAdapter) listView.getAdapter();

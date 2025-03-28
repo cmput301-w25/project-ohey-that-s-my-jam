@@ -24,6 +24,10 @@ import com.otmj.otmjapp.R;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Fragment that handles the filter option for the mood events on the timeline.
+ * A user can filter according to emotional state and or time frame.
+ */
 public class FilterFragment extends DialogFragment {
     public interface FilterListener {
         void filterOptions(FilterOptions filterOptions);
