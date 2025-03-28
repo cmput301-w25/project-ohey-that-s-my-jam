@@ -1,6 +1,4 @@
-package com.otmj.otmjapp.Helper;
-
-import com.otmj.otmjapp.Models.EmotionalState;
+package com.otmj.otmjapp.Models;
 
 import java.util.ArrayList;
 import java.util.List;

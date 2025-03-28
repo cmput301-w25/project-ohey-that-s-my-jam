@@ -17,7 +17,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 
-import com.otmj.otmjapp.Helper.FilterOptions;
+import com.otmj.otmjapp.Models.FilterOptions;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.R;
 

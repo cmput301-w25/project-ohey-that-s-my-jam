@@ -1,12 +1,10 @@
 package com.otmj.otmjapp;
 
-import static org.junit.Assert.*;
-
 import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.otmj.otmjapp.Helper.FirestoreCollections;
+import com.otmj.otmjapp.Models.FirestoreCollections;
 import com.otmj.otmjapp.Helper.FirestoreDB;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.User;
@@ -17,7 +15,6 @@ import org.junit.runner.RunWith;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
 @RunWith(AndroidJUnit4.class) // Use AndroidJUnit4 for instrumented tests
 public class UserManagerTest {

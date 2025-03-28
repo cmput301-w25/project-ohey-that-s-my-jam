@@ -9,6 +9,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.Filter;
 import com.otmj.otmjapp.Fragments.UserProfileFragment;
+import com.otmj.otmjapp.Models.FirestoreCollections;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 

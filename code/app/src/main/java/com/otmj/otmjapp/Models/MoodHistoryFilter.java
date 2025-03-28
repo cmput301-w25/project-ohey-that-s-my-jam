@@ -1,10 +1,8 @@
-package com.otmj.otmjapp.Helper;
+package com.otmj.otmjapp.Models;
 
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.Filter;
-import com.otmj.otmjapp.Models.EmotionalState;
-import com.otmj.otmjapp.Models.MoodEvent;
 
 import java.util.ArrayList;
 import java.util.Calendar;

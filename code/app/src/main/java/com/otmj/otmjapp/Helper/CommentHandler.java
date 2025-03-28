@@ -5,6 +5,8 @@ import android.util.Log;
 import com.google.firebase.firestore.Filter;
 import com.otmj.otmjapp.Adapters.CommentAdapter;
 import com.otmj.otmjapp.Models.Comment;
+import com.otmj.otmjapp.Models.DBSortOption;
+import com.otmj.otmjapp.Models.FirestoreCollections;
 import com.otmj.otmjapp.Models.User;
 
 import java.util.ArrayList;
