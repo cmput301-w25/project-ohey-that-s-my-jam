@@ -16,6 +16,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.otmj.otmjapp.API.Auth.SharedPreferencesHelper;
 import com.otmj.otmjapp.API.Auth.SpotifyAPIManager;
 import com.otmj.otmjapp.API.Models.Track;
+import com.otmj.otmjapp.Adapters.TrackListAdapter;
 import com.otmj.otmjapp.MainActivity;
 import com.otmj.otmjapp.R;
 
@@ -23,8 +24,9 @@ import java.util.ArrayList;
 
 public class AddEditMusicDialogFragment extends DialogFragment {
     private SpotifyAPIManager authManager;
+    private TrackListAdapter trackListAdapter;
 
-    public interface SearchResultsCallback {
+    public interface SearchResultsCallback { // maybe put this in its own file
         void onTracksFound(ArrayList<Track> tracks);
     }
 
@@ -49,7 +51,11 @@ public class AddEditMusicDialogFragment extends DialogFragment {
                             }
 
                             Log.d("AddEditMusicDialogFragment", "Searching for song: " + s);
-                            authManager.findSong(s, tracks -> Log.d("AddEditMusicDialogFragment", "Tracks found: " + tracks.size()));
+                            authManager.findSong(s, tracks -> {
+                                //ListView trackListView = view.findViewById(R.id.results_list);
+                                //trackListAdapter = new TrackListAdapter(requireActivity(), tracks);
+                                //trackListView.setAdapter(trackListAdapter);
+                            });
                             //search for song
                         } else {
                             Log.d("AddEditMusicDialogFragment", "Access token is invalid, logging in...");

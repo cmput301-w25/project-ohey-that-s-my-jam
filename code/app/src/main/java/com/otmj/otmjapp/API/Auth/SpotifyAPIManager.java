@@ -25,9 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -72,20 +70,19 @@ public class SpotifyAPIManager {
         Log.d("SpotifyAPIManager", "Request URI: " + tracksCall.request().url());
         Log.d("SpotifyAPIManager", "Auth header: " + tracksCall.request().header("Authorization"));
         Log.d("SpotifyAPIManager", "Searching for song: " + songTitle);
-        Log.d("SpotifyAPIManager", "Expiration time: " + prefsHelper.getExpirationDate());
+        Log.d("SpotifyAPIManager", "Expiration time: " + prefsHelper.getTokenExpirationTime());
         Log.d("SpotifyAPIManager", "URL: " + tracksCall.request().url().toString());
         tracksCall.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<TracksResponse> call, @NonNull Response<TracksResponse> response) {
                 if(response.isSuccessful() && null != response.body()) {
-                    Log.d("SpotifyAPIManager", "Response successful: " + response.body());
+                    Log.d("SpotifyAPIManager", "Response successful: " + response);
                     Log.d("SpotifyAPIManager", "Successfully retrieved tracks");
 
                     TracksResponse tracksResponse = response.body();
                     ArrayList<Track> tracks = tracksResponse.getTracks();
-                    Log.d("SpotifyAPIManager", "Tracks found: " + tracks.size());
 
-                    //searchCallback.onTracksFound(tracks);
+                    searchCallback.onTracksFound(tracks); //handle case where no tracks are found
                 } else {
                     try {
                         Log.d("SpotifyAPIManager", "Error getting tracks: " + response.errorBody().string());
@@ -184,8 +181,7 @@ public class SpotifyAPIManager {
                     prefsHelper.setRefreshToken(accessToken.getRefreshToken());
                     prefsHelper.setExpirationTime(
                             calculateExpirationTime(accessToken.getExpiresIn())
-                            // TODO: test date generation in visual studio to make sure it generates the right date aswell as adding the correct amount of time
-                            // TODO: test date/time comparison as well
+
                     );
                     prefsHelper.showAllPreferences();
 
@@ -235,9 +231,6 @@ public class SpotifyAPIManager {
                     );
 
                     Log.d("SpotifyAPIManager", "Successfully refreshed access token");
-                } else {
-                    Log.d("SpotifyAPIManager", "Null response body");
-                    //login(); // force login if token refresh fails
                 }
             }
 
@@ -254,31 +247,36 @@ public class SpotifyAPIManager {
      *
      * @return Whether or not the access token has expired.
      */
-    public boolean accessTokenExpired() {DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        if(prefsHelper.getExpirationDate().equals("undefined")) {
+    public boolean accessTokenExpired() {
+        if(prefsHelper.getTokenExpirationTime().equals("undefined")) {
             return false;
         } else {
-            ZoneId zoneId = ZoneId.systemDefault();
-            LocalDateTime expirationDateTime = LocalDateTime.parse(prefsHelper.getExpirationDate(), formatter);
-            LocalDateTime currentDateTime = LocalDateTime.now(zoneId);
+            LocalTime expirationTime = LocalTime.parse(prefsHelper.getTokenExpirationTime());
+            LocalTime currentTime = LocalTime.now();
 
-            return currentDateTime.isAfter(expirationDateTime);
+            return currentTime.isAfter(expirationTime); // there's still an issue with time generation. troubleshoot this
         }
     }
 
     /**
-     * Formats the expiration time of an access token.
+     * Calculates the expiration time of an access token.
      *
-     * @param accessTokenLifetime The lifetime of the access token in seconds.
+     * @param accessTokenLifetime The lifetime of the access token in milliseconds.
      *
-     * @return  A formatted string representing the expiration time of the access
+     * @return  The expiration time of the access token.
      */
     private String calculateExpirationTime(long accessTokenLifetime) { //TODO: calculate proper expiration time
-        Log.d("SpotifyAPIManager", "Access token lifetime: " + accessTokenLifetime + " seconds");
+        LocalTime currentTime = LocalTime.now();
 
-        return LocalDateTime.now()
-                .plusMinutes(accessTokenLifetime / 60)
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        Log.d("SpotifyAPIManager", "Current time: " + currentTime);
+
+        // subtract delay from expiration time to account for possible delay in processing time
+        int timeInMinutes = (int) (accessTokenLifetime / 60);
+        int delay = 5;
+        LocalTime expirationTime = currentTime.plusMinutes(timeInMinutes - delay);
+
+        Log.d("SpotifyAPIManager", "Expiration time: " + expirationTime);
+        return expirationTime.toString();
     }
 
     /**

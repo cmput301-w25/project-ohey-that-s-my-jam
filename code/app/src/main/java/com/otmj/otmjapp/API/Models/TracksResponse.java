@@ -5,15 +5,15 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class TracksResponse {
-    @SerializedName("items")
-    private ArrayList<Track> tracks;
+    @SerializedName("tracks")
+    private TracksContainer tracksContainer;
 
-    // default constructor required for field initialization
-    TracksResponse() {
-        this.tracks = null;
+    public static class TracksContainer {
+        @SerializedName("items")
+        private ArrayList<Track> tracks;
     }
 
     public ArrayList<Track> getTracks() {
-        return tracks;
+        return tracksContainer != null ? tracksContainer.tracks : new ArrayList<>();
     }
 }

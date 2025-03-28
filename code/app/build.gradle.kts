@@ -108,4 +108,6 @@ dependencies {
     implementation("io.github.cdimascio:java-dotenv:5.2.2") // Or the latest version
 
     implementation("jp.wasabeef:glide-transformations:4.3.0")
+
+    implementation("com.google.code.gson:gson:2.10.1")
 }

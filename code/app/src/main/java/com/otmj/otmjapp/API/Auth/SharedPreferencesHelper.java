@@ -78,12 +78,8 @@ public class SharedPreferencesHelper {
                 .apply();
     }
 
-    public String getExpirationDate() {
-        return preferences.getString(EXPIRATION_DATE_KEY, "undefined");
-    }
-
-    public long getTokenExpirationTime() {
-        return preferences.getLong(EXPIRATION_TIME_KEY, 0);
+    public String getTokenExpirationTime() {
+        return preferences.getString(EXPIRATION_TIME_KEY, "undefined");
     }
 
     public void setExpirationTime(String expirationTime) {

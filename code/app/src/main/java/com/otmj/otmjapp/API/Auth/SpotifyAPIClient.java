@@ -56,7 +56,7 @@ public class SpotifyAPIClient {
 
         return searchService.searchTracks(
                 "Bearer " + accessToken,
-                "track:" + query,  // putting 'track' before query ensures only tracks are returned
+                "" + query,  // putting 'track' before query ensures only tracks are returned
                 "track", 15);
     }
 

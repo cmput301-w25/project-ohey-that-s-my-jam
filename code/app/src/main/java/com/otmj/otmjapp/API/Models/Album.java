@@ -3,10 +3,11 @@ package com.otmj.otmjapp.API.Models;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Album {
     @SerializedName("images")
-    private final ArrayList<AlbumArt> images;
+    private final List<AlbumArt> images;
     @SerializedName("name")
     private final String title;
 
@@ -17,7 +18,7 @@ public class Album {
     }
 
     public ArrayList<AlbumArt> getImages() {
-        return images;
+        return (ArrayList<AlbumArt>) images;
     }
 
     public String getTitle() {
