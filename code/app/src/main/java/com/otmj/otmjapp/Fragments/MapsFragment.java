@@ -265,6 +265,7 @@ public class MapsFragment extends Fragment {
 
     private void getMoodEventsIn5km() {
         if (currentLocation == null) {
+            Toast.makeText(getContext(), "Unable to get location.", Toast.LENGTH_LONG).show();
             return;
         }
 
