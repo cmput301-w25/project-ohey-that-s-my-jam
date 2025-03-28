@@ -164,20 +164,35 @@ public class MapsFragment extends Fragment {
         });
     }
 
+    /**
+     * Given an ID to some drawable, get its bitmap description
+     * @param context   Context from which to get drawable
+     * @param resId     Drawable ID
+     * @return          A description that defines a bitmap image
+     */
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int resId) {
+        // Get drawable from id
         Drawable vectorDrawable = ContextCompat.getDrawable(context, resId);
         if (vectorDrawable == null) {
             return null;
         }
         vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        // Create a blank bitmap that matches the width and height of the drawable
         Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
                 vectorDrawable.getIntrinsicHeight(),
                 Bitmap.Config.ARGB_8888);
+        // Create canvas that will be used to draw on
         Canvas canvas = new Canvas(bitmap);
+        // Draw drawable onto bitmap using canvas
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
+    /**
+     * Create list of {@link MarkerOptions} from location, emoji and username of mood events
+     * @param moodEvents    List of {@link MoodEvent}
+     * @return              List of corresponding marker options from each mood event
+     */
     private ArrayList<MarkerOptions> createMapMarkers(ArrayList<MoodEvent> moodEvents) {
         if (moodEvents == null) {
             return new ArrayList<>();
@@ -193,6 +208,12 @@ public class MapsFragment extends Fragment {
         return markersList;
     }
 
+    /**
+     * Add noise to the location of a {@link MoodEvent} so that mood events in the same location
+     * will not be on top of each other
+     * @param moodEvent     Mood event
+     * @return              Noise-infused Latitude-Longitude of location of mood event
+     */
     @NonNull
     private static LatLng getNoisyPosition(MoodEvent moodEvent) {
         Random random = new Random();
@@ -202,18 +223,26 @@ public class MapsFragment extends Fragment {
         double noise1 = random.nextGaussian() / 2000,
                 noise2 = random.nextGaussian() / 2000;
 
+        // Add separate noise to lat and long
         return new LatLng(
                 moodEvent.getLocation().getLatitude() + noise1,
                 moodEvent.getLocation().getLongitude() + noise2
         );
     }
 
+    /**
+     * Get at most n mood events from each user
+     * @param userIDs       Users to get mood events from
+     * @param n             Maximum number of mood events to get for each user
+     * @param within5KM     Whether to filter out mood events that are more than 5 KM
+     */
     private void getNMostRecentMoodEvents(ArrayList<String> userIDs, int n, boolean within5KM) {
         if (userIDs.isEmpty() || n <= 0) {
             return;
         }
 
         moodEventsManager = new MoodEventsManager(userIDs);
+        // What to do after mood events with location are gotten:
         moodEventsManager.getMoodEventsWithLocation().observe(
                 getViewLifecycleOwner(),
                 moodEvents -> {
@@ -251,6 +280,9 @@ public class MapsFragment extends Fragment {
         );
     }
 
+    /**
+     * Get only current user's mood events
+     */
     private void getMyMoodEvents() {
         moodEventsManager = new MoodEventsManager(List.of(user.getID()));
         moodEventsManager.getMyMoodEventsWithLocation().observe(
@@ -263,30 +295,36 @@ public class MapsFragment extends Fragment {
         });
     }
 
+    /**
+     * Delete mood events that are farther than 5 KM from current location
+     */
     private void getMoodEventsIn5km() {
         if (currentLocation == null) {
             Toast.makeText(getContext(), "Unable to get location.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        ArrayList<MoodEvent> deleteList = new ArrayList<>();
-        for (int i = 0; i < moodEventList.size(); i++) {
+        int i = 0;
+        // Go through all mood events
+        while (i < moodEventList.size()) {
+            // If it's farther than 5*10^3 m away
             if (currentLocation.distanceTo(moodEventList.get(i).getLocation().toLocation()) > 5000) {
-                deleteList.add(moodEventList.get(i));
+                moodEventList.remove(i);
+            } else {
+                i++;
             }
         }
         
-        for (MoodEvent m : deleteList) {
-            moodEventList.remove(m);
-        }
-
-        // If there are no mood events that ar close, show message
+        // If there are no mood events that are close, show message
         if (moodEventList.isEmpty()) {
             Toast.makeText(getContext(), "No mood events nearby", Toast.LENGTH_LONG)
                     .show();
         }
     }
 
+    /**
+     * Get user's current location using {@link LocationHelper} utility class
+     */
     private void getCurrentLocation() {
         LocationHelper locationHelper = new LocationHelper(requireActivity());
         locationHelper.getCurrentLocation(new LocationHelper.LocationCallback() {
@@ -303,15 +341,22 @@ public class MapsFragment extends Fragment {
         });
     }
 
+    /**
+     * Move Google Map to centre at specified position
+     * @param position Position to centre at
+     */
     private void moveCameraTo(LatLng position) {
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 16.0f));
     }
 
+    /**
+     * Clear old marker and set new ones
+     */
     private void updateMap() {
         for (Marker marker : markerList) {
             marker.remove();
         }
-        currentMarkerIndex = 0;
+        currentMarkerIndex = 0; // Reset marker index
         markerList.clear();
 
         if (!moodEventList.isEmpty()) {
@@ -320,7 +365,7 @@ public class MapsFragment extends Fragment {
                 Marker marker = gMap.addMarker(markerOption);
                 markerList.add(marker);
             }
-            // Go to first emotional state
+            // Go to first mood event
             moveCameraTo(markerOptions.get(0).getPosition());
         }
     }
