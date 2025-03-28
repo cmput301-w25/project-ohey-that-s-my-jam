@@ -1,10 +1,9 @@
-package com.otmj.otmjapp;
+package com.otmj.otmjapp.Fragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -18,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,24 +34,24 @@ import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.User;
+import com.otmj.otmjapp.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-// TODO: Add marker for user's current location
-// TODO: Use user's current location
 public class MapsFragment extends Fragment {
 
     private User user;
     private MoodEventsManager moodEventsManager;
     private ArrayList<MoodEvent> moodEventList;
     private ArrayList<Marker> markerList;
+    private int currentMarkerIndex = 0;
     private GoogleMap gMap;
     private Location currentLocation;
 
-    private final OnMapReadyCallback callback = new OnMapReadyCallback() {
+    private final OnMapReadyCallback onMapReadyCallback = new OnMapReadyCallback() {
 
         /**
          * Manipulates the map once available.
@@ -86,6 +86,31 @@ public class MapsFragment extends Fragment {
         UserManager userManager = UserManager.getInstance();
         user = userManager.getCurrentUser();
 
+        // Get prev and next map buttons
+        ImageButton prevButton = view.findViewById(R.id.prev_marker_button),
+                nextButton = view.findViewById(R.id.next_marker_button);
+        prevButton.setOnClickListener(v -> {
+            if (!markerList.isEmpty()) {
+                currentMarkerIndex--;
+                // Wrap around
+                if (currentMarkerIndex < 0) {
+                    currentMarkerIndex = markerList.size() - 1;
+                }
+                moveCameraTo(markerList.get(currentMarkerIndex).getPosition());
+            }
+        });
+
+        nextButton.setOnClickListener(v -> {
+            if (!markerList.isEmpty()) {
+                currentMarkerIndex++;
+                // Wrap around
+                if (currentMarkerIndex >= markerList.size()) {
+                    currentMarkerIndex = 0;
+                }
+                moveCameraTo(markerList.get(currentMarkerIndex).getPosition());
+            }
+        });
+
         // Get filter button
         ImageButton filterButton = view.findViewById(R.id.filter_button);
         filterButton.setVisibility(View.GONE); // Hide it at first
@@ -115,7 +140,7 @@ public class MapsFragment extends Fragment {
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
-            mapFragment.getMapAsync(callback);
+            mapFragment.getMapAsync(onMapReadyCallback);
         }
 
         filterButton.setOnClickListener(v -> {
@@ -153,31 +178,34 @@ public class MapsFragment extends Fragment {
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    private ArrayList<MarkerOptions> createMapMarkers(ArrayList<MoodEvent> moodEvents){
-        if (moodEvents == null){
+    private ArrayList<MarkerOptions> createMapMarkers(ArrayList<MoodEvent> moodEvents) {
+        if (moodEvents == null) {
             return new ArrayList<>();
         }
 
         ArrayList<MarkerOptions> markersList = new ArrayList<>();
         for (int i = 0; i < moodEvents.size(); i++) {
-            Random random = new Random();
-
-            // Add noise from (-10^-3, 10^-3) to both lat and long,
-            // so that mood events in the same location will not overlap
-            double noise1 = random.nextGaussian() / 100,
-                    noise2 = random.nextGaussian() / 100;
-
-            LatLng latLng = new LatLng(
-                    moodEvents.get(i).getLocation().getLatitude() + noise1,
-                    moodEvents.get(i).getLocation().getLongitude() + noise2
-            );
-
             markersList.add(new MarkerOptions()
-                    .position(latLng)
+                    .position(getNoisyPosition(moodEvents.get(i)))
                     .icon(bitmapDescriptorFromVector(getContext(), moodEvents.get(i).getEmotionalState().getEmoji()))
                     .title(moodEvents.get(i).getUser().getUsername()));
         }
         return markersList;
+    }
+
+    @NonNull
+    private static LatLng getNoisyPosition(MoodEvent moodEvent) {
+        Random random = new Random();
+
+        // Add noise from (-2*2000, 2*2000) to both lat and long,
+        // so that mood events in the same location will not overlap
+        double noise1 = random.nextGaussian() / 2000,
+                noise2 = random.nextGaussian() / 2000;
+
+        return new LatLng(
+                moodEvent.getLocation().getLatitude() + noise1,
+                moodEvent.getLocation().getLongitude() + noise2
+        );
     }
 
     private void getNMostRecentMoodEvents(ArrayList<String> userIDs, int n, boolean within5KM) {
@@ -224,10 +252,7 @@ public class MapsFragment extends Fragment {
     }
 
     private void getMyMoodEvents() {
-        ArrayList<String> myId = new ArrayList<>();
-        myId.add(user.getID());
-        
-        moodEventsManager = new MoodEventsManager(myId);
+        moodEventsManager = new MoodEventsManager(List.of(user.getID()));
         moodEventsManager.getMyMoodEventsWithLocation().observe(
             getViewLifecycleOwner(),
             moodEvents -> {
@@ -253,6 +278,12 @@ public class MapsFragment extends Fragment {
         for (MoodEvent m : deleteList) {
             moodEventList.remove(m);
         }
+
+        // If there are no mood events that ar close, show message
+        if (moodEventList.isEmpty()) {
+            Toast.makeText(getContext(), "No mood events nearby", Toast.LENGTH_LONG)
+                    .show();
+        }
     }
 
     private void getCurrentLocation() {
@@ -261,10 +292,6 @@ public class MapsFragment extends Fragment {
             @Override
             public void onLocationResult(Location location) {
                 currentLocation = location;
-                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(location.getLatitude(), location.getLongitude()),
-                        16.0f)
-                );
                 Log.d("MapFragment", "I got the location");
             }
 
@@ -275,10 +302,15 @@ public class MapsFragment extends Fragment {
         });
     }
 
+    private void moveCameraTo(LatLng position) {
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 16.0f));
+    }
+
     private void updateMap() {
         for (Marker marker : markerList) {
             marker.remove();
         }
+        currentMarkerIndex = 0;
         markerList.clear();
 
         if (!moodEventList.isEmpty()) {
@@ -287,7 +319,8 @@ public class MapsFragment extends Fragment {
                 Marker marker = gMap.addMarker(markerOption);
                 markerList.add(marker);
             }
-            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerOptions.get(0).getPosition(), 16.0f));
+            // Go to first emotional state
+            moveCameraTo(markerOptions.get(0).getPosition());
         }
     }
 }
