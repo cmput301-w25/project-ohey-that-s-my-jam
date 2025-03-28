@@ -1,8 +1,6 @@
 package com.otmj.otmjapp.API.Auth;
 
-import com.otmj.otmjapp.API.Models.Track;
-
-import java.util.ArrayList;
+import com.otmj.otmjapp.API.Models.TracksResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -17,12 +15,11 @@ public interface SpotifySearchService {
      * Search for a track.
      *
      * @param accessToken The access token required for authorization.
-     * @param query The search query string.
-     *
+     * @param query       The search query string.
      * @return A Call object that represents a request for the search results.
      */
-    @GET("/search")
-    Call<ArrayList<Track>> searchTracks(
+    @GET("/v1/search")
+    Call<TracksResponse> searchTracks(
             @Header("Authorization") String accessToken,
             @Query("q") String query,
             @Query("type") String type,

@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
 
         SpotifyAPIManager authManager = new SpotifyAPIManager(this);
         authManager.getAccessToken(authCode);
-
     }
 
     private void initializeSharedPrefs() { //TODO: maybe move to SharedPreferencesHelper to make it singleton

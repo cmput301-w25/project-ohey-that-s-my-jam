@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import com.otmj.otmjapp.API.Models.AccessToken;
 import com.otmj.otmjapp.API.Models.RefreshToken;
 import com.otmj.otmjapp.API.Models.Track;
+import com.otmj.otmjapp.API.Models.TracksResponse;
 import com.otmj.otmjapp.Fragments.AddEditMusicDialogFragment;
 import com.otmj.otmjapp.MainActivity;
 
@@ -62,10 +63,11 @@ public class SpotifyAPIManager {
     }
 
     public void findSong(String songTitle, AddEditMusicDialogFragment.SearchResultsCallback searchCallback) {
-        Call<ArrayList<Track>> tracksCall = SpotifyAPIClient.getInstance().searchTracks(
+        Call<TracksResponse> tracksCall = SpotifyAPIClient.getInstance().searchTracks(//TODO: figure out to convert json object to array
                 prefsHelper.getAccessToken(),
                 songTitle
-        );
+        ); // convert json object 
+
         Log.d("SpotifyAPIManager", "Access token: " + prefsHelper.getAccessToken());
         Log.d("SpotifyAPIManager", "Request URI: " + tracksCall.request().url());
         Log.d("SpotifyAPIManager", "Auth header: " + tracksCall.request().header("Authorization"));
@@ -74,15 +76,16 @@ public class SpotifyAPIManager {
         Log.d("SpotifyAPIManager", "URL: " + tracksCall.request().url().toString());
         tracksCall.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<ArrayList<Track>> call, @NonNull Response<ArrayList<Track>> response) {
+            public void onResponse(@NonNull Call<TracksResponse> call, @NonNull Response<TracksResponse> response) {
                 if(response.isSuccessful() && null != response.body()) {
                     Log.d("SpotifyAPIManager", "Response successful: " + response.body());
                     Log.d("SpotifyAPIManager", "Successfully retrieved tracks");
 
-                    ArrayList<Track> tracks = response.body();
+                    TracksResponse tracksResponse = response.body();
+                    ArrayList<Track> tracks = tracksResponse.getTracks();
                     Log.d("SpotifyAPIManager", "Tracks found: " + tracks.size());
 
-                    searchCallback.onTracksFound(tracks);
+                    //searchCallback.onTracksFound(tracks);
                 } else {
                     try {
                         Log.d("SpotifyAPIManager", "Error getting tracks: " + response.errorBody().string());
@@ -93,7 +96,7 @@ public class SpotifyAPIManager {
             }
 
             @Override
-            public void onFailure(@NonNull Call<ArrayList<Track>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<TracksResponse> call, @NonNull Throwable t) {
                 Log.e("SpotifyAPIManager", "Error getting tracks: " + Objects.requireNonNull(t.getMessage()));
             }
         });
@@ -107,6 +110,7 @@ public class SpotifyAPIManager {
      * OAuth 2.0 authorization code grant flow with PKCE (Proof Key for Code Exchange).
      */
     public void login() { //TODO: research OAuth flow to better understand process, maybe change method signature for DI
+        Log.d("SpotifyAPIManager", "Auth flow started: " + MainActivity.authFlowStarted());
         if(!MainActivity.authFlowStarted()) {
             String codeChallenge = generateCodeChallenge();
             prefsHelper.saveCodeChallenge(codeChallenge);
@@ -128,12 +132,11 @@ public class SpotifyAPIManager {
             );
             Log.d("SpotifyAPIManager", "Authorization URL: " + authorizationUrl);
             Log.d("SpotifyAPIManager", "Code verifer 1: " + prefsHelper.getCodeVerifier());
-            Log.d("SpotifyAPIManager", "Auth flow started: " + MainActivity.authFlowStarted());
 
             MainActivity.setAuthFlowStarted(true);
             Uri uri = Uri.parse(authorizationUrl);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri); // research what an intent is
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); // research what this does
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // research what this does
 
             try {
                 Log.d("SpotifyAPIManager", "Activity address: " + activity.toString());
@@ -181,6 +184,8 @@ public class SpotifyAPIManager {
                     prefsHelper.setRefreshToken(accessToken.getRefreshToken());
                     prefsHelper.setExpirationTime(
                             calculateExpirationTime(accessToken.getExpiresIn())
+                            // TODO: test date generation in visual studio to make sure it generates the right date aswell as adding the correct amount of time
+                            // TODO: test date/time comparison as well
                     );
                     prefsHelper.showAllPreferences();
 
@@ -226,7 +231,7 @@ public class SpotifyAPIManager {
                     // update access token
                     prefsHelper.saveAccessToken(newToken.getAccessToken());
                     prefsHelper.setExpirationTime(
-                            calculateExpirationTime(newToken.getExpiresIn())
+                            calculateExpirationTime(newToken.getExpiresIn()) // date is not being saved
                     );
 
                     Log.d("SpotifyAPIManager", "Successfully refreshed access token");

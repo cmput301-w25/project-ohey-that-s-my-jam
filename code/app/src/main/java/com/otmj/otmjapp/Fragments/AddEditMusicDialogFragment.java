@@ -40,12 +40,12 @@ public class AddEditMusicDialogFragment extends DialogFragment {
                     public boolean onQueryTextSubmit(String s) {
                         authManager = new SpotifyAPIManager((MainActivity) requireActivity());
                         SharedPreferencesHelper prefsHelper = SharedPreferencesHelper.getInstance();
-                        prefsHelper.clear();
+
                         prefsHelper.showAllPreferences();
                         if(prefsHelper.accessTokenExists()) {
                             if(authManager.accessTokenExpired()) {
                                 Log.d("AddEditMusicDialogFragment", "Access token expired");
-                                //authManager.refreshAccessToken();
+                                authManager.refreshAccessToken();
                             }
 
                             Log.d("AddEditMusicDialogFragment", "Searching for song: " + s);
