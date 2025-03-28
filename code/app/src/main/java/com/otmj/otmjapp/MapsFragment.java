@@ -44,6 +44,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Fragment that deals with the Maps page and other location related functions.
+ */
 public class MapsFragment extends Fragment {
 
     private UserManager userManager;
@@ -136,6 +139,14 @@ public class MapsFragment extends Fragment {
         });
     }
 
+    /**
+     * Converts a vector drawable into a map marker.
+     *
+     * @param context The context to access resources.
+     * @param resId The resource ID of the vector drawable to be converted.
+     * @return `BitmapDescriptor` An object representing the vector drawable as a bitmap,
+     *         or `null` if the vector drawable cannot be retrieved.
+     */
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int resId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, resId);
         if (vectorDrawable == null) {
@@ -150,6 +161,13 @@ public class MapsFragment extends Fragment {
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
+    /**
+     * Creates a list of markers for each mood event to be displayed on a map.
+     * Each marker has a location, an emoji, and the username of the creator.
+     *
+     * @param moodEvents The list of mood events to create markers for
+     * @return A list of `MarkerOptions` objects representing the markers for the map
+     */
     private ArrayList<MarkerOptions> createMapMarkers(ArrayList<MoodEvent> moodEvents){
         if (moodEvents == null){
             return null;
@@ -251,6 +269,9 @@ public class MapsFragment extends Fragment {
         });
     }
 
+    /**
+     * Filters for mood events in a 5km radius on the map.
+     */
     private void getMoodEventsIn5km() {
         ArrayList<MoodEvent> deleteList = new ArrayList<>();
         for (int i = 0; i < moodEventList.size(); i++) {
