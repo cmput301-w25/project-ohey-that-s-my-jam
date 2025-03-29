@@ -42,21 +42,33 @@
         app:selectionRequired="false" />
 
     <SearchView
-        android:id="@+id/search_for_song"
+        android:id="@+id/search_song"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:queryHint="@string/search_music_hint" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/find_song_input_box"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:boxBackgroundMode="filled"
+        app:boxStrokeColor="@color/blue_nav_bar"
+        app:counterEnabled="false"
+        app:counterMaxLength="200"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
+        <ListView
+            android:id="@+id/search_results"
             android:layout_width="match_parent"
             android:layout_height="225dp"
             android:layout_marginTop="10dp"
             android:background="#F0F2F0"
+            android:choiceMode="singleChoice"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

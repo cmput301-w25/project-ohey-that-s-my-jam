@@ -25,7 +25,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -60,29 +62,27 @@ public class SpotifyAPIManager {
         prefsHelper = SharedPreferencesHelper.getInstance();
     }
 
-    public void findSong(String songTitle, AddEditMusicDialogFragment.SearchResultsCallback searchCallback) {
-        Call<TracksResponse> tracksCall = SpotifyAPIClient.getInstance().searchTracks(//TODO: figure out to convert json object to array
+    /**
+     * Searches for a song using the the provide search query by making a call to Spotify's search
+     * endpoint.
+     *
+     * @param searchQuery    The search query used to find the song.
+     * @param searchCallback A callback to handle the list of songs found.
+     */
+    public void findSong(String searchQuery, AddEditMusicDialogFragment.SearchResultsCallback searchCallback) {
+        Call<TracksResponse> tracksCall = SpotifyAPIClient.getInstance().searchTracks(
                 prefsHelper.getAccessToken(),
-                songTitle
-        ); // convert json object 
+                searchQuery
+        );
 
-        Log.d("SpotifyAPIManager", "Access token: " + prefsHelper.getAccessToken());
-        Log.d("SpotifyAPIManager", "Request URI: " + tracksCall.request().url());
-        Log.d("SpotifyAPIManager", "Auth header: " + tracksCall.request().header("Authorization"));
-        Log.d("SpotifyAPIManager", "Searching for song: " + songTitle);
-        Log.d("SpotifyAPIManager", "Expiration time: " + prefsHelper.getTokenExpirationTime());
-        Log.d("SpotifyAPIManager", "URL: " + tracksCall.request().url().toString());
         tracksCall.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<TracksResponse> call, @NonNull Response<TracksResponse> response) {
                 if(response.isSuccessful() && null != response.body()) {
-                    Log.d("SpotifyAPIManager", "Response successful: " + response);
-                    Log.d("SpotifyAPIManager", "Successfully retrieved tracks");
-
                     TracksResponse tracksResponse = response.body();
                     ArrayList<Track> tracks = tracksResponse.getTracks();
 
-                    searchCallback.onTracksFound(tracks); //handle case where no tracks are found
+                    searchCallback.onTracksFound(tracks); // TODO: handle case where no tracks are found
                 } else {
                     try {
                         Log.d("SpotifyAPIManager", "Error getting tracks: " + response.errorBody().string());
@@ -106,8 +106,7 @@ public class SpotifyAPIManager {
      * This method sends the authorization request to the Spotify API, triggering the
      * OAuth 2.0 authorization code grant flow with PKCE (Proof Key for Code Exchange).
      */
-    public void login() { //TODO: research OAuth flow to better understand process, maybe change method signature for DI
-        Log.d("SpotifyAPIManager", "Auth flow started: " + MainActivity.authFlowStarted());
+    public void login() { //TODO: research OAuth flow to better understand process
         if(!MainActivity.authFlowStarted()) {
             String codeChallenge = generateCodeChallenge();
             prefsHelper.saveCodeChallenge(codeChallenge);
@@ -127,18 +126,13 @@ public class SpotifyAPIManager {
                     prefsHelper.getCodeChallenge(),
                     scopesString
             );
-            Log.d("SpotifyAPIManager", "Authorization URL: " + authorizationUrl);
-            Log.d("SpotifyAPIManager", "Code verifer 1: " + prefsHelper.getCodeVerifier());
 
             MainActivity.setAuthFlowStarted(true);
             Uri uri = Uri.parse(authorizationUrl);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri); // research what an intent is
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // research what this does
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             try {
-                Log.d("SpotifyAPIManager", "Activity address: " + activity.toString());
-                Log.d("SpotifyAPIManager", "Intent sent: " + intent.toString());
-
                 // begin authorization flow in browser
                 activity.startActivity(intent);
                 prefsHelper.saveRedirectUri(ENCODED_REDIRECT_URI);
@@ -158,9 +152,9 @@ public class SpotifyAPIManager {
      */
     public void getAccessToken(String authCode) {
         // set query parameters
-        Log.d("SpotifyAPIManager", "Code verifer 2: " + prefsHelper.getCodeVerifier());
         SharedPreferencesHelper.getInstance().showAllPreferences();
         SharedPreferencesHelper.getInstance().showAllPreferences();
+
         // make request to api for the access token
         Call<AccessToken> tokenCall = SpotifyAPIClient.getInstance().getAccessToken(
                 "authorization_code",
@@ -211,7 +205,7 @@ public class SpotifyAPIManager {
      */
     public void refreshAccessToken() {
         String refreshToken = prefsHelper.getRefreshToken();
-
+        Log.d("SpotifyAPIManager", "Refresh token: " + refreshToken);
         Call<RefreshToken> tokenCall = SpotifyAPIClient.getInstance().refreshAccessToken(
                 "refresh_token",
                 refreshToken,
@@ -251,9 +245,10 @@ public class SpotifyAPIManager {
         if(prefsHelper.getTokenExpirationTime().equals("undefined")) {
             return false;
         } else {
-            LocalTime expirationTime = LocalTime.parse(prefsHelper.getTokenExpirationTime());
+            LocalTime expirationTime = LocalTime.parse(prefsHelper.getTokenExpirationTime(),
+                    DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             LocalTime currentTime = LocalTime.now();
-
+            Log.d("SpotifyAPIManager", "Expired: " + LocalTime.now().isAfter(expirationTime));
             return currentTime.isAfter(expirationTime); // there's still an issue with time generation. troubleshoot this
         }
     }
@@ -266,33 +261,37 @@ public class SpotifyAPIManager {
      * @return  The expiration time of the access token.
      */
     private String calculateExpirationTime(long accessTokenLifetime) { //TODO: calculate proper expiration time
-        LocalTime currentTime = LocalTime.now();
+        LocalDateTime currentDateTime = LocalDateTime.now();
 
-        Log.d("SpotifyAPIManager", "Current time: " + currentTime);
+        Log.d("SpotifyAPIManager", "Current date/time: " + currentDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
-        // subtract delay from expiration time to account for possible delay in processing time
         int timeInMinutes = (int) (accessTokenLifetime / 60);
         int delay = 5;
-        LocalTime expirationTime = currentTime.plusMinutes(timeInMinutes - delay);
+        LocalDateTime expirationDateTime = currentDateTime.plusMinutes(timeInMinutes - delay);
 
-        Log.d("SpotifyAPIManager", "Expiration time: " + expirationTime);
-        return expirationTime.toString();
+        String expirationString = expirationDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        Log.d("SpotifyAPIManager", "Expiration date/time: " + expirationString);
+        return expirationString;
     }
 
     /**
      * Generates a code challenge for PKCE (Proof Key for Code Exchange).
      * <p>
-     * TODO: explain function in process
+     * The code challenge is sent in the authorization request to the Spotify API, where it is saved.
+     * When the request for the access token is sent, we pass in the code verifier that generated the
+     * code challenge. Spotify then encodes the code verifier and verifies that it matches the code
+     * challenge that was previously sent before it can release the access token.
      *
      * @return  An encoding of the code verifier.
      */
     private String generateCodeChallenge() {
         String codeVerifier = generateCodeVerifier();
         prefsHelper.saveCodeVerifier(codeVerifier);
-        Log.d("SpotifyAPIManager", "Code verifier saved: " + codeVerifier);
+
         // encrypt code verifier
         MessageDigest digest;
         String codeChallenge = "";
+
         try {
             digest = MessageDigest.getInstance("SHA-256");
             codeChallenge = encodeToString(digest.digest(codeVerifier.getBytes(
@@ -308,15 +307,15 @@ public class SpotifyAPIManager {
     /**
      * Generates a random string used for PKCE (Proof Key for Code Exchange).
      * <p>
-     * TODO: explain function in process
-     *
+     * The code verifier is used to generate the code challenge - an encoding of the code verifier.
+     * See {@link #generateCodeChallenge()}.
      * @return  A randomly generated string of 64 characters.
      */
     private String generateCodeVerifier() {
         SecureRandom secureRandom = new SecureRandom();
 
         byte[] codeVerifier = new byte[64];
-        secureRandom.nextBytes(codeVerifier); // generate random bytes
+        secureRandom.nextBytes(codeVerifier); // generate a random string of bytes
 
         return encodeToString(codeVerifier, URL_SAFE | NO_WRAP | NO_PADDING);
     }

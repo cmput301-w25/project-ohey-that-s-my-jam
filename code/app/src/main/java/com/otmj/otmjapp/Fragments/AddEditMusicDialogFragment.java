@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
@@ -24,9 +25,7 @@ import java.util.ArrayList;
 
 public class AddEditMusicDialogFragment extends DialogFragment {
     private SpotifyAPIManager authManager;
-    private TrackListAdapter trackListAdapter;
-
-    public interface SearchResultsCallback { // maybe put this in its own file
+    public interface SearchResultsCallback {
         void onTracksFound(ArrayList<Track> tracks);
     }
 
@@ -35,7 +34,7 @@ public class AddEditMusicDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.add_music_event, null);
 
-        SearchView searchView = view.findViewById(R.id.search_for_song);
+        SearchView searchView = view.findViewById(R.id.search_song);
         searchView.setOnQueryTextListener(
                 new SearchView.OnQueryTextListener() {
                     @Override
@@ -52,11 +51,10 @@ public class AddEditMusicDialogFragment extends DialogFragment {
 
                             Log.d("AddEditMusicDialogFragment", "Searching for song: " + s);
                             authManager.findSong(s, tracks -> {
-                                //ListView trackListView = view.findViewById(R.id.results_list);
-                                //trackListAdapter = new TrackListAdapter(requireActivity(), tracks);
-                                //trackListView.setAdapter(trackListAdapter);
+                                ListView trackListView = view.findViewById(R.id.search_results);
+                                TrackListAdapter trackListAdapter = new TrackListAdapter(requireActivity(), tracks);
+                                trackListView.setAdapter(trackListAdapter);
                             });
-                            //search for song
                         } else {
                             Log.d("AddEditMusicDialogFragment", "Access token is invalid, logging in...");
                             authManager.login();

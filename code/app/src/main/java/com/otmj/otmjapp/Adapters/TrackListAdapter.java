@@ -44,7 +44,14 @@ public class TrackListAdapter extends ArrayAdapter<Track> {
         String albumArtUrl = track.getAlbum().getImages().get(0).getURL();
 
         TextView songTitle = listItemView.findViewById(R.id.song_title);
-        songTitle.setText(String.format("%s %s", title, artist));
+        String titleText = "Title: " + title;
+        titleText = wrapTextAfter20Chars(titleText);
+        songTitle.setText(titleText);
+
+        TextView songArtist = listItemView.findViewById(R.id.song_artist);
+        String artistText = "Artist: " + artist;
+        artistText = wrapTextAfter20Chars(artistText);
+        songArtist.setText(artistText);
 
         ImageView albumArt = listItemView.findViewById(R.id.album_art);
         Picasso.get()
@@ -52,5 +59,24 @@ public class TrackListAdapter extends ArrayAdapter<Track> {
                 .into(albumArt);
 
         return listItemView;
+    }
+    private String wrapTextAfter20Chars(String input) {
+        String[] words = input.split(" ");
+        StringBuilder result = new StringBuilder();
+        int currentLineLength = 0;
+
+        for (String word : words) {
+            if (currentLineLength + word.length() > 35) {
+                // Move to new line
+                result.append("\n").append(word).append(" ");
+                currentLineLength = word.length() + 1;
+            } else {
+                // Add to current line
+                result.append(word).append(" ");
+                currentLineLength += word.length() + 1;
+            }
+        }
+
+        return result.toString().trim();
     }
 }
