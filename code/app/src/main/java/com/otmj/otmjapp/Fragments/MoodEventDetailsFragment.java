@@ -42,6 +42,7 @@ import com.otmj.otmjapp.Helper.CustomImageSpan;
 import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.LocationHelper;
 import com.otmj.otmjapp.Helper.UserManager;
+import com.otmj.otmjapp.Models.Comment;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
@@ -202,7 +203,11 @@ public class MoodEventDetailsFragment extends Fragment {
         String currentUserId = currentUser.getID();
 
         // Load comments
-        commentHandler.loadComments(moodEventId, commentsAdapter);
+        commentsAdapter.clear();
+        commentHandler.loadComments(moodEventId, comment -> {
+            commentsAdapter.add(comment);
+            commentsAdapter.notifyDataSetChanged();
+        });
 
         // Handle sending comments
         ImageButton sendCommentButton = binding.sendCommentButton;
@@ -212,7 +217,13 @@ public class MoodEventDetailsFragment extends Fragment {
             String commentText = commentInput.getText().toString().trim();
             if (!commentText.isEmpty()) {
                 // Add the comment with the correct user details
-                commentHandler.addComment(commentText, moodEventId, currentUserId, commentsAdapter);
+                commentHandler.addComment(
+                        new Comment(currentUserId, moodEventId, commentText),
+                        c -> {
+                            commentsAdapter.add(c);
+                            commentsAdapter.notifyDataSetChanged();
+                        }
+                );
                 commentInput.setText("");  // Clear input field after sending
             } else {
                 Toast.makeText(requireContext(), "Comment cannot be empty", Toast.LENGTH_SHORT).show();

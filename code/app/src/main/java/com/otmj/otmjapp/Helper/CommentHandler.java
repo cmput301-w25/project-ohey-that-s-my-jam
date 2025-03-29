@@ -18,6 +18,10 @@ public class CommentHandler {
         void result(int count);
     }
 
+    public interface CommentCallback {
+        void newComment(Comment comment);
+    }
+
     private static final String TAG = "CommentHandler";
     private final FirestoreDB<Comment> db;
 
@@ -27,6 +31,8 @@ public class CommentHandler {
 
     /**
      * Retrieves comments from Firestore for a specific MoodEvent ID.
+     * @param moodEventId       ID of mood event to get comments for
+     * @param callback          Callback called when documents are retrieve from DB
      */
     private void getComments(String moodEventId, FirestoreDB.DBCallback<Comment> callback) {
         Filter filter = Filter.equalTo("moodEventId", moodEventId);
@@ -37,14 +43,15 @@ public class CommentHandler {
 
     /**
      * Get comments with the associated user details and send data to adapter
+     * @param moodEventId   ID of mood event to get comments for
+     * @param callback      Called when a new comment is retrieved
      */
-    public void loadComments(String moodEventId, CommentAdapter commentsAdapter) {
+    public void loadComments(String moodEventId, CommentCallback callback) {
         getComments(moodEventId, new FirestoreDB.DBCallback<>() {
             @Override
             public void onSuccess(ArrayList<Comment> comments) {
                 UserManager userManager = UserManager.getInstance();
 
-                commentsAdapter.clear();
                 // For each comment
                 for (Comment comment : comments) {
                     // Get the user that made the comment
@@ -53,9 +60,9 @@ public class CommentHandler {
                         public void onAuthenticated(ArrayList<User> users) {
                             if (!users.isEmpty()) {
                                 comment.setUser(users.get(0));
-
-                                commentsAdapter.add(comment);
-                                commentsAdapter.notifyDataSetChanged();
+                                if (callback != null) {
+                                    callback.newComment(comment);
+                                }
                             } else {
                                 Log.e(TAG, "User document does not exist.");
                             }
@@ -77,24 +84,23 @@ public class CommentHandler {
     }
 
     /**
-     * Saves a new comment to Firestore and ensures UI is updated only after successful save.
+     * Saves a new comment to database and ensures UI is updated only after successful save.
+     * @param comment   Comment to add
+     * @param callback  Called when comment is successfully added to database
      */
-    public void addComment(String commentText,
-                           String moodEventId,
-                           String userId,
-                           CommentAdapter commentsAdapter) {
-        // Create a comment
-        Comment comment = new Comment(userId, moodEventId, commentText);
+    public void addComment(Comment comment, CommentCallback callback) {
         // Add it to the db
         db.addDocument(comment, new FirestoreDB.DBCallback<>() {
             @Override
             public void onSuccess(ArrayList<Comment> result) {
-                loadComments(moodEventId, commentsAdapter);
+                if (!result.isEmpty()) {
+                    callback.newComment(result.get(0));
+                }
             }
 
             @Override
             public void onFailure(Exception e) {
-                Log.e("Firestore", "Error adding comment", e);
+                Log.e(TAG, "Unable to add comment to DB");
             }
         });
     }
