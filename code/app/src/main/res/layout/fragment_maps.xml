@@ -10,17 +10,42 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MapsFragment" />
+        tools:context=".Fragments.MapsFragment" />
 
     <ImageButton
         android:id="@+id/filter_button"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="55dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/filter_desc"
         android:src="@drawable/ic_filter"
         android:layout_gravity="top|end" />
+
+    <ImageButton
+        android:id="@+id/prev_marker_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:contentDescription="@string/prev_map_desc"
+        android:scaleType="fitCenter"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="94dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/back" />
+
+    <ImageButton
+        android:id="@+id/next_marker_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:contentDescription="@string/next_map_desc"
+        android:scaleType="fitCenter"
+        android:rotationY="180"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/back" />
 
 </FrameLayout>
