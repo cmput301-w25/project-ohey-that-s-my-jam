@@ -13,12 +13,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.otmj.otmjapp.Helper.CircleTransform;
 import com.otmj.otmjapp.Helper.FollowHandler;
+import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -82,14 +81,13 @@ public class RequestsListViewAdapter extends ArrayAdapter<User> {
             });
         });
 
-        // Set the profile picture using Picasso (with a placeholder)
         ImageView profileImageView = listItemView.findViewById(R.id.profile_image);
-        Picasso.get()
-                .load(profilePicUrl)
-                .placeholder(R.drawable.profile_placeholder) // Placeholder while loading
-                .error(R.drawable.profile_placeholder) // Placeholder in case of an error
-                .transform(new CircleTransform()) // Apply the circular transformation
-                .into(profileImageView);
+        // Load the profile image if available
+        if (user.getProfilePictureLink() != null && !user.getProfilePictureLink().isEmpty()) {
+            ImageHandler.loadCircularImage(listItemView.getContext(), user.getProfilePictureLink(), profileImageView);
+        } else {
+            profileImageView.setImageResource(R.drawable.profile_placeholder); // default image
+        }
 
         return listItemView;
     }

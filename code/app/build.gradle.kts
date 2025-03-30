@@ -66,8 +66,6 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
 
-    implementation("com.squareup.picasso:picasso:2.71828")
-
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.9.0"))

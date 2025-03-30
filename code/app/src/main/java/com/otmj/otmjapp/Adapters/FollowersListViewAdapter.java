@@ -11,11 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.otmj.otmjapp.Helper.CircleTransform;
+
+import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
 public class FollowersListViewAdapter extends ArrayAdapter<User> {
@@ -24,7 +23,7 @@ public class FollowersListViewAdapter extends ArrayAdapter<User> {
         super(context, 0, followersList); // Pass context, layout resource, and the data
     }
 
-
+    @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         // If the list is empty, return an empty view
@@ -49,19 +48,12 @@ public class FollowersListViewAdapter extends ArrayAdapter<User> {
         // Get the profile picture URL
         String profilePicUrl = user.getProfilePictureLink();
 
-        // Check if the profile picture URL is null or empty
-        if (profilePicUrl == null || profilePicUrl.isEmpty()) {
-            profilePicUrl = "android.resource://com.otmj.otmjapp/drawable/placeholder_image"; // Use a placeholder image
-        }
-
-        // Set the profile picture using Picasso (with a placeholder)
         ImageView profileImageView = listItemView.findViewById(R.id.profile_image);
-        Picasso.get()
-                .load(profilePicUrl)
-                .placeholder(R.drawable.profile_placeholder) // Placeholder while loading
-                .error(R.drawable.profile_placeholder) // Placeholder in case of an error
-                .transform(new CircleTransform()) // Apply the circular transformation
-                .into(profileImageView);
+        if (profilePicUrl == null || profilePicUrl.isEmpty()) {
+            profileImageView.setImageResource(R.drawable.profile_placeholder); // default image
+        } else {
+            ImageHandler.loadCircularImage(getContext(), profilePicUrl, profileImageView);
+        }
 
         return listItemView;
     }

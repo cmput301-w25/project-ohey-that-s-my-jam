@@ -4,6 +4,7 @@ import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Comment extends DatabaseObject {
     private final String moodEventId;
@@ -56,5 +57,20 @@ public class Comment extends DatabaseObject {
 
     public String getMoodEventId() {
         return moodEventId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Comment)) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(moodEventId, comment.moodEventId)
+                && Objects.equals(userId, comment.userId)
+                && Objects.equals(timestamp, comment.timestamp)
+                && Objects.equals(commentText, comment.commentText);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(moodEventId, userId, timestamp, commentText);
     }
 }

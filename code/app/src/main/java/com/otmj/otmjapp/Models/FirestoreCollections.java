@@ -1,4 +1,4 @@
-package com.otmj.otmjapp.Helper;
+package com.otmj.otmjapp.Models;
 
 import androidx.annotation.NonNull;
 
