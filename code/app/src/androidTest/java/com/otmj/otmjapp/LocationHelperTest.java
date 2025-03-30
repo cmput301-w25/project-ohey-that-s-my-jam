@@ -100,13 +100,6 @@ public class LocationHelperTest {
         Thread.sleep(2000);
     }
 
-    // requestLocationPermission is not testable because it is use for getting permission for location
-    // which it will pop out the system message for getting permission. for this class we assume the location
-    // permission is granted by using @Rule
-    //    public GrantPermissionRule permissionRule =
-    //            GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION,
-    //                    Manifest.permission.ACCESS_COARSE_LOCATION);
-
     public static Activity getCurrentActivity() {
         final Activity[] currentActivity = new Activity[1];
         final long startTime = System.currentTimeMillis();
@@ -134,6 +127,13 @@ public class LocationHelperTest {
         AppCompatActivity mainActivity = (AppCompatActivity) getCurrentActivity();
         return new LocationHelper(mainActivity);
     }
+
+    // requestLocationPermission is not testable because it is use for getting permission for location
+    // which it will pop out the system message for getting permission. for this class we assume the location
+    // permission is granted by using @Rule
+    //    public GrantPermissionRule permissionRule =
+    //            GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION,
+    //                    Manifest.permission.ACCESS_COARSE_LOCATION);
 
     @Test
     public void TestGetCurrentLocation() throws InterruptedException {
