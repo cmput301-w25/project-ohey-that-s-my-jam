@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
@@ -35,20 +35,34 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/Theme.OTMJApp"
             android:windowSoftInputMode="adjustNothing"
-            android:label="Main Page" /> <!-- Added title here -->
+            android:label="Main Page"
+            android:launchMode="singleTask"> <!-- Added title here -->
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="com.otmj.otmjapp"
+                    android:host="callback" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".InitialActivity"
             android:exported="true"
             android:label="Welcome"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.OTMJApp"> <!-- Added title here -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <meta-data
