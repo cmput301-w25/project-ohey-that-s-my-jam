@@ -20,7 +20,6 @@ import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.MoodEvent;
-import com.otmj.otmjapp.Models.Privacy;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
 
@@ -82,8 +81,7 @@ public class FilterMoodEventTest {
                 false,
                 "Got promoted at work!",
                 null,
-                null,
-                Privacy.Public
+                MoodEvent.Privacy.Public
         );
         recentHappy.setCreatedDate(new Date(System.currentTimeMillis() - 3 * 24 * 60 * 60 * 1000L));
         testMoodEvents.add(recentHappy);
@@ -96,8 +94,7 @@ public class FilterMoodEventTest {
                 false,
                 "Missed my flight",
                 null,
-                null,
-                Privacy.Public
+                MoodEvent.Privacy.Public
         );
         olderSad.setCreatedDate(new Date(System.currentTimeMillis() - 10 * 24 * 60 * 60 * 1000L));
         testMoodEvents.add(olderSad);
@@ -110,8 +107,7 @@ public class FilterMoodEventTest {
                 false,
                 "Traffic was terrible today",
                 null,
-                null,
-                Privacy.Public
+                MoodEvent.Privacy.Public
         );
         recentAnger.setCreatedDate(new Date(System.currentTimeMillis() - 2 * 24 * 60 * 60 * 1000L));
         testMoodEvents.add(recentAnger);

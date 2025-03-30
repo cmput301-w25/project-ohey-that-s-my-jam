@@ -10,6 +10,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.hamcrest.Matchers.anything;
 
 import android.util.Log;
@@ -23,7 +24,6 @@ import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.Follow;
 import com.otmj.otmjapp.Models.MoodEvent;
-import com.otmj.otmjapp.Models.Privacy;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
 
@@ -90,8 +90,7 @@ public class FollowInteractionsTest {
                 false,
                 "Watching a scary movie",
                 null,
-                null,
-                Privacy.Public
+                MoodEvent.Privacy.Public
         );
         MoodEvent moodEvent2 = new MoodEvent(
                 userId,
@@ -100,8 +99,7 @@ public class FollowInteractionsTest {
                 false,
                 "My cat puked out a huge hairball in front of me",
                 null,
-                null,
-                Privacy.Public
+                MoodEvent.Privacy.Public
         );
         MoodEvent moodEvent3 = new MoodEvent(
                 userId,
@@ -110,8 +108,7 @@ public class FollowInteractionsTest {
                 false,
                 "I can't function without energy drinks",
                 null,
-                null,
-                Privacy.Public
+                MoodEvent.Privacy.Public
         );
         moodEventsManager.addMoodEvent(moodEvent1);
         Thread.sleep(1000);
