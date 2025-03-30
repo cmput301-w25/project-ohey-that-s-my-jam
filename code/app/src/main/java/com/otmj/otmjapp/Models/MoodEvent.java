@@ -38,11 +38,6 @@ public class MoodEvent extends DatabaseObject {
     private MusicEvent musicEvent;
     private String reason;
     private String imageLink;
-
-    public enum Privacy {
-        Public,
-        Private
-    }
     private Privacy privacy;
 
     MoodEvent() {
@@ -56,7 +51,7 @@ public class MoodEvent extends DatabaseObject {
                      String reason,
                      String imageLink,
                      MusicEvent musicEvent,
-                     MoodEvent.Privacy privacy) {
+                     Privacy privacy) {
         this.userID = userID;
         setEmotionalState(emotionalState);
         this.socialSituation = socialSituation;
@@ -82,7 +77,7 @@ public class MoodEvent extends DatabaseObject {
                      String reason,
                      String imageLink,
                      MusicEvent musicEvent,
-                     MoodEvent.Privacy privacy) {
+                     Privacy privacy) {
         this(
                 userID,
                 EmotionalState.fromString(emotionalState),

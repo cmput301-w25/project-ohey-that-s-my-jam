@@ -14,6 +14,8 @@ public class MusicEvent extends DatabaseObject {
     private String feeling;
     private User user;
     private String albumArtURL;
+    private Privacy privacy;
+
     // empty constructor for firebase
     MusicEvent() {}
     //TODO: make sure on edit mood event, album art is shown
@@ -72,4 +74,8 @@ public class MusicEvent extends DatabaseObject {
     public void setAlbumArtURL(String albumArtURL) {
         this.albumArtURL = albumArtURL;
     }
+
+    public Privacy getPrivacy() { return privacy; }
+
+    public void setPrivacy(Privacy privacy) { this.privacy = privacy; }
 }

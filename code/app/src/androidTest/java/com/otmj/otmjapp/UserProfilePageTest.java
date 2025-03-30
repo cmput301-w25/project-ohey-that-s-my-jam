@@ -8,10 +8,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.junit.Assert.assertEquals;
-
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -27,6 +23,7 @@ import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.Follow;
 import com.otmj.otmjapp.Models.FollowRequest;
 import com.otmj.otmjapp.Models.MoodEvent;
+import com.otmj.otmjapp.Models.Privacy;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
 
@@ -112,7 +109,8 @@ public class UserProfilePageTest {
                 false,
                 "On a date",
                 null,
-                MoodEvent.Privacy.Public
+                null,
+                Privacy.Public
         );
 
 

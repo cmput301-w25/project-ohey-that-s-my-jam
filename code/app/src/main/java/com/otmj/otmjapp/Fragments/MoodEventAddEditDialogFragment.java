@@ -43,6 +43,7 @@ import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.MusicEvent;
+import com.otmj.otmjapp.Models.Privacy;
 import com.otmj.otmjapp.Models.SimpleLocation;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
@@ -65,7 +66,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
     private EmotionalState selectedEmotionalState;
     private SocialSituation selectedSocialSituation;
     private MoodEvent moodEvent;
-    private MoodEvent.Privacy privacy;
+    private Privacy privacy;
     private MusicEvent musicEvent;
     private Map<String, SocialSituation> socialSituationMapping;
 
@@ -198,7 +199,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     addLocationBottom.setImageResource(R.drawable.detach_location);
                 }
 
-                privacySwitch.setChecked(privacy == MoodEvent.Privacy.Public);
+                privacySwitch.setChecked(privacy == Privacy.Public);
             }
         }
 
@@ -243,7 +244,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
 
         // privacy toggle
         privacySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            privacy = isChecked ? MoodEvent.Privacy.Public : MoodEvent.Privacy.Private;
+            privacy = isChecked ? Privacy.Public : Privacy.Private;
         });
 
         // submit post button
@@ -369,6 +370,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 //saveAlbumArt(musicEvent); TODO: reactivate when app goes live
                 musicEvent.setUser(UserManager.getInstance().getCurrentUser());
                 musicEvent.setAssociatedMood(moodEvent.getEmotionalState().getEmoji());
+                musicEvent.setPrivacy(privacy);
                 moodEvent.setMusicEvent(musicEvent);
                 musicEventsManager.updateMusicEvent(musicEvent);
             } else {
@@ -377,7 +379,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             moodEventsManager.updateMoodEvent(moodEvent);
         } else {
             if(privacy == null) { // privacy is null by default. If user doesn't toggle switch, set it to private
-                privacy = MoodEvent.Privacy.Private;
+                privacy = Privacy.Private;
             }
             MoodEvent temp_moodEvent = new MoodEvent(
                     user.getID(),
@@ -400,6 +402,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 //saveAlbumArt(musicEvent); TODO: reactivate when app goes live
                 musicEvent.setUser(UserManager.getInstance().getCurrentUser());
                 musicEvent.setAssociatedMood(temp_moodEvent.getEmotionalState().getEmoji());
+                musicEvent.setPrivacy(privacy);
                 temp_moodEvent.setMusicEvent(musicEvent);
                 musicEventsManager.addMusicEvent(musicEvent);
             } else {

@@ -2,15 +2,18 @@ package com.otmj.otmjapp.Helper;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ImageView;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.otmj.otmjapp.Models.MusicEvent;
+import com.otmj.otmjapp.Models.User;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -33,14 +36,105 @@ public class MusicEventsManager {
      * Observable object that callers can observe to get notified of changes
      */
     private final MutableLiveData<ArrayList<MusicEvent>> musicHistory;
-
+    private MusicHistoryFilter lastFilter = null;
     public MusicEventsManager(List<String> userIDs) {
         assert !userIDs.isEmpty();
 
         this.userIDs = new ArrayList<>(userIDs);
         this.db = new FirestoreDB<>(FirestoreCollections.MusicEvents.name);
+        this.db.addCollectionListener(() -> {
+            if (lastFilter != null) {
+                getMusicEvents(lastFilter);
+            }
+        });
 
         musicHistory = new MutableLiveData<>(new ArrayList<>());
+    }
+
+    private LiveData<ArrayList<MusicEvent>> getMusicEvents(@NonNull MusicHistoryFilter filter) {
+        UserManager.getInstance().getUsers(userIDs, new UserManager.AuthenticationCallback() {
+            @Override
+            public void onAuthenticated(ArrayList<User> authenticatedUsers) {
+                // Get all mood events from specified users
+                db.getDocuments(filter.getFilter(), MusicEvent.class, new FirestoreDB.DBCallback<>() {
+                    @Override
+                    public void onSuccess(ArrayList<MusicEvent> result) {
+                        lastFilter = filter;
+
+                        ArrayList<MusicEvent> musicEvents = new ArrayList<>();
+
+                        for (MusicEvent musicEvent : result) {
+                            // If the filter contains a query text and mood event has "reason"
+                            if(filter.getQueryText() != null && musicEvent.getFeeling() != null) {
+                                // Then only add music events that match query
+                                String reason = musicEvent.getFeeling().trim().toLowerCase();
+                                if (reason.contains(filter.getQueryText())) {
+                                    musicEvents.add(musicEvent);
+                                }
+                            } else {
+                                musicEvents.add(musicEvent);
+                            }
+
+                            // Look through all the users
+                            for (User u : authenticatedUsers) {
+                                // When we get the user associated with the mood event
+                                if (u.getID().equals(musicEvent.getUser().getID())) {
+                                    musicEvent.setUser(u);
+                                    break;
+                                }
+                            }
+                        }
+
+                        musicHistory.setValue(musicEvents);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        // TODO: Do something about error
+                        Log.d("MusicEventsManager", e.toString());
+                    }
+                }, filter.getSortOption());
+            }
+
+            @Override
+            public void onAuthenticationFailure(String reason) {
+                // TODO: Handle case where we're unable to get users
+                Log.d("MusicEventsManager", reason);
+            }
+        });
+
+        return musicHistory;
+    }
+
+    /**
+     * Gets all public mood events from user(s)
+     * @param customFilter A filter specifies the condition for the mood event to be returned
+     *                     and how to sort it
+     *
+     * @return An observable value that returns all the music events.
+     * @see #getMusicEvents(MusicHistoryFilter)
+     */
+    public LiveData<ArrayList<MusicEvent>> getPublicMusicEvents(MusicHistoryFilter customFilter) {
+        if (customFilter == null) {
+            customFilter = MusicHistoryFilter.Default(userIDs);
+        }
+        customFilter.addFilter(MusicHistoryFilter.PublicMoodEvents());
+
+        return getMusicEvents(customFilter);
+    }
+
+    /**
+     * Gets all private mood events from user(s)
+     * @param customFilter A filter specifies the condition for the mood event to be returned
+     *                     and how to sort it
+     *
+     * @return An observable value that returns all the mood events.
+     * @see #getMusicEvents(MusicHistoryFilter)
+     */
+    public LiveData<ArrayList<MusicEvent>> getUserMusicEvents(MusicHistoryFilter customFilter) {
+        return getMusicEvents((null != customFilter)
+                ? customFilter
+                : MusicHistoryFilter.Default(userIDs));
     }
 
     /**

@@ -56,4 +56,19 @@ public class FilterOptions {
 
         return moodHistoryFilter;
     }
+
+    public MusicHistoryFilter buildFilter(List<String> userIDs, String extraParam) {
+        MusicHistoryFilter musicHistoryFilter = MusicHistoryFilter.Default(userIDs);
+        if (last7Days) {
+            musicHistoryFilter.addFilter(MusicHistoryFilter.MostRecentWeek());
+        }
+        if (!emotionalStates.isEmpty()) {
+            //musicHistoryFilter.addFilter(MusicHistoryFilter.OnlyEmotionalStates(emotionalStates));
+        }
+        if (!reasonText.isBlank()) {
+            musicHistoryFilter.addFilter(MusicHistoryFilter.ContainsText(reasonText));
+        }
+
+        return musicHistoryFilter;
+    }
 }
