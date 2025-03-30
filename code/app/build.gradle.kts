@@ -83,7 +83,9 @@ dependencies {
     testImplementation(libs.ext.junit)
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 
-
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
+    androidTestImplementation("androidx.test:runner:1.4.0")
+    androidTestImplementation("androidx.test:rules:1.4.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

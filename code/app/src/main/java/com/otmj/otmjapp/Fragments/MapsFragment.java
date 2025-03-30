@@ -65,7 +65,6 @@ public class MapsFragment extends Fragment {
         @Override
         public void onMapReady(@NonNull GoogleMap googleMap) {
             gMap = googleMap;
-            getCurrentLocation();
         }
     };
 
@@ -74,6 +73,7 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        getCurrentLocation();
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
@@ -271,10 +271,10 @@ public class MapsFragment extends Fragment {
                                 // At this point, we're only adding a maximum of n mood events per user
                                 moodEventList.add(moodEvent);
                             }
+                            if (within5KM) {
+                                getMoodEventsIn5km();
+                            }
                         }
-                    if (within5KM) {
-                        getMoodEventsIn5km();
-                    }
                     updateMap();
                 }
         );
@@ -368,5 +368,9 @@ public class MapsFragment extends Fragment {
             // Go to first mood event
             moveCameraTo(markerOptions.get(0).getPosition());
         }
+    }
+
+    public ArrayList<Marker> getMarkerList(){
+        return this.markerList;
     }
 }
