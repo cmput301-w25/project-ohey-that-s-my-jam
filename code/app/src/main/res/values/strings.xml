@@ -102,7 +102,7 @@
     <string name="users_profile_picture">User profile picture</string>
     <string name="add_music_fragment">Set the Tone</string>
     <string name="search_music_hint">Search for a song…</string>
-    <string name="reason_why_song_hint">How does this song make you feel?</string>
+    <string name="reason_why_song_hint">Why does this song fit your mood?</string>
     <string name="save_button_text">Save</string>
     <string name="song_title">Title</string>
     <string name="artist">Artist</string>

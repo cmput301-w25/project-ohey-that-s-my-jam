@@ -151,6 +151,10 @@ public class SpotifyAPIManager {
      * @param authCode  The code provided by the response of the authorization request.
      */
     public void getAccessToken(String authCode) {
+        // set query parameters
+        SharedPreferencesHelper.getInstance().showAllPreferences();
+        SharedPreferencesHelper.getInstance().showAllPreferences();
+
         // make request to api for the access token
         Call<AccessToken> tokenCall = SpotifyAPIClient.getInstance().getAccessToken(
                 "authorization_code",
@@ -199,7 +203,7 @@ public class SpotifyAPIManager {
      * is successful - it allows the app to obtain a new access token without requiring the user
      * to log in again.
      */
-    public void refreshAccessToken() { //TODO: debug here
+    public void refreshAccessToken() {
         String refreshToken = prefsHelper.getRefreshToken();
         Log.d("SpotifyAPIManager", "Refresh token: " + refreshToken);
         Call<RefreshToken> tokenCall = SpotifyAPIClient.getInstance().refreshAccessToken(

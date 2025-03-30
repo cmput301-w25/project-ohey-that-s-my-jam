@@ -1,5 +1,7 @@
 package com.otmj.otmjapp.Models;
 
+import android.location.Location;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.Exclude;
@@ -35,7 +37,6 @@ public class MoodEvent extends DatabaseObject {
     private String emotionalStateText;
     private SocialSituation socialSituation;
     private SimpleLocation simpleLocation;
-    private MusicEvent musicEvent;
     private String reason;
     private String imageLink;
 
@@ -55,14 +56,12 @@ public class MoodEvent extends DatabaseObject {
                      boolean includeLocation,
                      String reason,
                      String imageLink,
-                     MusicEvent musicEvent,
                      MoodEvent.Privacy privacy) {
         this.userID = userID;
         setEmotionalState(emotionalState);
         this.socialSituation = socialSituation;
         this.reason = reason;
         this.imageLink = imageLink;
-        this.musicEvent = musicEvent;
         this.privacy = privacy;
 
 //        if (includeLocation) {
@@ -81,7 +80,6 @@ public class MoodEvent extends DatabaseObject {
                      boolean includeLocation,
                      String reason,
                      String imageLink,
-                     MusicEvent musicEvent,
                      MoodEvent.Privacy privacy) {
         this(
                 userID,
@@ -90,7 +88,6 @@ public class MoodEvent extends DatabaseObject {
                 includeLocation,
                 reason,
                 imageLink,
-                musicEvent,
                 privacy
         );
     }
@@ -162,8 +159,6 @@ public class MoodEvent extends DatabaseObject {
     public void setImageLink(String link) {
         this.imageLink = link;
     }
-    public MusicEvent getMusicEvent() { return musicEvent; }
-    public void setMusicEvent(MusicEvent musicEvent) { this.musicEvent = musicEvent; }
 
     public Privacy getPrivacy() {
         return privacy;
@@ -199,7 +194,6 @@ public class MoodEvent extends DatabaseObject {
                 ", location=" + simpleLocation +
                 ", reason='" + reason + '\'' +
                 ", imageLink='" + imageLink + '\'' +
-                ", musicEvent="+ musicEvent + '\n' +
                 ", privacy=" + privacy +
                 '}';
     }
