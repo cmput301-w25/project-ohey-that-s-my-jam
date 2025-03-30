@@ -1,16 +1,15 @@
 package com.otmj.otmjapp.Models;
 
+import com.google.gson.annotations.SerializedName;
 import com.otmj.otmjapp.API.Models.Track;
-
-import java.time.LocalDateTime;
 
 /**
  * Represents a music event - the association of a track with a feeling.
  */
 public class MusicEvent extends DatabaseObject {
     private Track track;
-    private LocalDateTime createdDate;
-    private int associatedMood;
+    @SerializedName("associatedMood")
+    private String associatedMood;
     private String feeling;
     private User user;
     private String albumArtURL;
@@ -28,7 +27,6 @@ public class MusicEvent extends DatabaseObject {
     public MusicEvent(Track track,
                       String feeling) {
         this.track = track;
-        this.createdDate = LocalDateTime.now();
         this.feeling = feeling;
     }
 
@@ -40,9 +38,6 @@ public class MusicEvent extends DatabaseObject {
         this.track = track;
     }
 
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
     public String getFeeling() {
         return feeling;
     }
@@ -51,12 +46,16 @@ public class MusicEvent extends DatabaseObject {
         this.feeling = feeling;
     }
 
-    public int getAssociatedMood() {
+    public String getAssociatedMood() {
         return associatedMood;
     }
 
-    public void setAssociatedMood(int associatedMood) {
-        this.associatedMood = associatedMood;
+    public void setAssociatedMood(Object value) {
+        if (value instanceof Long) {
+            this.associatedMood = String.valueOf(value);
+        } else if (value instanceof String) {
+            this.associatedMood = (String) value;
+        }
     }
 
     public User getUser() {

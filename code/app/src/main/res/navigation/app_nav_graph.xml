@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_timelineFragment_to_mapsFragment2"
             app:destination="@id/mapsFragment" />
+        <action
+            android:id="@+id/action_timelineFragment_to_musicTimelineFragment"
+            app:destination="@id/musicTimelineFragment" />
     </fragment>
 
     <!-- Mood Event Details Fragment -->
@@ -87,4 +90,9 @@
         android:name="com.otmj.otmjapp.InitialActivity"
         android:label="activity_initial"
         tools:layout="@layout/activity_initial" />
+    <fragment
+        android:id="@+id/musicTimelineFragment"
+        android:name="com.otmj.otmjapp.Fragments.MusicTimelineFragment"
+        android:label="fragment_music_timeline"
+        tools:layout="@layout/fragment_music_timeline" />
 </navigation>

@@ -17,7 +17,7 @@
         android:title="fab"/>
 
     <item
-        android:id="@+id/wowFactorFragment"
+        android:id="@+id/musicTimelineFragment"
         android:icon="@drawable/music"
         android:title="Music" />
 

@@ -2,6 +2,7 @@ package com.otmj.otmjapp.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.otmj.otmjapp.Adapters.TimelineMusicEventAdapter;
 import com.otmj.otmjapp.Helper.FilterOptions;
 import com.otmj.otmjapp.Helper.FollowHandler;
+import com.otmj.otmjapp.Helper.MoodHistoryFilter;
 import com.otmj.otmjapp.Helper.MusicEventsManager;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MusicEvent;
@@ -59,9 +61,10 @@ public class MusicTimelineFragment extends Fragment {
         FollowHandler followHandler = new FollowHandler();
         followHandler.getFollowIDs(currentUser.getID(), FollowHandler.FollowType.Following, ids -> {
             ids.add(currentUser.getID()); // Add user's ID to list
-
+            Log.d("MusicTimelineFragment", "Following IDs: " + ids.toString());
+            MoodHistoryFilter filter = MoodHistoryFilter.PublicMoodEvents();
             MusicEventsManager musicEventsManager = new MusicEventsManager(ids);
-            musicEventsManager.getPublicMusicEvents(null).observe(
+            musicEventsManager.getPublicMusicEvents(filter).observe(
                     getViewLifecycleOwner(),
                     this::updateMusicEventsList
             );
@@ -72,14 +75,13 @@ public class MusicTimelineFragment extends Fragment {
                     // save filter options
                     filterOptions = newFilterOptions;
                     // use the new filter options to show music events
-                    musicEventsManager.getPublicMusicEvents(newFilterOptions.buildFilter(ids, null)).observe(
+                    musicEventsManager.getPublicMusicEvents(newFilterOptions.buildFilter(ids)).observe(
                             getViewLifecycleOwner(),
                             this::updateMusicEventsList
                     );
                 });
             });
         });
-
     }
 
     private void updateMusicEventsList(List<MusicEvent> musicEvents) {
@@ -88,16 +90,18 @@ public class MusicTimelineFragment extends Fragment {
         HashMap<String, ArrayList<MusicEvent>> musicEventsPerUser = new HashMap<>();
         for (MusicEvent musicEvent : musicEvents) {
             // If this is the first time this userID is seen
-            if (!musicEventsPerUser.containsKey(musicEvent.getUser().getID())) {
-                // Add to map with current mood event
-                musicEventsPerUser.put(musicEvent.getUser().getID(), new ArrayList<>(List.of(musicEvent)));
-            } else {
-                ArrayList<MusicEvent> userMusicEvents = musicEventsPerUser.get(musicEvent.getUser().getID());
-                // Only add if we don't have up to 3 mood events for the user
-                if (userMusicEvents != null && userMusicEvents.size() < 3) {
-                    userMusicEvents.add(musicEvent);
+            if(null != musicEvent.getUser()) {
+                if (!musicEventsPerUser.containsKey(musicEvent.getUser().getID())) {
+                    // Add to map with current mood event
+                    musicEventsPerUser.put(musicEvent.getUser().getID(), new ArrayList<>(List.of(musicEvent)));
                 } else {
-                    continue;
+                    ArrayList<MusicEvent> userMusicEvents = musicEventsPerUser.get(musicEvent.getUser().getID());
+                    // Only add if we don't have up to 3 mood events for the user
+                    if (userMusicEvents != null && userMusicEvents.size() < 3) {
+                        userMusicEvents.add(musicEvent);
+                    } else {
+                        continue;
+                    }
                 }
             }
 
