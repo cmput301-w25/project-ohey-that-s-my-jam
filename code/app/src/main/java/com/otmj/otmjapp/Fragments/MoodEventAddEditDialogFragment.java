@@ -154,10 +154,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         addressTextView = view.findViewById(R.id.textview_address);
         selectedImageContainer = view.findViewById(R.id.image_container);
 
-        ImageView addMusic = view.findViewById(R.id.add_music);
-        addMusic.setOnClickListener(v -> {
-            new AddEditMusicDialogFragment().show(getParentFragmentManager(), "addMusic");
-        });
+        ImageView addMusicButton = view.findViewById(R.id.add_music);
 
         // using SwitchCompat makes the app crash when the 'addMoodEvent' button is clicked
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch privacySwitch = view.findViewById(R.id.privacy_switch);
@@ -305,6 +302,10 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 addLocationBottom.setImageResource(R.drawable.ic_add_location);
                 location = null;
             }
+        });
+
+        addMusicButton.setOnClickListener(v -> {
+            new AddEditMusicDialogFragment().show(getParentFragmentManager(), "addMusic");
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
