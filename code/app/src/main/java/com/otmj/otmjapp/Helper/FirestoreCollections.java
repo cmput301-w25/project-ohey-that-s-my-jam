@@ -10,7 +10,6 @@ public enum FirestoreCollections {
     Users("users"),
     MoodEvents("mood_events"),
     Follows("follows"),
-    MusicEvents("music_events"),
     FollowRequests("follow_requests"),
     Comments("comments");
 

@@ -37,17 +37,14 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.LocationHelper;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
-import com.otmj.otmjapp.Helper.MusicEventsManager;
 import com.otmj.otmjapp.Helper.TextValidator;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.MoodEvent;
-import com.otmj.otmjapp.Models.MusicEvent;
 import com.otmj.otmjapp.Models.SimpleLocation;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Map;
@@ -66,7 +63,6 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
     private SocialSituation selectedSocialSituation;
     private MoodEvent moodEvent;
     private MoodEvent.Privacy privacy;
-    private MusicEvent musicEvent;
     private Map<String, SocialSituation> socialSituationMapping;
 
     private boolean attachLocation;
@@ -74,7 +70,6 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
     private LocationHelper locationHelper;
     private ActivityResultLauncher<String> permissionLauncher;
     private TextView addressTextView;
-    private ImageView addMusicButton;
     private String imageLink;
 
     private ConstraintLayout selectedImageContainer;
@@ -105,6 +100,9 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     }
                 }
             });
+
+
+
 
     /**
      * Creates a new instance of the dialog fragment with a given MoodEvent.
@@ -156,7 +154,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         addressTextView = view.findViewById(R.id.textview_address);
         selectedImageContainer = view.findViewById(R.id.image_container);
 
-        addMusicButton = view.findViewById(R.id.add_music);
+        ImageView addMusicButton = view.findViewById(R.id.add_music);
 
         // using SwitchCompat makes the app crash when the 'addMoodEvent' button is clicked
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch privacySwitch = view.findViewById(R.id.privacy_switch);
@@ -278,11 +276,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                         .setPositiveButton("Delete", (dialog, which) -> {
                             MoodEventsManager moodEventsManager =
                                     new MoodEventsManager(List.of(UserManager.getInstance().getCurrentUser().getID()));
-                            moodEventsManager.deleteMoodEvent(moodEvent);
 
-                            MusicEventsManager musicEventsManager =
-                                    new MusicEventsManager(List.of(UserManager.getInstance().getCurrentUser().getID()));
-                            musicEventsManager.deleteMusicEvent(moodEvent.getMusicEvent());
+                            moodEventsManager.deleteMoodEvent(moodEvent);
                             dismiss();
                         })
                         .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
@@ -310,19 +305,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         });
 
         addMusicButton.setOnClickListener(v -> {
-            AddEditMusicDialogFragment musicFragment = new AddEditMusicDialogFragment();
-
-            // Set up the listener to handle track selection
-            musicFragment.setOnTrackSelectedListener(createdMusicEvent -> {
-                musicEvent = createdMusicEvent;
-
-                // change what used to be music note icon with album art to show that song has been selected
-                Picasso.get()
-                        .load(musicEvent.getTrack().getAlbum().getImages().get(0).getURL())
-                        .into(addMusicButton);
-            });
-
-            musicFragment.show(getParentFragmentManager(), "addMusic");
+            new AddEditMusicDialogFragment().show(getParentFragmentManager(), "addMusic");
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
@@ -347,32 +330,18 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         User user = UserManager.getInstance().getCurrentUser();
         MoodEventsManager moodEventsManager =
                 new MoodEventsManager(List.of(user.getID()));
-        MusicEventsManager musicEventsManager =
-                new MusicEventsManager(List.of(user.getID()));
-
         Log.d("MoodEvent privacy", "setupMoodEvent:" + privacy);
         if (moodEvent != null) {
             moodEvent.setEmotionalState(selectedEmotionalState);
             moodEvent.setReason(reason);
             moodEvent.setSocialSituation(selectedSocialSituation);
             moodEvent.setPrivacy(privacy);
-            moodEvent.setImageLink(imageLink); // this is where download link function should be called
-
+            moodEvent.setImageLink(imageLink);
             if (location != null){
                 SimpleLocation temp_simpleLocation = new SimpleLocation(location.getLatitude(),location.getLongitude());
                 moodEvent.setLocation(temp_simpleLocation);
             } else {
                 moodEvent.setLocation(null);
-            }
-
-            if(null != musicEvent) {
-                //saveAlbumArt(musicEvent); TODO: reactivate when app goes live
-                musicEvent.setUser(UserManager.getInstance().getCurrentUser());
-                musicEvent.setAssociatedMood(moodEvent.getEmotionalState().getEmoji());
-                moodEvent.setMusicEvent(musicEvent);
-                musicEventsManager.updateMusicEvent(musicEvent);
-            } else {
-                moodEvent.setMusicEvent(null);
             }
             moodEventsManager.updateMoodEvent(moodEvent);
         } else {
@@ -386,7 +355,6 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     attachLocation,
                     reason,
                     imageLink,
-                    null,
                     privacy
             );
             if (location != null){
@@ -395,29 +363,8 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             } else {
                 temp_moodEvent.setLocation(null);
             }
-
-            if(null != musicEvent) {
-                //saveAlbumArt(musicEvent); TODO: reactivate when app goes live
-                musicEvent.setUser(UserManager.getInstance().getCurrentUser());
-                musicEvent.setAssociatedMood(temp_moodEvent.getEmotionalState().getEmoji());
-                temp_moodEvent.setMusicEvent(musicEvent);
-                musicEventsManager.addMusicEvent(musicEvent);
-            } else {
-                temp_moodEvent.setMusicEvent(null);
-            }
             moodEventsManager.addMoodEvent(temp_moodEvent);
         }
-    }
-
-    /**
-     * See {@link com.otmj.otmjapp.Helper.MusicEventsManager#uploadAlbumArtToStorage(ImageView, String, MusicEvent)}.
-     *
-     * @param musicEvent The music event to save the album art for.
-     */
-    public void saveAlbumArt(MusicEvent musicEvent) {
-        String imageName = musicEvent.getTrack().getArtists().get(0).getName() + musicEvent.getTrack().getTitle();
-        MusicEventsManager musicEventsManager = new MusicEventsManager(List.of(UserManager.getInstance().getCurrentUser().getID()));
-        musicEventsManager.uploadAlbumArtToStorage(addMusicButton, imageName, musicEvent);
     }
 
     /**

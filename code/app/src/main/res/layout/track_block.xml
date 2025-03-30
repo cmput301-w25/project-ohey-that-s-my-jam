@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="102dp">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/song_artist"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="90dp"
-        android:breakStrategy="balanced"
         android:ellipsize="none"
         android:maxLines="3"
         android:singleLine="false"
+        android:breakStrategy="balanced"
         android:text="@string/song_title"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/album_art"
@@ -26,7 +26,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/dummy_album_art" />
