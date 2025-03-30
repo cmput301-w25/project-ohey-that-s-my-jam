@@ -1,6 +1,7 @@
 package com.otmj.otmjapp.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,11 @@ import java.util.ArrayList;
 public class TrackListAdapter extends ArrayAdapter<Track> {
     public TrackListAdapter(@NonNull Context context, ArrayList<Track> tracks) {
         super(context, 0, tracks);
+        this.tracks = tracks;
     }
+
+    private int selectedPosition = -1;
+    private final ArrayList<Track> tracks;
 
     @NonNull
     @Override
@@ -34,10 +39,11 @@ public class TrackListAdapter extends ArrayAdapter<Track> {
         if(null == listItemView) {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.track_block, parent, false);
         }
-        //TODO: play preview
-        Track track = getItem(position);
-        assert track != null;
 
+        Track track = getItem(position);
+
+        assert track != null;
+        //setSelectedTrack(track);
         // get track data
         String title = track.getTitle();
         String artist = track.getArtists().get(0).getName();
@@ -58,8 +64,29 @@ public class TrackListAdapter extends ArrayAdapter<Track> {
                 .load(albumArtUrl)
                 .into(albumArt);
 
+        // Change the background color if the item is selected
+        if (position == selectedPosition) {
+            listItemView.setBackgroundColor(Color.parseColor("#D2D6D2"));
+        } else {
+            listItemView.setBackgroundColor(Color.TRANSPARENT);
+        }
+
+        // Handle item click and update selection
+        listItemView.setOnClickListener(v -> {
+            selectedPosition = position;
+
+            notifyDataSetChanged();
+        });
+
         return listItemView;
     }
+
+    /**
+     * Wraps text after 20 characters.
+     * <p>
+     * @param input The input string to be wrapped.
+     * @return The wrapped string.
+     */
     private String wrapTextAfter20Chars(String input) {
         String[] words = input.split(" ");
         StringBuilder result = new StringBuilder();
@@ -78,5 +105,13 @@ public class TrackListAdapter extends ArrayAdapter<Track> {
         }
 
         return result.toString().trim();
+    }
+
+    public Track getLastSelectedTrack() {
+        if(selectedPosition >= 0) {
+            return tracks.get(selectedPosition);
+        } else {
+            return null;
+        }
     }
 }
