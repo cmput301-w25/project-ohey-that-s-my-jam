@@ -1,86 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp"
-    android:layout_margin="8dp">
+    android:layout_height="match_parent">
 
-    <!-- Title and Edit Button -->
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start|center_vertical"
-        android:orientation="horizontal">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="8dp"
+        tools:ignore="MissingConstraints"
+        app:cardBackgroundColor="@color/white"
+        app:cardUseCompatPadding="true">
 
-        <ImageView
-            android:id="@+id/image_emoji"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:scaleType="centerCrop" />
-
-        <TextView
-            android:id="@+id/textView_emotionalState"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-
-        <ImageButton
-            android:id="@+id/my_mood_edit_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_edit"
-            android:contentDescription="@string/edit_event" />
-    </LinearLayout>
-
-    <!-- Timestamp -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/event_timestamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/date_and_time_text"
-            android:textColor="@color/gray"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/reason_why_image"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="6dp"
-            android:contentDescription="@string/reason_why_image_desc"
-            android:scaleType="centerCrop" />
+            android:padding="8dp"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textview_reason"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:text="@string/reason_why"/>
+            <TextView
+                android:id="@+id/event_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:drawablePadding="2dp"
+                android:gravity="center_vertical"
+                android:text="@string/mood_event_location"
+                android:textSize="12sp"
+                app:drawableStartCompat="@drawable/ic_location"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textview_reason" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textview_reason"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="5"
+                android:paddingBottom="5dp"
+                android:text="@string/reason_why"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/reason_why_image" />
 
-    <!-- Location Layout -->
-    <TextView
-        android:id="@+id/event_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/mood_event_location"
-        android:textSize="12sp"
-        android:paddingTop="5dp"
-        android:gravity="center_vertical"
-        app:drawableStartCompat="@drawable/ic_location"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timeline_mood_event_desc"
-        app:layout_constraintBottom_toBottomOf="parent"/>
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/textView_emotionalState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toEndOf="@id/image_emoji"
+                app:layout_constraintBottom_toTopOf="@+id/event_timestamp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:id="@+id/image_emoji"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toTopOf="@id/event_timestamp"/>
+
+            <ImageButton
+                android:id="@+id/my_mood_edit_button"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_edit"
+                android:contentDescription="@string/edit_event"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/event_timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/reason_why_image"
+                android:layout_marginTop="4dp"
+                android:text="@string/date_and_time_text"
+                android:textColor="@color/gray"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/reason_why_image"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:contentDescription="@string/reason_why_image_desc"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/event_timestamp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
