@@ -11,9 +11,10 @@ import android.util.Log;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.otmj.otmjapp.Helper.FirestoreCollections;
+
 import com.otmj.otmjapp.Helper.FirestoreDB;
 import com.otmj.otmjapp.Helper.UserManager;
+import com.otmj.otmjapp.Models.FirestoreCollections;
 import com.otmj.otmjapp.Models.User;
 
 import org.junit.After;
