@@ -64,6 +64,8 @@
             app:destination="@id/moodEventDetailsFragment" />
         <action
             android:id="@+id/logoutFromApp"
+            app:popUpTo="@+id/initial_nav_graph"
+            app:popUpToInclusive="true"
             app:destination="@id/initialActivity" />
     </fragment>
 
