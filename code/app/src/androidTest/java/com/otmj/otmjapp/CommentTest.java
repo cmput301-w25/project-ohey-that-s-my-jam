@@ -7,7 +7,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static com.otmj.otmjapp.Models.MoodEvent.Privacy.Public;
 
 import static org.hamcrest.CoreMatchers.containsString;
 
@@ -29,6 +28,7 @@ import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.Comment;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.MoodEvent;
+import com.otmj.otmjapp.Models.Privacy;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
 
@@ -66,7 +66,13 @@ public class CommentTest {
     private void MockMoodEvent(@NonNull UserManager userManager) {
         user = userManager.getCurrentUser();
         userId = user.getID();
-        MoodEvent moodEvent = new MoodEvent(userId, EmotionalState.Happy, SocialSituation.Alone, false, "Got ice Cream!", null, Public);
+        MoodEvent moodEvent = new MoodEvent(userId,
+                EmotionalState.Happy,
+                SocialSituation.Alone,
+                false,
+                "Got ice Cream!",
+                null,
+                Privacy.Public);
         ArrayList<String> userIdList = new ArrayList<String>();
         userIdList.add(userId);
         moodEventsManager = new MoodEventsManager(userIdList);
@@ -76,7 +82,7 @@ public class CommentTest {
     private void MockMoodEventwithComment(@NonNull UserManager userManager, Context context) {
         user = userManager.getCurrentUser();
         userId = user.getID();
-        MoodEvent moodEvent = new MoodEvent(userId, EmotionalState.Happy, SocialSituation.Alone, false, "Got ice Cream!", null, Public);
+        MoodEvent moodEvent = new MoodEvent(userId, EmotionalState.Happy, SocialSituation.Alone, false, "Got ice Cream!", null, Privacy.Public);
 
         // Add mood event
         ArrayList<String> userIdList = new ArrayList<>();
@@ -107,12 +113,20 @@ public class CommentTest {
 
         // Add comments with extended delays
         for (Comment comment : comments) {
-            commentHandler.addComment(comment.getCommentText(), moodEventId, userId, commentAdapter);
+            commentHandler.addComment(comment, c -> {
+                commentAdapter.add(c);
+                commentAdapter.notifyDataSetChanged();
+            });
+
             SystemClock.sleep(1000); // Small delay between comment additions
         }
 
         // Load comments after adding
-        commentHandler.loadComments(moodEventId, commentAdapter);
+        commentAdapter.clear();
+        commentHandler.loadComments(moodEventId, comment -> {
+            commentAdapter.add(comment);
+            commentAdapter.notifyDataSetChanged();
+        });
     }
 
     public void MockUser() throws InterruptedException {

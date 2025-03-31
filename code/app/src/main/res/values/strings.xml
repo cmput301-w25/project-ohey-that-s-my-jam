@@ -126,5 +126,6 @@
     <string name="requested_text">REQUESTED</string>
     <string name="prev_map_desc">Go to previous emotional state in map</string>
     <string name="next_map_desc">Go to next emotional state in map</string>
+    <string name="recent_music_events">RECENT MUSIC EVENTS</string>
 
 </resources>

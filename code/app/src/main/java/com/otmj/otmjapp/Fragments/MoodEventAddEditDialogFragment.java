@@ -1,8 +1,5 @@
 package com.otmj.otmjapp.Fragments;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -37,10 +34,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.LocationHelper;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
+import com.otmj.otmjapp.Helper.MusicEventsManager;
 import com.otmj.otmjapp.Helper.TextValidator;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.MoodEvent;
+import com.otmj.otmjapp.Models.MusicEvent;
 import com.otmj.otmjapp.Models.SimpleLocation;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
@@ -48,9 +47,6 @@ import com.otmj.otmjapp.R;
 
 import java.util.List;
 import java.util.Map;
-
-
-
 
 /**
  * A dialog fragment for adding or editing a MoodEvent.
@@ -63,6 +59,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
     private SocialSituation selectedSocialSituation;
     private MoodEvent moodEvent;
     private MoodEvent.Privacy privacy;
+    private MusicEvent musicEvent;
     private Map<String, SocialSituation> socialSituationMapping;
 
     private boolean attachLocation;
@@ -70,6 +67,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
     private LocationHelper locationHelper;
     private ActivityResultLauncher<String> permissionLauncher;
     private TextView addressTextView;
+    private ImageView addMusicButton;
     private String imageLink;
 
     private ConstraintLayout selectedImageContainer;
@@ -100,9 +98,6 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     }
                 }
             });
-
-
-
 
     /**
      * Creates a new instance of the dialog fragment with a given MoodEvent.
@@ -154,10 +149,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         addressTextView = view.findViewById(R.id.textview_address);
         selectedImageContainer = view.findViewById(R.id.image_container);
 
-        ImageView addMusic = view.findViewById(R.id.add_music);
-        addMusic.setOnClickListener(v -> {
-            new AddEditMusicDialogFragment().show(getParentFragmentManager(), "addMusic");
-        });
+        addMusicButton = view.findViewById(R.id.add_music);
 
         // using SwitchCompat makes the app crash when the 'addMoodEvent' button is clicked
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch privacySwitch = view.findViewById(R.id.privacy_switch);
@@ -194,10 +186,22 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     ImageHandler.loadImage(requireContext(), imageLink, selectedImageView);
                 }
                 if (moodEvent.getLocation() != null) {
-                    attachLocation = TRUE;
+                    attachLocation = true;
                     getCurrentAddress(moodEvent.getLocation().toLocation());
                     addLocationBottom.setImageResource(R.drawable.detach_location);
                 }
+
+                // Load music event if it is has one
+                MusicEventsManager musicEventsManager = new MusicEventsManager(List.of(moodEvent.getUserID()));
+                musicEventsManager.getAssociatedMusicEvent(moodEvent.getID(), music -> {
+                    musicEvent = music;
+                    // Show the album cover as the new icon
+                    ImageHandler.loadImage(
+                            getContext(),
+                            music.getTrack().getAlbum().getImages().get(0).getURL(),
+                            addMusicButton
+                    );
+                });
 
                 privacySwitch.setChecked(privacy == MoodEvent.Privacy.Public);
             }
@@ -281,6 +285,10 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                                     new MoodEventsManager(List.of(UserManager.getInstance().getCurrentUser().getID()));
 
                             moodEventsManager.deleteMoodEvent(moodEvent);
+
+                            MusicEventsManager musicEventsManager =
+                                    new MusicEventsManager(List.of(UserManager.getInstance().getCurrentUser().getID()));
+                            musicEventsManager.deleteMusicEvent(moodEvent.getID());
                             dismiss();
                         })
                         .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
@@ -289,7 +297,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         });
 
         addLocationBottom.setOnClickListener(v -> {
-            if (attachLocation == FALSE) {
+            if (!attachLocation) {
                 addressTextView.setText("Please wait a moment");
                 if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
@@ -298,13 +306,31 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     getCurrentLocation();
                 }
                 addLocationBottom.setImageResource(R.drawable.detach_location);
-                attachLocation = TRUE;
+                attachLocation = true;
             } else {
                 addressTextView.setText("");
-                attachLocation = FALSE;
+                attachLocation = false;
                 addLocationBottom.setImageResource(R.drawable.ic_add_location);
                 location = null;
             }
+        });
+
+        addMusicButton.setOnClickListener(v -> {
+            AddEditMusicDialogFragment musicFragment = new AddEditMusicDialogFragment();
+
+            // Set up the listener to handle track selection
+            musicFragment.setOnTrackSelectedListener(createdMusicEvent -> {
+                musicEvent = createdMusicEvent;
+
+                // change what used to be music note icon with album art to show that song has been selected
+                ImageHandler.loadImage(
+                        getContext(),
+                        musicEvent.getTrack().getAlbum().getImages().get(0).getURL(),
+                        addMusicButton
+                );
+            });
+
+            musicFragment.show(getParentFragmentManager(), "addMusic");
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
@@ -329,24 +355,34 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         User user = UserManager.getInstance().getCurrentUser();
         MoodEventsManager moodEventsManager =
                 new MoodEventsManager(List.of(user.getID()));
-        Log.d("MoodEvent privacy", "setupMoodEvent:" + privacy);
+        MusicEventsManager musicEventsManager =
+                new MusicEventsManager(List.of(user.getID()));
+
+        // Update mood event
         if (moodEvent != null) {
             moodEvent.setEmotionalState(selectedEmotionalState);
             moodEvent.setReason(reason);
             moodEvent.setSocialSituation(selectedSocialSituation);
             moodEvent.setPrivacy(privacy);
             moodEvent.setImageLink(imageLink);
-            if (location != null){
+
+            if (location != null) {
                 SimpleLocation temp_simpleLocation = new SimpleLocation(location.getLatitude(),location.getLongitude());
                 moodEvent.setLocation(temp_simpleLocation);
             } else {
                 moodEvent.setLocation(null);
             }
+
+            if (null != musicEvent) {
+                musicEventsManager.updateMusicEvent(musicEvent);
+            }
             moodEventsManager.updateMoodEvent(moodEvent);
+        // Add new mood event
         } else {
-            if(privacy == null) { // privacy is null by default. If user doesn't toggle switch, set it to private
+            if (privacy == null) { // privacy is null by default. If user doesn't toggle switch, set it to private
                 privacy = MoodEvent.Privacy.Private;
             }
+
             MoodEvent temp_moodEvent = new MoodEvent(
                     user.getID(),
                     selectedEmotionalState,
@@ -356,13 +392,23 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     imageLink,
                     privacy
             );
-            if (location != null){
-                SimpleLocation temp_simpleLocation = new SimpleLocation(location.getLatitude(),location.getLongitude());
+
+            if (location != null) {
+                SimpleLocation temp_simpleLocation =
+                        new SimpleLocation(location.getLatitude(),location.getLongitude());
                 temp_moodEvent.setLocation(temp_simpleLocation);
             } else {
                 temp_moodEvent.setLocation(null);
             }
-            moodEventsManager.addMoodEvent(temp_moodEvent);
+
+            moodEventsManager.addMoodEvent(temp_moodEvent, m -> {
+                if (null != musicEvent) {
+                    musicEvent.setUserID(user.getID());
+                    musicEvent.setMoodEventID(m.getID());
+
+                    musicEventsManager.addMusicEvent(musicEvent);
+                }
+            });
         }
     }
 

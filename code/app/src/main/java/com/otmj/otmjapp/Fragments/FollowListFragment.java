@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filterable;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -53,26 +54,29 @@ public class FollowListFragment extends Fragment {
         // Find the SearchView
         SearchView searchView = rootView.findViewById(R.id.search_view);
 
-        // Set up the SearchView listener (for text changes)
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // You can handle the search submit event here (if needed)
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // Filter the list as the user types
-                filterList(newText, rootView);
+                ListAdapter adapter = ((ListView) rootView.findViewById(R.id.user_list_view)).getAdapter();
+                if (adapter instanceof Filterable) {
+                    ((Filterable) adapter).getFilter().filter(newText);
+                }
                 return true;
             }
         });
 
-        // Get the arguments passed from the previous fragment
+
         Bundle arguments = getArguments();
         if (arguments != null) {
+            // Get the arguments passed from the previous fragment
             String buttonClicked = arguments.getString("buttonClicked");
+            String userID = arguments.getString("userID");
+
 
             // Check if the followers button was clicked
             if ("followers".equals(buttonClicked)) {
@@ -82,7 +86,7 @@ public class FollowListFragment extends Fragment {
                 Log.d("FollowListFragment", "Followers button clicked");
 
                 // Fetch followers using FollowHandler
-                followHandler.fetchFollowers(currentUserId, new FollowHandler.FollowCallback() {
+                followHandler.fetchFollowers(userID, new FollowHandler.FollowCallback() {
                     @Override
                     public void onSuccess(ArrayList<User> followersList) {
                         // Log the followers list size
@@ -100,9 +104,6 @@ public class FollowListFragment extends Fragment {
                     }
                 });
 
-                // Hide the SearchView for followers
-                searchView.setVisibility(View.GONE);
-
                 // Check if the following button was clicked
             } else if ("following".equals(buttonClicked)) {
                 listTitle.setText(R.string.following);  // Set title for following
@@ -111,7 +112,7 @@ public class FollowListFragment extends Fragment {
                 Log.d("FollowListFragment", "Following button clicked");
 
                 // Fetch following using FollowHandler
-                followHandler.fetchFollowing(currentUserId, new FollowHandler.FollowCallback() {
+                followHandler.fetchFollowing(userID, new FollowHandler.FollowCallback() {
                     @Override
                     public void onSuccess(ArrayList<User> followingList) {
                         // Log the following list size
@@ -128,9 +129,6 @@ public class FollowListFragment extends Fragment {
                         // Optionally, show an error message
                     }
                 });
-
-                // Hide the SearchView for following
-                searchView.setVisibility(View.GONE);
 
                 // Check if the "peopleYouMayKnow" button was clicked
             } else if ("peopleYouMayKnow".equals(buttonClicked)) {

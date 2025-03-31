@@ -70,21 +70,22 @@
                 android:layout_marginEnd="8dp"
                 android:text="@string/time_ago"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toTopOf="@+id/timeline_mood_event_username"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/timeline_mood_event_username"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="username is happy 😊 with 3 others"
                 android:textColor="@color/black"
                 android:textSize="16sp"
+                android:maxLines="2"
                 app:layout_constraintBottom_toTopOf="@+id/mood_image"
                 app:layout_constraintStart_toEndOf="@id/timeline_mood_event_profile_pic"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <ImageView
                 android:id="@+id/timeline_mood_event_profile_pic"
@@ -103,6 +104,7 @@
                 android:layout_height="300dp"
                 android:contentDescription="@string/reason_why_image_desc"
                 android:scaleType="centerCrop"
+                android:paddingTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/timeline_mood_event_profile_pic" />

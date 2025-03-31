@@ -65,8 +65,6 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
 
-    implementation("com.squareup.picasso:picasso:2.71828")
-    implementation ("androidx.cardview:cardview:1.0.0")
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.9.0"))
@@ -79,6 +77,7 @@ dependencies {
     implementation(libs.annotation)
     implementation(libs.play.services.maps)
     implementation(libs.firebase.storage)
+    implementation(libs.security.crypto)
     testImplementation(libs.runner)
     testImplementation(libs.ext.junit)
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
@@ -87,9 +86,13 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
+    androidTestImplementation("androidx.test:rules:1.4.0")
+
 
     testImplementation("org.mockito:mockito-core:5.7.0")
     testImplementation("org.mockito:mockito-inline:5.2.0")
+    androidTestImplementation("android.arch.core:core-testing:1.0.0")
     implementation("net.bytebuddy:byte-buddy:1.17.1")
 
     // for getting location
@@ -98,5 +101,15 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-maps:19.1.0")
 
-    implementation("jp.wasabeef:glide-transformations:4.3.0");
+    // for sending http requests
+    implementation("com.squareup.retrofit2:retrofit:2.9.0");
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+
+    // for retrieving environment variables
+    implementation("io.github.cdimascio:java-dotenv:5.2.2") // Or the latest version
+
+    implementation("jp.wasabeef:glide-transformations:4.3.0")
+
+    implementation("com.google.code.gson:gson:2.10.1")
 }

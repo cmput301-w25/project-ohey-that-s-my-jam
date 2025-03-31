@@ -12,7 +12,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.otmj.otmjapp.Adapters.TimelineMoodEventAdapter;
-import com.otmj.otmjapp.Helper.FilterOptions;
+import com.otmj.otmjapp.Models.FilterOptions;
 import com.otmj.otmjapp.Helper.FollowHandler;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.UserManager;

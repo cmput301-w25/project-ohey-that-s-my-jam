@@ -7,10 +7,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
-import static com.otmj.otmjapp.Models.MoodEvent.Privacy.Private;
-import static com.otmj.otmjapp.Models.MoodEvent.Privacy.Public;
-
+import static com.otmj.otmjapp.Models.Privacy.Private;
 import static org.hamcrest.CoreMatchers.not;
 
 import android.os.SystemClock;
@@ -26,6 +23,7 @@ import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.MoodEvent;
+import com.otmj.otmjapp.Models.Privacy;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
 
@@ -63,7 +61,7 @@ public class MoodEventAddEditTest {
     private void MockPublicMoodEvent(@NonNull UserManager userManager) {
         user = userManager.getCurrentUser();
         userId = user.getID();
-        MoodEvent moodEvent = new MoodEvent(userId, EmotionalState.Happy, SocialSituation.Alone, false, "Got ice Cream!", null, Public);
+        MoodEvent moodEvent = new MoodEvent(userId, EmotionalState.Happy, SocialSituation.Alone, false, "Got ice Cream!", null, Privacy.Public);
         ArrayList<String> userIdList = new ArrayList<String>();
         userIdList.add(userId);
         moodEventsManager = new MoodEventsManager(userIdList);

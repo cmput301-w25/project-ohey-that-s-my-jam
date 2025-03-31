@@ -2,18 +2,12 @@ package com.otmj.otmjapp;
 
 import static org.junit.Assert.assertEquals;
 
-import android.location.Location;
-
 import com.otmj.otmjapp.Models.EmotionalState;
 import com.otmj.otmjapp.Models.MoodEvent;
+import com.otmj.otmjapp.Models.Privacy;
 import com.otmj.otmjapp.Models.SocialSituation;
 
 import org.junit.Test;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MoodEventTest {
 
@@ -24,7 +18,7 @@ public class MoodEventTest {
                                             false,
                                             "I am happy",
                                             "http://example.com/profile.jpg",
-                                            MoodEvent.Privacy.Public);
+                Privacy.Public);
         return moodEvent;
     }
 

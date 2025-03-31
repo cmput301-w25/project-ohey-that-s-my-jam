@@ -13,6 +13,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.otmj.otmjapp.R;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -147,6 +148,8 @@ public class ImageHandler {
     public static void loadCircularImage(Context context, String imageUrl, ImageView imageView) {
         Glide.with(context)
                 .load(imageUrl)
+                .placeholder(R.drawable.profile_placeholder)  // Always show while loading
+                .error(R.drawable.profile_placeholder)         // Fallback for bad URLs
                 .apply(RequestOptions.circleCropTransform())
                 .into(imageView);
     }

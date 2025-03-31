@@ -1,8 +1,5 @@
 package com.otmj.otmjapp.Helper;
 
-import android.util.Log;
-
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -10,9 +7,8 @@ import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.otmj.otmjapp.Models.DBSortOption;
 import com.otmj.otmjapp.Models.DatabaseObject;
-import com.otmj.otmjapp.Models.MoodEvent;
 
 import java.util.ArrayList;
 import java.util.List;

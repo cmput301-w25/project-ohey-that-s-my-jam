@@ -1,10 +1,9 @@
-package com.otmj.otmjapp.Helper;
+package com.otmj.otmjapp.Models;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.Filter;
-import com.otmj.otmjapp.Models.EmotionalState;
-import com.otmj.otmjapp.Models.MoodEvent;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,6 +65,13 @@ public class MoodHistoryFilter {
         if (newFilter.getFilter() != null) {
             addFilter(newFilter.getFilter());
         }
+    }
+
+    public static MoodHistoryFilter SpecificMoodEvent(String moodEventID) {
+        return new MoodHistoryFilter(
+          Filter.equalTo(FieldPath.documentId(), moodEventID),
+          null
+        );
     }
 
     /**
