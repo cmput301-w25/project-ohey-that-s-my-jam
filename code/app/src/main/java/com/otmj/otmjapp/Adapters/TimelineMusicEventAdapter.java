@@ -9,23 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.otmj.otmjapp.API.Auth.SpotifyAPIManager;
 import com.otmj.otmjapp.Helper.ImageHandler;
-import com.otmj.otmjapp.MainActivity;
 import com.otmj.otmjapp.Models.MusicEvent;
 import com.otmj.otmjapp.R;
 
 import java.util.ArrayList;
 
 public class TimelineMusicEventAdapter extends ArrayAdapter<MusicEvent> {
-    private int currentlyPlayingPosition = -1;
-    private Activity activity;
     public TimelineMusicEventAdapter(@NonNull Activity activity, @NonNull ArrayList<MusicEvent> musicEvents) {
         super(activity, 0, musicEvents);
-        this.activity = activity;
     }
 
     @NonNull
@@ -74,66 +68,6 @@ public class TimelineMusicEventAdapter extends ArrayAdapter<MusicEvent> {
             // use ImageHandler to load the image
             ImageHandler.loadImage(parent.getContext(), currentMusicEvent.getAlbumArtURL(), albumArt);
         }
-
-        ImageView playButton = view.findViewById(R.id.play_button);
-        ImageView pauseButton = view.findViewById(R.id.pause_button);
-
-        if (position == currentlyPlayingPosition) {
-            playButton.setVisibility(View.GONE);
-            pauseButton.setVisibility(View.VISIBLE);
-        } else {
-            playButton.setVisibility(View.VISIBLE);
-            pauseButton.setVisibility(View.GONE);
-        }
-
-        // toggle play/pause buttons of other music events based on current item play status
-        playButton.setOnClickListener(v -> {
-            SpotifyAPIManager apiManager = new SpotifyAPIManager((MainActivity) activity);
-            apiManager.playSong(currentMusicEvent.getTrack().getID());
-
-            if (currentlyPlayingPosition != -1 && currentlyPlayingPosition != position) {
-                // Iterate through visible children to find the previously playing one
-                ListView listView = (ListView) parent;
-                int firstVisiblePosition = listView.getFirstVisiblePosition();
-                int lastVisiblePosition = listView.getLastVisiblePosition();
-
-                for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
-                    //Log.d("TimelineMusicEvent", musicEvents.get(i - firstVisiblePosition).getTrack().getTitle());
-                    if (i == currentlyPlayingPosition) {
-                        View previousView = listView.getChildAt(i - firstVisiblePosition);
-
-                        if (previousView != null) {
-                            ImageView prevPlayButton = previousView.findViewById(R.id.play_button);
-                            ImageView prevPauseButton = previousView.findViewById(R.id.pause_button);
-
-                            if (prevPlayButton != null && prevPauseButton != null) {
-                                prevPlayButton.setVisibility(View.VISIBLE);
-                                prevPauseButton.setVisibility(View.GONE);
-                            }
-                        }
-
-                        break;
-                    }
-                }
-            }
-
-            // Update the current item's button.
-            playButton.setVisibility(View.GONE);
-            pauseButton.setVisibility(View.VISIBLE);
-            currentlyPlayingPosition = position;
-            notifyDataSetChanged();
-        });
-
-        pauseButton.setOnClickListener(v -> {
-            SpotifyAPIManager apiManager = new SpotifyAPIManager((MainActivity) activity);
-            apiManager.pauseSong();
-
-            // reset 'currently playing' status
-            playButton.setVisibility(View.VISIBLE);
-            pauseButton.setVisibility(View.GONE);
-            currentlyPlayingPosition = -1;
-            notifyDataSetChanged();
-        });
 
         return view;
     }
