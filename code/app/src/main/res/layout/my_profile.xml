@@ -13,176 +13,176 @@
 
         <!-- Scrollable Content (Profile & Recent Events) -->
 
-                <!-- Profile Section -->
-                <LinearLayout
-                    android:layout_width="match_parent"
+        <!-- Profile Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/profile_image"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/profile_placeholder"
+                android:contentDescription="@string/profile_picture"
+                android:scaleType="centerCrop"
+                android:layout_marginStart="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_marginStart="12dp"
+                    android:text="@string/username_text"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
-                    <ImageView
-                        android:id="@+id/profile_image"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:background="@drawable/profile_placeholder"
-                        android:contentDescription="@string/profile_picture"
-                        android:scaleType="centerCrop"
-                        android:layout_marginStart="10dp"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/logoutButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/blue_nav_bar"
+                    android:paddingHorizontal="8dp"
+                    android:text="@string/logout_text"
+                    android:textColor="@color/white"
+                    android:visibility="gone"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="20dp"
+                    android:layout_marginStart="12dp"
+                    app:icon="@drawable/ic_logout"
+                    app:iconGravity="textStart"
+                    app:iconPadding="4dp"
+                    app:iconSize="30dp"
+                    app:iconTint="@color/white" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/username"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:text="@string/username_text"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/logoutButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:backgroundTint="@color/blue_nav_bar"
-                            android:paddingHorizontal="8dp"
-                            android:text="@string/logout_text"
-                            android:textColor="@color/white"
-                            android:visibility="gone"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="20dp"
-                            android:layout_marginStart="12dp"
-                            app:icon="@drawable/ic_logout"
-                            app:iconGravity="textStart"
-                            app:iconPadding="4dp"
-                            app:iconSize="30dp"
-                            app:iconTint="@color/white" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/unfollowButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:backgroundTint="@color/blue_nav_bar"
-                            android:paddingHorizontal="8dp"
-                            android:visibility="gone"
-                            android:text="@string/unfollow_text"
-                            android:textColor="@color/white"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="20dp"
-                            android:layout_marginStart="12dp"
-                            app:icon="@drawable/ic_unfollow"
-                            app:iconGravity="textStart"
-                            app:iconPadding="4dp"
-                            app:iconSize="30dp"
-                            app:iconTint="@color/white" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/unfollowButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:backgroundTint="@color/blue_nav_bar"
+                    android:paddingHorizontal="8dp"
+                    android:visibility="gone"
+                    android:text="@string/unfollow_text"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="20dp"
+                    android:layout_marginStart="12dp"
+                    app:icon="@drawable/ic_unfollow"
+                    app:iconGravity="textStart"
+                    app:iconPadding="4dp"
+                    app:iconSize="30dp"
+                    app:iconTint="@color/white" />
 
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/requestButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:backgroundTint="#26193F80"
-                            android:paddingHorizontal="8dp"
-                            android:text="@string/send_request_text"
-                            android:visibility="gone"
-                            android:textColor="#DE000000"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="20dp"
-                            app:icon="@drawable/ic_send"
-                            app:iconGravity="textStart"
-                            app:iconPadding="4dp"
-                            app:iconSize="30dp"
-                            app:iconTint="#80000000"
-                            android:layout_marginStart="12dp"/>
-                    </LinearLayout>
-                </LinearLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/requestButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:backgroundTint="#26193F80"
+                    android:paddingHorizontal="8dp"
+                    android:text="@string/send_request_text"
+                    android:visibility="gone"
+                    android:textColor="#DE000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="20dp"
+                    app:icon="@drawable/ic_send"
+                    app:iconGravity="textStart"
+                    app:iconPadding="4dp"
+                    app:iconSize="30dp"
+                    app:iconTint="#80000000"
+                    android:layout_marginStart="12dp"/>
+            </LinearLayout>
+        </LinearLayout>
 
-                <!-- Follow Buttons -->
+        <!-- Follow Buttons -->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginStart="0dp"
-                    android:padding="5dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="40dp"
+            android:padding="5dp">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/followers_button"
-                            android:clickable="true"
-                            android:layout_width="wrap_content"
-                            android:layout_height="34dp"
-                            android:backgroundTint="#D0D5DF"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="4dp"
-                            android:text="@string/followers"
-                            android:textColor="@android:color/black"
-                            android:textSize="12sp"
-                            android:fontFamily="@font/roboto_medium"
-                            app:cornerRadius="12dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/followers_button"
+                android:clickable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:backgroundTint="#D0D5DF"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="@string/followers"
+                android:textColor="@android:color/black"
+                android:textSize="12sp"
+                android:fontFamily="@font/roboto_medium"
+                app:cornerRadius="12dp" />
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/following_button"
-                            android:clickable="true"
-                            android:layout_width="wrap_content"
-                            android:layout_height="34dp"
-                            android:layout_marginStart="6dp"
-                            android:backgroundTint="#D0D5DF"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="4dp"
-                            android:text="@string/following"
-                            android:textColor="@android:color/black"
-                            android:textSize="12sp"
-                            android:fontFamily="@font/roboto_medium"
-                            app:cornerRadius="12dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/following_button"
+                android:clickable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_marginStart="6dp"
+                android:backgroundTint="#D0D5DF"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="@string/following"
+                android:textColor="@android:color/black"
+                android:textSize="12sp"
+                android:fontFamily="@font/roboto_medium"
+                app:cornerRadius="12dp" />
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/view_requests_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="34dp"
-                            android:layout_marginStart="6dp"
-                            android:backgroundTint="#D0D5DF"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="4dp"
-                            android:text="@string/requests"
-                            android:textColor="@android:color/black"
-                            android:fontFamily="@font/roboto_medium"
-                            android:textSize="12sp"
-                            app:cornerRadius="12dp" />
-                </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/view_requests_button"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_marginStart="6dp"
+                android:backgroundTint="#D0D5DF"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="@string/requests"
+                android:textColor="@android:color/black"
+                android:fontFamily="@font/roboto_medium"
+                android:textSize="12sp"
+                app:cornerRadius="12dp" />
+        </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="15dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="15dp">
 
-                    <ImageButton
-                        android:id="@+id/filter_button"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/filter_desc"
-                        android:src="@drawable/ic_filter" />
+            <ImageButton
+                android:id="@+id/filter_button"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/filter_desc"
+                android:src="@drawable/ic_filter" />
 
-                    <TextView
-                        android:id="@+id/recent_events_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:text="@string/recent_events"
-                        android:textColor="@color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+            <TextView
+                android:id="@+id/recent_events_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/recent_events"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
