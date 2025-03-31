@@ -61,12 +61,9 @@ android {
 dependencies {
     implementation(libs.appcompat)
     implementation("com.google.android.material:material:1.6.0")  //newer version
-
     implementation(libs.constraintlayout)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
-
-    implementation("com.squareup.picasso:picasso:2.71828")
 
 
     // Firebase
@@ -89,6 +86,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
+    androidTestImplementation("androidx.test:rules:1.4.0")
+
 
     testImplementation("org.mockito:mockito-core:5.7.0")
     testImplementation("org.mockito:mockito-inline:5.2.0")
@@ -111,6 +111,4 @@ dependencies {
     implementation("jp.wasabeef:glide-transformations:4.3.0")
 
     implementation("com.google.code.gson:gson:2.10.1")
-
-    //implementation("com.spotify.android:spotify-app-remote:0.8.0") // for song playback
 }

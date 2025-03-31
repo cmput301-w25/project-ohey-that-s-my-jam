@@ -269,7 +269,7 @@ public class SpotifyAPIManager {
     }
 
     /**
-     * Checks if the access token has expit red.
+     * Checks if the access token has expired.
      *
      * @return Whether or not the access token has expired.
      */

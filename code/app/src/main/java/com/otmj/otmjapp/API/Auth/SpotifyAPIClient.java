@@ -51,6 +51,10 @@ public class SpotifyAPIClient {
     public Call<TracksResponse> searchTracks(
                                        String accessToken,
                                        String query) {
+        Log.d("SpotifyAPIClient", "Query: " + query);
+        Log.d("SpotifyAPIClient", "Access token: " + accessToken);
+        Log.d("SpotifyAPIClient", "Search service: " + searchService.toString());
+
         return searchService.searchTracks(
                 "Bearer " + accessToken,
                 "track:" + query,

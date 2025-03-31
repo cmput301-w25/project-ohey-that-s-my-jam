@@ -113,12 +113,20 @@ public class CommentTest {
 
         // Add comments with extended delays
         for (Comment comment : comments) {
-            commentHandler.addComment(comment.getCommentText(), moodEventId, userId, commentAdapter);
+            commentHandler.addComment(comment, c -> {
+                commentAdapter.add(c);
+                commentAdapter.notifyDataSetChanged();
+            });
+
             SystemClock.sleep(1000); // Small delay between comment additions
         }
 
         // Load comments after adding
-        commentHandler.loadComments(moodEventId, commentAdapter);
+        commentAdapter.clear();
+        commentHandler.loadComments(moodEventId, comment -> {
+            commentAdapter.add(comment);
+            commentAdapter.notifyDataSetChanged();
+        });
     }
 
     public void MockUser() throws InterruptedException {
