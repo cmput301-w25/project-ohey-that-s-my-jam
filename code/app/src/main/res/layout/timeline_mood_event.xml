@@ -103,6 +103,7 @@
                 android:layout_height="300dp"
                 android:contentDescription="@string/reason_why_image_desc"
                 android:scaleType="centerCrop"
+                android:paddingTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/timeline_mood_event_profile_pic" />
