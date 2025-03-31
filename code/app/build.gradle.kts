@@ -111,4 +111,6 @@ dependencies {
     implementation("jp.wasabeef:glide-transformations:4.3.0")
 
     implementation("com.google.code.gson:gson:2.10.1")
+
+    //implementation("com.spotify.android:spotify-app-remote:0.8.0") // for song playback
 }

@@ -16,16 +16,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Handles communication with the Spotify API.
  */
 public class SpotifyAPIClient {
+    private final SpotifyPlaybackService playbackService;
     private final SpotifySearchService searchService;
     private final SpotifyAuthService authService;
     private static final SpotifyAPIClient instance = new SpotifyAPIClient();
 
     private SpotifyAPIClient() {
 
-        OkHttpClient client = new OkHttpClient.Builder()
+        OkHttpClient client = new OkHttpClient.Builder() // interceptor to verify the request being sent
                 .addInterceptor(chain -> {
                     Request request = chain.request();
-                    Log.d("SpotifyAPIManager", "FULL URL: " + request.url());
+                    Log.d("SpotifyAPIManager", "Request URL: " + request.url());
                     return chain.proceed(request);
                 })
                 .build();
@@ -42,21 +43,17 @@ public class SpotifyAPIClient {
                 .build();
 
         // generate proxy objects for API calls
+        playbackService = retrofitAPI.create(SpotifyPlaybackService.class);
         searchService = retrofitAPI.create(SpotifySearchService.class);
         authService = retrofitAuth.create(SpotifyAuthService.class);
     }
 
-    // TODO: make methods static
     public Call<TracksResponse> searchTracks(
                                        String accessToken,
                                        String query) {
-        Log.d("SpotifyAPIClient", "Query: " + query);
-        Log.d("SpotifyAPIClient", "Access token: " + accessToken);
-        Log.d("SpotifyAPIClient", "Search service: " + searchService.toString());
-
         return searchService.searchTracks(
                 "Bearer " + accessToken,
-                "" + query,  // putting 'track' before query ensures only tracks are returned
+                "track:" + query,
                 "track", 15);
     }
 
@@ -81,6 +78,19 @@ public class SpotifyAPIClient {
                                          String refreshToken,
                                          String clientID) {
         return authService.refreshAccessToken(grantType, refreshToken, clientID);
+    }
+    //TODO: investigate why app crashes after first sign in
+    public Call<Void> playSong(String uri) {
+        String accessToken = "Bearer " + SharedPreferencesHelper.getInstance().getTokenExpirationTime();
+        String[] songsToPlay = {"spotify:track:" + uri};
+
+        return playbackService.playSong(accessToken, songsToPlay);
+    }
+
+    public Call<Void> pauseSong() {
+        String token = "Bearer " + SharedPreferencesHelper.getInstance().getAccessToken();
+
+        return playbackService.pauseSong(token);
     }
 
     public static SpotifyAPIClient getInstance() {

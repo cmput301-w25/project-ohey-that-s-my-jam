@@ -13,15 +13,15 @@ public class Track {
     private final int duration;
     @SerializedName("name")
     private final String title;
-    @SerializedName("preview_url")
-    private final String previewURL;
+    @SerializedName("id")
+    private final String id;
 
     // default constructor required for field initialization
     Track() {
         this.album = null;
         this.artists = null;
         this.title = "";
-        this.previewURL = "";
+        this.id = "";
         this.duration = 0;
     }
 
@@ -37,8 +37,8 @@ public class Track {
         return album;
     }
 
-    public String getPreviewURL() {
-        return previewURL;
+    public String getID() {
+        return id;
     }
 
     public int getDuration() {

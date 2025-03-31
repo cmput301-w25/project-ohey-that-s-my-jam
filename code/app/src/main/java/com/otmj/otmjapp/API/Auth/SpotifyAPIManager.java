@@ -48,18 +48,55 @@ public class SpotifyAPIManager {
 
     private static final String[] SCOPES = {
             "user-read-private",
-            "streaming"
+            "user-modify-playback-state" //playback only works for users who have spotify premium -> remove playback option
     };
 
     public SpotifyAPIManager(MainActivity activity) {
         this.activity = activity;
-        // TODO: find way to get environment variables using a library
 
+        // TODO: find way to get environment variables using a library
         CLIENT_ID = "5d2e6eb636f1462aa365d47ae67aeb9f";
         REDIRECT_URI = "com.otmj.otmjapp://callback";
         ENCODED_REDIRECT_URI = Uri.encode(REDIRECT_URI);
 
         prefsHelper = SharedPreferencesHelper.getInstance();
+    }
+
+    /**
+     * Plays the provided song.
+     *
+     * @param uri The URI of the song to play.
+     */
+    public void playSong(String uri) {
+        Call<Void> playCall = SpotifyAPIClient.getInstance().playSong(uri);
+        playCall.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                if(response.isSuccessful()) {
+                    Log.d("SpotifyAPIManager", "Successfully played song");
+                } else {
+                    try {
+                        Log.d("SpotifyAPIManager", "Error playing song: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        Log.d("SpotifyAPIManager", "IOException: " + e.getMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                Log.e("SpotifyAPIManager", Objects.requireNonNull(t.getMessage()));
+            }
+        });
+    }
+
+    /**
+     * Pauses the song that is currently playing.
+     */
+    public void pauseSong() {
+        Call<Void> pauseCall = SpotifyAPIClient.getInstance().pauseSong();
+
+        Log.d("SpotifyAPIManager", "Song paused.");
     }
 
     /**
