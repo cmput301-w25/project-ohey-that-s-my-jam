@@ -190,7 +190,18 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     getCurrentAddress(moodEvent.getLocation().toLocation());
                     addLocationBottom.setImageResource(R.drawable.detach_location);
                 }
-                // TODO: Load music event
+
+                // Load music event if it is has one
+                MusicEventsManager musicEventsManager = new MusicEventsManager(List.of(moodEvent.getUserID()));
+                musicEventsManager.getAssociatedMusicEvent(moodEvent.getID(), music -> {
+                    musicEvent = music;
+                    // Show the album cover as the new icon
+                    ImageHandler.loadImage(
+                            getContext(),
+                            music.getTrack().getAlbum().getImages().get(0).getURL(),
+                            addMusicButton
+                    );
+                });
 
                 privacySwitch.setChecked(privacy == MoodEvent.Privacy.Public);
             }
