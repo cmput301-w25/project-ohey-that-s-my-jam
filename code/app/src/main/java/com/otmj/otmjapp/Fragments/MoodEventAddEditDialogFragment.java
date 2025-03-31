@@ -4,8 +4,14 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,6 +30,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
@@ -55,6 +62,10 @@ import java.util.Map;
  * the event details.
  */
 public class MoodEventAddEditDialogFragment extends DialogFragment {
+    public interface OnNetworkChanged {
+        void changed(boolean online);
+    }
+
     private EmotionalState selectedEmotionalState;
     private SocialSituation selectedSocialSituation;
     private MoodEvent moodEvent;
@@ -145,11 +156,25 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         ImageView uploadImage = view.findViewById(R.id.add_image_button);
         ImageButton addLocationBottom = view.findViewById(R.id.add_location_button),
                 detachImageButton = view.findViewById(R.id.remove_image_button);
+
         selectedImageView = view.findViewById(R.id.selected_image_view);
         addressTextView = view.findViewById(R.id.textview_address);
         selectedImageContainer = view.findViewById(R.id.image_container);
 
         addMusicButton = view.findViewById(R.id.add_music);
+
+        // Disable add music and add location by default (enable it when has internet access)
+        enableOnConnectedToInternet(online -> {
+            if (online) {
+                uploadImage.setVisibility(View.VISIBLE);
+                addMusicButton.setVisibility(View.VISIBLE);
+                addLocationBottom.setVisibility(View.VISIBLE);
+            } else {
+                uploadImage.setVisibility(View.GONE);
+                addMusicButton.setVisibility(View.GONE);
+                addLocationBottom.setVisibility(View.GONE);
+            }
+        });
 
         // using SwitchCompat makes the app crash when the 'addMoodEvent' button is clicked
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch privacySwitch = view.findViewById(R.id.privacy_switch);
@@ -472,7 +497,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         locationHelper = new LocationHelper(requireActivity());
     }
 
-    public void getCurrentLocation(){
+    private void getCurrentLocation(){
         locationHelper = new LocationHelper(requireActivity());
         Log.d("Testing", "stage initial");
         locationHelper.getCurrentLocation(new LocationHelper.LocationCallback() {
@@ -495,7 +520,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         });
     }
 
-    public void getCurrentAddress(Location location){
+    private void getCurrentAddress(Location location){
         locationHelper.getAddressFromLocation(location, new LocationHelper.AddressCallback() {
             @Override
             public void onAddressResult(String country, String state, String city) {
@@ -511,5 +536,37 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 Log.e("Address", "Error: " + error);
             }
         });
+    }
+
+   private void enableOnConnectedToInternet(OnNetworkChanged onNetworkChanged) {
+       if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_NETWORK_STATE)
+                   == PackageManager.PERMISSION_GRANTED
+               && ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.CHANGE_NETWORK_STATE)
+                   == PackageManager.PERMISSION_GRANTED) {
+           ConnectivityManager connMgr =
+                   (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+           boolean isWifiConn = false;
+           boolean isMobileConn = false;
+           for (Network network : connMgr.getAllNetworks()) {
+               NetworkInfo networkInfo = connMgr.getNetworkInfo(network);
+               if (networkInfo != null) {
+                   if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                       isWifiConn |= networkInfo.isConnected();
+                   }
+                   if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                       isMobileConn |= networkInfo.isConnected();
+                   }
+               }
+           }
+
+           onNetworkChanged.changed(isWifiConn || isMobileConn);
+       } else {
+           ActivityCompat.requestPermissions(requireActivity(),
+                   new String[] {Manifest.permission.CHANGE_NETWORK_STATE,
+                           Manifest.permission.ACCESS_NETWORK_STATE},
+                   0);
+           onNetworkChanged.changed(false);
+       }
     }
 }

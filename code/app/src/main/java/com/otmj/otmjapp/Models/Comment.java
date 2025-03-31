@@ -9,7 +9,6 @@ import java.util.Objects;
 public class Comment extends DatabaseObject {
     private final String moodEventId;
     private final String userId;
-    @Exclude
     private User user = null;
     @ServerTimestamp
     private Date timestamp;
@@ -36,6 +35,7 @@ public class Comment extends DatabaseObject {
         this.user = user;
     }
 
+    @Exclude
     public User getUser() {
         return user;
     }
