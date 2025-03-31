@@ -5,7 +5,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,6 +18,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.otmj.otmjapp.Adapters.UserProfilePageMoodEventAdapter;
+import com.otmj.otmjapp.Helper.FirestoreDB;
 import com.otmj.otmjapp.Models.FilterOptions;
 import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
@@ -33,6 +38,40 @@ public class UserProfileFragment extends Fragment {
     private UserProfilePageMoodEventAdapter moodEventAdapter;
     private LiveData<ArrayList<MoodEvent>> moodEventsLiveData;
     private FilterOptions filterOptions;
+
+    private final ActivityResultLauncher<PickVisualMediaRequest> galleryLauncher =
+            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                if (uri != null) {
+                    long imageSize = ImageHandler.getImageSize(requireContext(), uri);
+                    if (imageSize <= 65536) {
+                        Toast.makeText(requireContext(), "Loading image...", Toast.LENGTH_SHORT).show();
+                        ImageHandler.uploadToFirebaseStorage(requireContext(), uri, new ImageHandler.UploadCallback() {
+                            @Override
+                            public void onSuccess(String imageUrl) {
+                                Log.d("Image Upload", "Image successfully uploaded: " + imageUrl);
+
+                                // 1. Update in-memory User object
+                                User currentUser = UserManager.getInstance().getCurrentUser();
+                                currentUser.setProfilePictureLink(imageUrl);
+
+                                // 2. Push updated User object to Firestore using your FirestoreDB helper
+                                FirestoreDB<User> userDB = new FirestoreDB<>("users");
+                                userDB.updateDocument(currentUser);
+
+                                // 3. Update UI immediately
+                                ImageHandler.loadCircularImage(requireContext(), imageUrl, binding.profileImage);
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                Log.e("Image Upload", "Failed to upload image: " + e.getMessage());
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getContext(), "Image size too big", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
 
     @Override
@@ -195,9 +234,18 @@ public class UserProfileFragment extends Fragment {
             });
 
         } else {
+            binding.profileImage.setOnClickListener(v -> {
+                galleryLauncher.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
+            });
             moodEventsLiveData = mood_event_controller.getAllMoodEvents(null);
             binding.logoutButton.setVisibility(View.VISIBLE);
-            binding.logoutButton.setOnClickListener(v -> user_manager.logout(this));
+            binding.logoutButton.setOnClickListener(v -> {
+                user_manager.logout();
+                NavHostFragment.findNavController(UserProfileFragment.this)
+                        .navigate(R.id.logoutFromApp);
+            });
             if (moodEventsLiveData != null) {
                 getMoodEventFromDB();
             }

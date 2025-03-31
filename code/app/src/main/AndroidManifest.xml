@@ -55,7 +55,7 @@
             android:name=".InitialActivity"
             android:exported="true"
             android:label="Welcome"
-            android:launchMode="singleTask"
+            android:launchMode="standard"
             android:theme="@style/Theme.OTMJApp"> <!-- Added title here -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

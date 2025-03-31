@@ -190,6 +190,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     getCurrentAddress(moodEvent.getLocation().toLocation());
                     addLocationBottom.setImageResource(R.drawable.detach_location);
                 }
+                // TODO: Load music event
 
                 privacySwitch.setChecked(privacy == MoodEvent.Privacy.Public);
             }

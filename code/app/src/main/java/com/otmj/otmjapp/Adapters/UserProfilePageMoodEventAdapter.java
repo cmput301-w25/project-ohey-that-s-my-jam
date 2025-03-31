@@ -104,7 +104,12 @@ public class UserProfilePageMoodEventAdapter extends ArrayAdapter<MoodEvent> {
         String fullText;
         if (m.getSocialSituation() != null) {
             String social = m.getSocialSituation().toString().toLowerCase();
-            fullText = emotion + " " + social;
+            if ("alone".equalsIgnoreCase(social)){
+                fullText = emotion + " while " + social;
+            }
+            else {
+                fullText = emotion + " " + social;
+            }
         } else {
             fullText = emotion;
         }
