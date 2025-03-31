@@ -94,7 +94,7 @@ public class CommentHandler {
             @Override
             public void onSuccess(ArrayList<Comment> result) {
                 if (!result.isEmpty()) {
-                    callback.newComment(result.get(0));
+                    callback.newComment(comment);
                 }
             }
 

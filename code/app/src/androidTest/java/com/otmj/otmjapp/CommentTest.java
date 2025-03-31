@@ -2,6 +2,7 @@ package com.otmj.otmjapp;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -131,7 +132,9 @@ public class CommentTest {
         Thread.sleep(1000);
         onView(withId(R.id.signup_edit_username)).perform(ViewActions.typeText(username));
         onView(withId(R.id.signup_edit_email)).perform(ViewActions.typeText(userEmail));
-        onView(withId(R.id.signup_edit_password)).perform(ViewActions.typeText(userPassword));
+        onView(withId(R.id.signup_edit_password))
+                .perform(ViewActions.typeText(userPassword))
+                .perform(closeSoftKeyboard());
         onView(withId(R.id.signup_button)).perform(click());
         Thread.sleep(2000);
     }
@@ -152,7 +155,9 @@ public class CommentTest {
         onView(withId(R.id.timeline_mood_event_username)).perform(click());
 
         // Add comment
-        onView(withId(R.id.comment_input)).perform(typeText("Nice!"));
+        onView(withId(R.id.comment_input))
+                .perform(typeText("Nice!"))
+                .perform(closeSoftKeyboard());
         onView(withId(R.id.send_comment_button)).perform(click());
 
         // Wait for comment and user data to load
