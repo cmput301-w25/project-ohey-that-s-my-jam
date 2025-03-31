@@ -238,8 +238,10 @@ public class MoodEventDetailsFragment extends Fragment {
             String commentText = commentInput.getText().toString().trim();
             if (!commentText.isEmpty()) {
                 // Add the comment with the correct user details
+                Comment comment = new Comment(currentUserId, moodEventId, commentText);
+                comment.setUser(currentUser);
                 commentHandler.addComment(
-                        new Comment(currentUserId, moodEventId, commentText),
+                        comment,
                         c -> {
                             commentsAdapter.add(c);
                             commentsAdapter.notifyDataSetChanged();

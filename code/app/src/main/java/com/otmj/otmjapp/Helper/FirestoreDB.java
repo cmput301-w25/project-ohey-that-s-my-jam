@@ -6,6 +6,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.MemoryCacheSettings;
+import com.google.firebase.firestore.PersistentCacheSettings;
 import com.google.firebase.firestore.Query;
 import com.otmj.otmjapp.Models.DBSortOption;
 import com.otmj.otmjapp.Models.DatabaseObject;
@@ -47,6 +50,7 @@ public class FirestoreDB<T extends DatabaseObject> {
 
     private final FirebaseFirestore db;
     private final String collection;
+
     public FirestoreDB(String collection) {
         this.collection = collection;
         this.db = FirebaseFirestore.getInstance();

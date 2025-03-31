@@ -2,6 +2,7 @@ package com.otmj.otmjapp;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -86,7 +87,9 @@ public class MoodEventAddEditTest {
         Thread.sleep(1000);
         onView(withId(R.id.signup_edit_username)).perform(ViewActions.typeText(username));
         onView(withId(R.id.signup_edit_email)).perform(ViewActions.typeText(userEmail));
-        onView(withId(R.id.signup_edit_password)).perform(ViewActions.typeText(userPassword));
+        onView(withId(R.id.signup_edit_password))
+                .perform(ViewActions.typeText(userPassword))
+                .perform(closeSoftKeyboard());
         onView(withId(R.id.signup_button)).perform(click());
         Thread.sleep(2000);
     }
@@ -103,14 +106,16 @@ public class MoodEventAddEditTest {
         // Add mood event
         onView(withId(R.id.add_mood_event_button)).perform(click());
         onView(withId(R.id.anger_chip)).perform(click());
-        onView(withId(R.id.reason_why_edit_text)).perform(typeText("Heavy traffic"));
+        onView(withId(R.id.reason_why_edit_text))
+                .perform(typeText("Heavy traffic"))
+                .perform(closeSoftKeyboard());
         onView(withId(R.id.chipAlone)).perform(click());
         onView(withId(R.id.privacy_switch)).perform(click());
         onView(withId(R.id.SubmitPostButton)).perform(click());
 
         // Check if the mood event is added
         SystemClock.sleep(3000);
-        onView(withId(R.id.textView_emotionalState)).check(matches(withText("ANGER alone")));
+        onView(withId(R.id.textView_emotionalState)).check(matches(withText("ANGER while alone")));
         onView(withId(R.id.textview_reason)).check(matches(withText("Heavy traffic")));
 
     }
@@ -129,13 +134,15 @@ public class MoodEventAddEditTest {
 
         // Edit mood
         onView(withId(R.id.disgust_chip)).perform(click());
-        onView(withId(R.id.reason_why_edit_text)).perform(replaceText("Ice Cream melted :("));
+        onView(withId(R.id.reason_why_edit_text))
+                .perform(replaceText("Ice Cream melted :("))
+                .perform(closeSoftKeyboard());
         onView(withId(R.id.SubmitPostButton)).perform(click());
 
         // Check if the mood event is edited
         SystemClock.sleep(3000);
 
-        onView(withId(R.id.textView_emotionalState)).check(matches(withText("DISGUST alone")));
+        onView(withId(R.id.textView_emotionalState)).check(matches(withText("DISGUST while alone")));
         onView(withId(R.id.textview_reason)).check(matches(withText("Ice Cream melted :(")));
     }
 
@@ -148,7 +155,9 @@ public class MoodEventAddEditTest {
         // Add mood event
         onView(withId(R.id.add_mood_event_button)).perform(click());
         onView(withId(R.id.happy_chip)).perform(click());
-        onView(withId(R.id.reason_why_edit_text)).perform(typeText("Watching Youtube"));
+        onView(withId(R.id.reason_why_edit_text))
+                .perform(typeText("Watching Youtube"))
+                .perform(closeSoftKeyboard());
         onView(withId(R.id.chipAlone)).perform(click());
         onView(withId(R.id.SubmitPostButton)).perform(click());
 
@@ -166,7 +175,10 @@ public class MoodEventAddEditTest {
         // Add mood event
         onView(withId(R.id.add_mood_event_button)).perform(click());
         onView(withId(R.id.sad_chip)).perform(click());
-        onView(withId(R.id.reason_why_edit_text)).perform(typeText("Doing assignments"));
+        onView(withId(R.id.reason_why_edit_text))
+                .perform(typeText("Doing assignments"))
+                .perform(closeSoftKeyboard());
+        onView(withId(R.id.privacy_switch)).perform(click());
         onView(withId(R.id.chipAlone)).perform(click());
         onView(withId(R.id.SubmitPostButton)).perform(click());
 

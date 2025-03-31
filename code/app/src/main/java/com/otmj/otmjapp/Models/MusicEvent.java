@@ -42,6 +42,7 @@ public class MusicEvent extends DatabaseObject {
         this.moodEventID = moodEventID;
     }
 
+    @Exclude
     public MoodEvent getMoodEvent() {
         return moodEvent;
     }
@@ -58,6 +59,7 @@ public class MusicEvent extends DatabaseObject {
         this.userID = userID;
     }
 
+    @Exclude
     public User getUser() {
         return user;
     }

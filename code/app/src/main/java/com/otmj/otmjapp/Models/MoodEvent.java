@@ -18,7 +18,6 @@ public class MoodEvent extends DatabaseObject {
      * Will be set when mood event is retrieved from database
      * Should not be saved directly in database
      */
-    @Exclude // from database
     private User user = null;
     /**
      * ServerTimestamp annotation automatically grabs the date and time
@@ -113,6 +112,7 @@ public class MoodEvent extends DatabaseObject {
      * Get user associated with mood event
      * @return A constant `User` object
      */
+    @Exclude // from database
     public final User getUser() {
         return user;
     }

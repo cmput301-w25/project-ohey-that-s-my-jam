@@ -1,6 +1,7 @@
 package com.otmj.otmjapp;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
@@ -63,7 +64,9 @@ public class InitialScreenTest {
 
         // Enter information
         onView(withId(R.id.login_edit_username )).perform(typeText("username1"));
-        onView(withId(R.id.login_edit_password)).perform(typeText("user1password"));
+        onView(withId(R.id.login_edit_password)).
+                perform(typeText("user1password"))
+                .perform(closeSoftKeyboard());
 
         // Login
         onView(withId(R.id.login_button)).perform(click());
@@ -81,7 +84,9 @@ public class InitialScreenTest {
         // Enter information
         onView(withId(R.id.signup_edit_username)).perform(typeText("username2"));
         onView(withId(R.id.signup_edit_email)).perform(typeText("username2@mail.com"));
-        onView(withId(R.id.signup_edit_password)).perform(typeText("user2password"));
+        onView(withId(R.id.signup_edit_password)).
+                perform(typeText("user2password"))
+                .perform(closeSoftKeyboard());
 
         // Signup
         onView(withId(R.id.signup_button)).perform(click());
@@ -98,7 +103,9 @@ public class InitialScreenTest {
 
         // Enter information with no username
         onView(withId(R.id.login_edit_username )).perform(typeText(""));
-        onView(withId(R.id.login_edit_password)).perform(typeText("user1password"));
+        onView(withId(R.id.login_edit_password))
+                .perform(typeText("user1password"))
+                .perform(closeSoftKeyboard());
 
         // Press login button
         onView(withId(R.id.login_button)).perform(click());
@@ -115,7 +122,9 @@ public class InitialScreenTest {
 
         // Enter information with invalid username
         onView(withId(R.id.login_edit_username )).perform(typeText("user2"));
-        onView(withId(R.id.login_edit_password)).perform(typeText("user1password"));
+        onView(withId(R.id.login_edit_password))
+                .perform(typeText("user1password"))
+                .perform(closeSoftKeyboard());
 
         // Press login button
         onView(withId(R.id.login_button)).perform(click());
@@ -132,7 +141,9 @@ public class InitialScreenTest {
 
         // Enter information with no password
         onView(withId(R.id.login_edit_username )).perform(typeText("username1"));
-        onView(withId(R.id.login_edit_password)).perform(typeText(""));
+        onView(withId(R.id.login_edit_password))
+                .perform(typeText(""))
+                .perform(closeSoftKeyboard());
 
         // Press login button
         onView(withId(R.id.login_button)).perform(click());
@@ -149,7 +160,9 @@ public class InitialScreenTest {
 
         // Enter information with invalid password
         onView(withId(R.id.login_edit_username )).perform(typeText("username1"));
-        onView(withId(R.id.login_edit_password)).perform(typeText("abcd"));
+        onView(withId(R.id.login_edit_password)).
+                perform(typeText("abcd"))
+                .perform(closeSoftKeyboard());
 
         // Press login button
         onView(withId(R.id.login_button)).perform(click());
@@ -167,7 +180,9 @@ public class InitialScreenTest {
         // Enter information with no username
         onView(withId(R.id.signup_edit_username )).perform(typeText(""));
         onView(withId(R.id.signup_edit_email)).perform(typeText("username2@mail.com"));
-        onView(withId(R.id.signup_edit_password)).perform(typeText("user2password"));
+        onView(withId(R.id.signup_edit_password))
+                .perform(typeText("user2password"))
+                .perform(closeSoftKeyboard());
 
         // Press sign up button
         onView(withId(R.id.signup_button)).perform(click());
@@ -185,7 +200,9 @@ public class InitialScreenTest {
         // Enter information with no username
         onView(withId(R.id.signup_edit_username )).perform(typeText("1"));
         onView(withId(R.id.signup_edit_email)).perform(typeText("username2@mail.com"));
-        onView(withId(R.id.signup_edit_password)).perform(typeText("user2password"));
+        onView(withId(R.id.signup_edit_password))
+                .perform(typeText("user2password"))
+                .perform(closeSoftKeyboard());
 
         // Press sign up button
         onView(withId(R.id.signup_button)).perform(click());
@@ -203,7 +220,9 @@ public class InitialScreenTest {
         // Enter information with no username
         onView(withId(R.id.signup_edit_username )).perform(typeText("username1"));
         onView(withId(R.id.signup_edit_email)).perform(typeText("username2@mail.com"));
-        onView(withId(R.id.signup_edit_password)).perform(typeText("user2password"));
+        onView(withId(R.id.signup_edit_password))
+                .perform(typeText("user2password"))
+                .perform(closeSoftKeyboard());
 
         // Press sign up button
         onView(withId(R.id.signup_button)).perform(click());
@@ -221,7 +240,9 @@ public class InitialScreenTest {
         // Enter information with no email
         onView(withId(R.id.signup_edit_username )).perform(typeText("username2"));
         onView(withId(R.id.signup_edit_email)).perform(typeText(""));
-        onView(withId(R.id.signup_edit_password)).perform(typeText("user2password"));
+        onView(withId(R.id.signup_edit_password))
+                .perform(typeText("user2password"))
+                .perform(closeSoftKeyboard());
 
         // Press sign up button
         onView(withId(R.id.signup_button)).perform(click());
@@ -239,7 +260,9 @@ public class InitialScreenTest {
         // Enter information with invalid email
         onView(withId(R.id.signup_edit_username )).perform(typeText("username2"));
         onView(withId(R.id.signup_edit_email)).perform(typeText("hello"));
-        onView(withId(R.id.signup_edit_password)).perform(typeText("user2password"));
+        onView(withId(R.id.signup_edit_password))
+                .perform(typeText("user2password"))
+                .perform(closeSoftKeyboard());
 
         // Press sign up button
         onView(withId(R.id.signup_button)).perform(click());
@@ -257,7 +280,9 @@ public class InitialScreenTest {
         // Enter information with no password
         onView(withId(R.id.signup_edit_username )).perform(typeText("username2"));
         onView(withId(R.id.signup_edit_email)).perform(typeText("username2@mail.com"));
-        onView(withId(R.id.signup_edit_password)).perform(typeText(""));
+        onView(withId(R.id.signup_edit_password))
+                .perform(typeText(""))
+                .perform(closeSoftKeyboard());
 
         // Press sign up button
         onView(withId(R.id.signup_button)).perform(click());
@@ -275,7 +300,9 @@ public class InitialScreenTest {
         // Enter information with invalid password
         onView(withId(R.id.signup_edit_username )).perform(typeText("username2"));
         onView(withId(R.id.signup_edit_email)).perform(typeText("username2@mail.com"));
-        onView(withId(R.id.signup_edit_password)).perform(typeText("1"));
+        onView(withId(R.id.signup_edit_password))
+                .perform(typeText("1"))
+                .perform(closeSoftKeyboard());
 
         // Press sign up button
         onView(withId(R.id.signup_button)).perform(click());

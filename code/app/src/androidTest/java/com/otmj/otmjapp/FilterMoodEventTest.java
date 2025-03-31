@@ -2,6 +2,7 @@ package com.otmj.otmjapp;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -136,7 +137,9 @@ public class FilterMoodEventTest {
         Thread.sleep(1000);
         onView(withId(R.id.signup_edit_username)).perform(ViewActions.typeText(username));
         onView(withId(R.id.signup_edit_email)).perform(ViewActions.typeText(userEmail));
-        onView(withId(R.id.signup_edit_password)).perform(ViewActions.typeText(userPassword));
+        onView(withId(R.id.signup_edit_password))
+                .perform(ViewActions.typeText(userPassword))
+                .perform(closeSoftKeyboard());
         onView(withId(R.id.signup_button)).perform(click());
         Thread.sleep(2000);
     }
@@ -192,7 +195,9 @@ public class FilterMoodEventTest {
         onView(withId(R.id.filter_button)).perform(click());
 
         // Enter search text
-        onView(withId(R.id.filter_reason_text)).perform(typeText("promoted"));
+        onView(withId(R.id.filter_reason_text))
+                .perform(typeText("promoted"))
+                .perform(closeSoftKeyboard());
 
         // Apply filters
         onView(withId(R.id.close_fragment_button)).perform(click());
