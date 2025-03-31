@@ -54,14 +54,6 @@ public class FirestoreDB<T extends DatabaseObject> {
     public FirestoreDB(String collection) {
         this.collection = collection;
         this.db = FirebaseFirestore.getInstance();
-
-        // Enable offline persistence
-        FirebaseFirestoreSettings settings =
-                new FirebaseFirestoreSettings.Builder(this.db.getFirestoreSettings())
-                        .setLocalCacheSettings(MemoryCacheSettings.newBuilder().build())
-                        .setLocalCacheSettings(PersistentCacheSettings.newBuilder().build())
-                .build();
-        this.db.setFirestoreSettings(settings);
     }
 
     public FirestoreDB(String collection, FirebaseFirestore db) { // Constructor with custom Firestore instance for testing

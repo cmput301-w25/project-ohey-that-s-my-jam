@@ -2,6 +2,7 @@ package com.otmj.otmjapp;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
@@ -110,7 +111,9 @@ public class ImageTest {
     public void loginAsUser(User user) throws InterruptedException {
         onView(withId(R.id.welcome_login_button)).perform(click());
         onView(withId(R.id.login_edit_username)).perform(ViewActions.typeText(user.getUsername()));
-        onView(withId(R.id.login_edit_password)).perform(ViewActions.typeText(user.getPassword()));
+        onView(withId(R.id.login_edit_password))
+                .perform(ViewActions.typeText(user.getPassword()))
+                .perform(closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
         Thread.sleep(1000);
     }
