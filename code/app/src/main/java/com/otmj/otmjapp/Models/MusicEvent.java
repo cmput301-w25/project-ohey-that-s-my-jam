@@ -3,17 +3,23 @@ package com.otmj.otmjapp.Models;
 import com.google.firebase.firestore.Exclude;
 import com.otmj.otmjapp.API.Models.Track;
 
+import java.util.Objects;
+
 /**
  * Represents a music event - the association of a track with a feeling.
  * A music event is associated with some mood event
  */
 public class MusicEvent extends DatabaseObject {
     private String moodEventID;
+    private String userID;
+    // Actual music event information
     private Track track;
     private String feeling;
-    private String albumArtURL;
+    // ----------------------------
     @Exclude
     private MoodEvent moodEvent;
+    @Exclude
+    private User user;
 
     // Empty constructor for firebase
     MusicEvent() {}
@@ -44,6 +50,22 @@ public class MusicEvent extends DatabaseObject {
         this.moodEvent = moodEvent;
     }
 
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Track getTrack() {
         return track;
     }
@@ -60,11 +82,18 @@ public class MusicEvent extends DatabaseObject {
         this.feeling = feeling;
     }
 
-    public String getAlbumArtURL() {
-        return albumArtURL;
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof MusicEvent)) return false;
+        MusicEvent that = (MusicEvent) o;
+        return Objects.equals(moodEventID, that.moodEventID)
+                && Objects.equals(userID, that.userID)
+                && Objects.equals(track, that.track)
+                && Objects.equals(feeling, that.feeling);
     }
 
-    public void setAlbumArtURL(String albumArtURL) {
-        this.albumArtURL = albumArtURL;
+    @Override
+    public int hashCode() {
+        return Objects.hash(moodEventID, userID, track, feeling);
     }
 }

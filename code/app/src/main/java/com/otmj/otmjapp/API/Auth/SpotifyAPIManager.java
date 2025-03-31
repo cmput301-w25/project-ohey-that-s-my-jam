@@ -241,10 +241,10 @@ public class SpotifyAPIManager {
         if(prefsHelper.getTokenExpirationTime().equals("undefined")) {
             return false;
         } else {
-            LocalTime expirationTime = LocalTime.parse(prefsHelper.getTokenExpirationTime(),
+            LocalDateTime expirationTime = LocalDateTime.parse(prefsHelper.getTokenExpirationTime(),
                     DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            LocalTime currentTime = LocalTime.now();
-            Log.d("SpotifyAPIManager", "Expired: " + LocalTime.now().isAfter(expirationTime));
+            LocalDateTime currentTime = LocalDateTime.now();
+            Log.d("SpotifyAPIManager", "Expired: " + currentTime.isAfter(expirationTime));
             return currentTime.isAfter(expirationTime); // there's still an issue with time generation. troubleshoot this
         }
     }

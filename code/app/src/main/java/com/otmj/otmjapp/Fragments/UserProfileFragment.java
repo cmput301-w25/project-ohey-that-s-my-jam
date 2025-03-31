@@ -121,7 +121,7 @@ public class UserProfileFragment extends Fragment {
                 // Save filter options
                 filterOptions = newFilterOptions;
                 // Get new mood events with specified filter
-                moodEventsLiveData = mood_event_controller.getUserMoodEvents(
+                moodEventsLiveData = mood_event_controller.getAllMoodEvents(
                         newFilterOptions.buildFilter(idOfUser));
                 if (moodEventsLiveData != null) {
                     getMoodEventFromDB();
@@ -222,7 +222,7 @@ public class UserProfileFragment extends Fragment {
             });
 
         } else {
-            moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
+            moodEventsLiveData = mood_event_controller.getAllMoodEvents(null);
             binding.logoutButton.setVisibility(View.VISIBLE);
             binding.logoutButton.setOnClickListener(v -> user_manager.logout(this));
             if (moodEventsLiveData != null) {

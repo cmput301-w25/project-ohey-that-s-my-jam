@@ -3,6 +3,7 @@ package com.otmj.otmjapp.API.Models;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Track {
     @SerializedName("album")
@@ -43,5 +44,21 @@ public class Track {
 
     public int getDuration() {
         return duration;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Track)) return false;
+        Track track = (Track) o;
+        return duration == track.duration
+                && Objects.equals(album, track.album)
+                && Objects.equals(artists, track.artists)
+                && Objects.equals(title, track.title)
+                && Objects.equals(previewURL, track.previewURL);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(album, artists, duration, title, previewURL);
     }
 }

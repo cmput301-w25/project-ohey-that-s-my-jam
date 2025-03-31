@@ -2,6 +2,8 @@ package com.otmj.otmjapp.API.Models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 public class AlbumArt {
     @SerializedName("url")
     private final String url;
@@ -15,5 +17,17 @@ public class AlbumArt {
 
     public String getURL() {
         return url;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof AlbumArt)) return false;
+        AlbumArt albumArt = (AlbumArt) o;
+        return Objects.equals(url, albumArt.url);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(url);
     }
 }

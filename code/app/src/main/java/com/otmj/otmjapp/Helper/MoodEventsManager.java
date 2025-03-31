@@ -25,8 +25,12 @@ import java.util.List;
 public class MoodEventsManager {
 
     public interface ImageDownloadCallback {
-        public void onSuccess(Bitmap image);
-        public void onFailure(Exception e);
+        void onSuccess(Bitmap image);
+        void onFailure(Exception e);
+    }
+
+    public interface MoodEventCallback {
+        void onComplete(MoodEvent moodEvent);
     }
 
     /**
@@ -56,6 +60,33 @@ public class MoodEventsManager {
         });
 
         moodHistory = new MutableLiveData<>(new ArrayList<>());
+    }
+
+    /**
+     * Get specific mood event from database
+     * @param moodEventID   ID of mood event
+     * @param callback      Called when mood event retrieved
+     */
+    public void getMoodEvent(String moodEventID, MoodEventCallback callback) {
+        db.getDocuments(
+                MoodHistoryFilter.SpecificMoodEvent(moodEventID).getFilter(),
+                MoodEvent.class,
+                new FirestoreDB.DBCallback<>() {
+                    @Override
+                    public void onSuccess(ArrayList<MoodEvent> result) {
+                        if (!result.isEmpty()) {
+                            callback.onComplete(result.get(0));
+                        } else {
+                            callback.onComplete(null);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        callback.onComplete(null);
+                    }
+                }
+        );
     }
 
     /**
@@ -152,7 +183,7 @@ public class MoodEventsManager {
      * @return An observable value that returns all the mood events.
      * @see #getMoodEvents(MoodHistoryFilter)
      */
-    public LiveData<ArrayList<MoodEvent>> getUserMoodEvents(MoodHistoryFilter customFilter) {
+    public LiveData<ArrayList<MoodEvent>> getAllMoodEvents(MoodHistoryFilter customFilter) {
         return getMoodEvents((null != customFilter)
                 ? customFilter
                 : MoodHistoryFilter.Default(userIDs));
@@ -176,25 +207,18 @@ public class MoodEventsManager {
 
         return getMoodEvents(filter);
     }
-  
+
     /**
-     * Insert new mood event to database
+     * Insert new mood event to database and specify what to do when inserted
      * @param moodEvent Mood event to insert
+     * @param callback  Specifies what to do after mood event is inserted into database
      */
-    public void addMoodEvent(MoodEvent moodEvent) {
-        db.addDocument(moodEvent, new FirestoreDB.DBCallback<>() {
+    public void addMoodEvent(MoodEvent moodEvent, MoodEventCallback callback) {
+        db.addDocument(moodEvent, new FirestoreDB.DBCallback<MoodEvent>() {
             @Override
             public void onSuccess(ArrayList<MoodEvent> result) {
                 if (!result.isEmpty()) {
-                    MoodEvent m = result.get(0);
-
-                    if (moodHistory.getValue() == null) {
-                        moodHistory.setValue(new ArrayList<>(List.of(m)));
-                    } else {
-                        moodHistory.getValue().add(m);
-                    }
-                } else {
-                    // TODO: Handle this
+                    callback.onComplete(result.get(0));
                 }
             }
 
@@ -203,6 +227,20 @@ public class MoodEventsManager {
                 // TODO: Show error message
             }
         });
+    }
+  
+    /**
+     * Insert new mood event to database
+     * @param moodEvent Mood event to insert
+     */
+    public void addMoodEvent(MoodEvent moodEvent) {
+       addMoodEvent(moodEvent, m -> {
+            if (moodHistory.getValue() == null) {
+                moodHistory.setValue(new ArrayList<>(List.of(m)));
+            } else {
+                moodHistory.getValue().add(m);
+            }
+       });
     }
 
     public void updateMoodEvent(MoodEvent moodEvent) {

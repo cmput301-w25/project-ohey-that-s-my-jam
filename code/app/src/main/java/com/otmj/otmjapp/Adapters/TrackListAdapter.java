@@ -13,8 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.otmj.otmjapp.API.Models.Track;
+import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -60,9 +60,7 @@ public class TrackListAdapter extends ArrayAdapter<Track> {
         songArtist.setText(artistText);
 
         ImageView albumArt = listItemView.findViewById(R.id.album_art);
-        Picasso.get()
-                .load(albumArtUrl)
-                .into(albumArt);
+        ImageHandler.loadImage(getContext(), albumArtUrl, albumArt);
 
         // Change the background color if the item is selected
         if (position == selectedPosition) {

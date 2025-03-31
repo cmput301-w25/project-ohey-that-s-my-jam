@@ -1,8 +1,5 @@
 package com.otmj.otmjapp.Fragments;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -34,6 +31,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.otmj.otmjapp.Helper.FirestoreDB;
 import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.LocationHelper;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
@@ -47,13 +45,10 @@ import com.otmj.otmjapp.Models.SimpleLocation;
 import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
-import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-
-
 
 /**
  * A dialog fragment for adding or editing a MoodEvent.
@@ -193,7 +188,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     ImageHandler.loadImage(requireContext(), imageLink, selectedImageView);
                 }
                 if (moodEvent.getLocation() != null) {
-                    attachLocation = TRUE;
+                    attachLocation = true;
                     getCurrentAddress(moodEvent.getLocation().toLocation());
                     addLocationBottom.setImageResource(R.drawable.detach_location);
                 }
@@ -282,7 +277,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
 
                             MusicEventsManager musicEventsManager =
                                     new MusicEventsManager(List.of(UserManager.getInstance().getCurrentUser().getID()));
-                            musicEventsManager.deleteMusicEvent(moodEvent.getMusicEvent());
+                            musicEventsManager.deleteMusicEvent(moodEvent.getID());
                             dismiss();
                         })
                         .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
@@ -291,7 +286,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         });
 
         addLocationBottom.setOnClickListener(v -> {
-            if (attachLocation == FALSE) {
+            if (!attachLocation) {
                 addressTextView.setText("Please wait a moment");
                 if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
@@ -300,10 +295,10 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     getCurrentLocation();
                 }
                 addLocationBottom.setImageResource(R.drawable.detach_location);
-                attachLocation = TRUE;
+                attachLocation = true;
             } else {
                 addressTextView.setText("");
-                attachLocation = FALSE;
+                attachLocation = false;
                 addLocationBottom.setImageResource(R.drawable.ic_add_location);
                 location = null;
             }
@@ -317,9 +312,11 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 musicEvent = createdMusicEvent;
 
                 // change what used to be music note icon with album art to show that song has been selected
-                Picasso.get()
-                        .load(musicEvent.getTrack().getAlbum().getImages().get(0).getURL())
-                        .into(addMusicButton);
+                ImageHandler.loadImage(
+                        getContext(),
+                        musicEvent.getTrack().getAlbum().getImages().get(0).getURL(),
+                        addMusicButton
+                );
             });
 
             musicFragment.show(getParentFragmentManager(), "addMusic");
@@ -350,7 +347,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
         MusicEventsManager musicEventsManager =
                 new MusicEventsManager(List.of(user.getID()));
 
-        Log.d("MoodEvent privacy", "setupMoodEvent:" + privacy);
+        // Update mood event
         if (moodEvent != null) {
             moodEvent.setEmotionalState(selectedEmotionalState);
             moodEvent.setReason(reason);
@@ -358,27 +355,23 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             moodEvent.setPrivacy(privacy);
             moodEvent.setImageLink(imageLink); // this is where download link function should be called
 
-            if (location != null){
+            if (location != null) {
                 SimpleLocation temp_simpleLocation = new SimpleLocation(location.getLatitude(),location.getLongitude());
                 moodEvent.setLocation(temp_simpleLocation);
             } else {
                 moodEvent.setLocation(null);
             }
 
-            if(null != musicEvent) {
-                //saveAlbumArt(musicEvent); TODO: reactivate when app goes live
-                musicEvent.setUser(UserManager.getInstance().getCurrentUser());
-                musicEvent.setAssociatedMood(moodEvent.getEmotionalState().getEmoji());
-                moodEvent.setMusicEvent(musicEvent);
+            if (null != musicEvent) {
                 musicEventsManager.updateMusicEvent(musicEvent);
-            } else {
-                moodEvent.setMusicEvent(null);
             }
             moodEventsManager.updateMoodEvent(moodEvent);
+        // Add new mood event
         } else {
-            if(privacy == null) { // privacy is null by default. If user doesn't toggle switch, set it to private
+            if (privacy == null) { // privacy is null by default. If user doesn't toggle switch, set it to private
                 privacy = MoodEvent.Privacy.Private;
             }
+
             MoodEvent temp_moodEvent = new MoodEvent(
                     user.getID(),
                     selectedEmotionalState,
@@ -386,38 +379,26 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     attachLocation,
                     reason,
                     imageLink,
-                    null,
                     privacy
             );
-            if (location != null){
-                SimpleLocation temp_simpleLocation = new SimpleLocation(location.getLatitude(),location.getLongitude());
+
+            if (location != null) {
+                SimpleLocation temp_simpleLocation =
+                        new SimpleLocation(location.getLatitude(),location.getLongitude());
                 temp_moodEvent.setLocation(temp_simpleLocation);
             } else {
                 temp_moodEvent.setLocation(null);
             }
 
-            if(null != musicEvent) {
-                //saveAlbumArt(musicEvent); TODO: reactivate when app goes live
-                musicEvent.setUser(UserManager.getInstance().getCurrentUser());
-                musicEvent.setAssociatedMood(temp_moodEvent.getEmotionalState().getEmoji());
-                temp_moodEvent.setMusicEvent(musicEvent);
-                musicEventsManager.addMusicEvent(musicEvent);
-            } else {
-                temp_moodEvent.setMusicEvent(null);
-            }
-            moodEventsManager.addMoodEvent(temp_moodEvent);
-        }
-    }
+            moodEventsManager.addMoodEvent(temp_moodEvent, m -> {
+                if (null != musicEvent) {
+                    musicEvent.setUserID(user.getID());
+                    musicEvent.setMoodEventID(m.getID());
 
-    /**
-     * See {@link com.otmj.otmjapp.Helper.MusicEventsManager#uploadAlbumArtToStorage(ImageView, String, MusicEvent)}.
-     *
-     * @param musicEvent The music event to save the album art for.
-     */
-    public void saveAlbumArt(MusicEvent musicEvent) {
-        String imageName = musicEvent.getTrack().getArtists().get(0).getName() + musicEvent.getTrack().getTitle();
-        MusicEventsManager musicEventsManager = new MusicEventsManager(List.of(UserManager.getInstance().getCurrentUser().getID()));
-        musicEventsManager.uploadAlbumArtToStorage(addMusicButton, imageName, musicEvent);
+                    musicEventsManager.addMusicEvent(musicEvent);
+                }
+            });
+        }
     }
 
     /**
