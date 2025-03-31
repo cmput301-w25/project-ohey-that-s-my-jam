@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".Fragments.MoodEventDetailsFragment"
-    android:layout_marginBottom="90dp"
+    android:layout_marginBottom="80dp"
     android:padding="20dp"
     android:background="@color/white">
 
@@ -23,7 +23,6 @@
             android:id="@+id/details_profile_picture"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:padding="5dp"
             android:background="@drawable/profile_placeholder"
             android:contentDescription="@string/profile_picture"
             android:scaleType="centerCrop" />
@@ -70,27 +69,42 @@
         android:textSize="11sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
     <TextView
         android:id="@+id/details_emotion_and_social_situation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:paddingTop="15dp"
+        android:paddingBottom="5dp"
         android:text="Happy 😊 with 2 others"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/details_event_timestamp"
         app:layout_constraintBottom_toBottomOf="@+id/details_event_timestamp"
-        android:paddingTop="15dp"
-        android:paddingBottom="5dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_event_timestamp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/music_event_details"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="35dp"
+        android:paddingHorizontal="0dp"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:icon="@drawable/music"
+        app:iconTint="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_emotion_and_social_situation" />
 
     <ImageView
         android:id="@+id/details_mood_image"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_width="370dp"
+        android:layout_height="303dp"
         android:contentDescription="@string/reason_why_image_desc"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/details_emotion_and_social_situation" />
+        app:layout_constraintTop_toBottomOf="@+id/music_event_details" />
 
     <TextView
         android:id="@+id/details_reason_why"
