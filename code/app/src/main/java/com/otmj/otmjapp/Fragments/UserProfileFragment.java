@@ -51,33 +51,6 @@ public class UserProfileFragment extends Fragment {
         binding.followersButton.setClickable(true);
         binding.followingButton.setClickable(true);
 
-        // Navigate to Followers List when Followers Button is clicked
-        binding.followersButton.setOnClickListener(v -> {
-            Bundle args = new Bundle();
-            args.putString("buttonClicked", "followers");  // Add an argument indicating which button was clicked
-
-            // Navigate to Followers List using Navigation Component
-            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followersListFragment, args);
-        });
-
-        // Navigate to Followers List when Following Button is clicked
-        binding.followingButton.setOnClickListener(v -> {
-            Bundle args = new Bundle();
-            args.putString("buttonClicked", "following");  // Add an argument indicating which button was clicked
-
-            // Navigate to Following List using Navigation Component
-            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, args);
-        });
-
-        // Navigate to Requests List when Requests Button is clicked
-        binding.viewRequestsButton.setOnClickListener(v -> {
-            Bundle args = new Bundle();
-            args.putString("buttonClicked", "requests");  // Add an argument indicating which button was clicked
-
-            // Navigate to Requests List using Navigation Component
-            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, args);
-        });
-
         UserProfileFragmentArgs args = UserProfileFragmentArgs.fromBundle(getArguments());
 
         // Get UserID
@@ -229,6 +202,36 @@ public class UserProfileFragment extends Fragment {
                 getMoodEventFromDB();
             }
         }
+
+        // Navigate to Followers List when Followers Button is clicked
+        binding.followersButton.setOnClickListener(v -> {
+            Bundle followersargs = new Bundle();
+            followersargs.putString("buttonClicked", "followers");  // Add an argument indicating which button was clicked
+            followersargs.putString("userID", user.getID());
+
+            // Navigate to Followers List using Navigation Component
+            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followersListFragment, followersargs);
+        });
+
+        // Navigate to Followers List when Following Button is clicked
+        binding.followingButton.setOnClickListener(v -> {
+            Bundle followingargs = new Bundle();
+            followingargs.putString("buttonClicked", "following");  // Add an argument indicating which button was clicked
+            followingargs.putString("userID", user.getID());
+
+
+            // Navigate to Following List using Navigation Component
+            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, followingargs);
+        });
+
+        // Navigate to Requests List when Requests Button is clicked
+        binding.viewRequestsButton.setOnClickListener(v -> {
+            Bundle viewRequestsargs = new Bundle();
+            viewRequestsargs.putString("buttonClicked", "requests");  // Add an argument indicating which button was clicked
+
+            // Navigate to Requests List using Navigation Component
+            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, viewRequestsargs);
+        });
     }
 
     public void getMoodEventFromDB(){
