@@ -54,7 +54,7 @@ public class UserManagerTests {
         firestoreDB.addDocument(new User("testUser", "test@example.com", "123", null), new FirestoreDB.DBCallback<User>() {
             @Override
             public void onSuccess(ArrayList<User> result) {
-                existUser = result.getFirst();
+                existUser = result.get(0);
             }
 
             @Override
@@ -86,7 +86,7 @@ public class UserManagerTests {
         userManager.login("testUser", "123", new UserManager.AuthenticationCallback() {
             @Override
             public void onAuthenticated(ArrayList<User> authenticatedUsers) {
-                assertEquals("testUser", authenticatedUsers.getFirst().getUsername());
+                assertEquals("testUser", authenticatedUsers.get(0).getUsername());
             }
 
             @Override
@@ -132,7 +132,7 @@ public class UserManagerTests {
         userManager.signup(user, new UserManager.AuthenticationCallback() {
             @Override
             public void onAuthenticated(ArrayList<User> authenticatedUsers) {
-                assertEquals(user, authenticatedUsers.getFirst());
+                assertEquals(user, authenticatedUsers.get(0));
             }
 
             @Override
@@ -164,7 +164,7 @@ public class UserManagerTests {
         userManager.getUsers(userIds, new UserManager.AuthenticationCallback() {
             @Override
             public void onAuthenticated(ArrayList<User> authenticatedUsers) {
-                assertEquals(existUser, authenticatedUsers.getFirst());
+                assertEquals(existUser, authenticatedUsers.get(0));
             }
 
             @Override
@@ -195,7 +195,7 @@ public class UserManagerTests {
         userManager.getUser("testUser", new UserManager.AuthenticationCallback() {
             @Override
             public void onAuthenticated(ArrayList<User> authenticatedUsers) {
-                assertEquals(existUser, authenticatedUsers.getFirst());
+                assertEquals(existUser, authenticatedUsers.get(0));
             }
 
             @Override
@@ -231,7 +231,7 @@ public class UserManagerTests {
         userManager.login("testUser", "123", new UserManager.AuthenticationCallback() {
             @Override
             public void onAuthenticated(ArrayList<User> authenticatedUsers) {
-                currentUser[0] = authenticatedUsers.getFirst().getUsername();
+                currentUser[0] = authenticatedUsers.get(0).getUsername();
             }
 
             @Override

@@ -83,7 +83,7 @@ public class MoodEventManagerTest {
     public void testGetMoodEvents(){
         LiveData<ArrayList<MoodEvent>> allMoodEvents = moodEventsManager.getAllMoodEvents(MoodHistoryFilter.Default(userIds));
         allMoodEvents.observeForever(moodEvents -> {
-            assertEquals("testing", moodEvents.getFirst().getReason());
+            assertEquals("testing", moodEvents.get(0).getReason());
         });
     }
 
@@ -92,7 +92,7 @@ public class MoodEventManagerTest {
     public void testGetPublicMoodEvents(){
         LiveData<ArrayList<MoodEvent>> allMoodEvents = moodEventsManager.getPublicMoodEvents(null);
         allMoodEvents.observeForever(moodEvents -> {
-            assertEquals("testing", moodEvents.getFirst().getReason());
+            assertEquals("testing", moodEvents.get(0).getReason());
         });
     }
 
@@ -101,7 +101,7 @@ public class MoodEventManagerTest {
     public void testGetAllMoodEvents() throws InterruptedException {
         LiveData<ArrayList<MoodEvent>> allMoodEvents = moodEventsManager.getAllMoodEvents(MoodHistoryFilter.Default(userIds));
         allMoodEvents.observeForever(moodEvents -> {
-            assertEquals("testing", moodEvents.getFirst().getReason());
+            assertEquals("testing", moodEvents.get(0).getReason());
             assertEquals("testGetAll", moodEvents.get(1).getReason());
         });
     }

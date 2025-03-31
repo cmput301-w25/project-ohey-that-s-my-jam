@@ -144,7 +144,7 @@ public class MoodEventAddEditTest {
         // Check if the mood event is edited
         SystemClock.sleep(3000);
 
-        onView(withId(R.id.textView_emotionalState)).check(matches(withText("DISGUST alone")));
+        onView(withId(R.id.textView_emotionalState)).check(matches(withText("DISGUST while alone")));
         onView(withId(R.id.textview_reason)).check(matches(withText("Ice Cream melted :(")));
     }
 
@@ -180,6 +180,7 @@ public class MoodEventAddEditTest {
         onView(withId(R.id.reason_why_edit_text))
                 .perform(typeText("Doing assignments"))
                 .perform(closeSoftKeyboard());
+        onView(withId(R.id.privacy_switch)).perform(click());
         onView(withId(R.id.chipAlone)).perform(click());
         onView(withId(R.id.SubmitPostButton)).perform(click());
 
