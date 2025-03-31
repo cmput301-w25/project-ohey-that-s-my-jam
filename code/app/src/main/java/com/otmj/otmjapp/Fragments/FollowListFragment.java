@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filterable;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -53,21 +54,22 @@ public class FollowListFragment extends Fragment {
         // Find the SearchView
         SearchView searchView = rootView.findViewById(R.id.search_view);
 
-        // Set up the SearchView listener (for text changes)
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // You can handle the search submit event here (if needed)
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // Filter the list as the user types
-                filterList(newText, rootView);
+                ListAdapter adapter = ((ListView) rootView.findViewById(R.id.user_list_view)).getAdapter();
+                if (adapter instanceof Filterable) {
+                    ((Filterable) adapter).getFilter().filter(newText);
+                }
                 return true;
             }
         });
+
 
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -102,9 +104,6 @@ public class FollowListFragment extends Fragment {
                     }
                 });
 
-                // Hide the SearchView for followers
-                searchView.setVisibility(View.GONE);
-
                 // Check if the following button was clicked
             } else if ("following".equals(buttonClicked)) {
                 listTitle.setText(R.string.following);  // Set title for following
@@ -130,9 +129,6 @@ public class FollowListFragment extends Fragment {
                         // Optionally, show an error message
                     }
                 });
-
-                // Hide the SearchView for following
-                searchView.setVisibility(View.GONE);
 
                 // Check if the "peopleYouMayKnow" button was clicked
             } else if ("peopleYouMayKnow".equals(buttonClicked)) {
