@@ -48,11 +48,11 @@ public class FollowersListViewAdapter extends ArrayAdapter<User> {
         String profilePicUrl = user.getProfilePictureLink();
 
         ImageView profileImageView = listItemView.findViewById(R.id.profile_image);
-        if (profilePicUrl == null || profilePicUrl.isEmpty()) {
-            profileImageView.setImageResource(R.drawable.profile_placeholder); // default image
-        } else {
-            ImageHandler.loadCircularImage(getContext(), profilePicUrl, profileImageView);
-        }
+        ImageHandler.loadCircularImage(
+                getContext(),
+                (profilePicUrl == null || profilePicUrl.isEmpty()) ? "" : profilePicUrl,
+                profileImageView
+        );
 
         return listItemView;
     }
