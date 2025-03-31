@@ -72,7 +72,6 @@ public class CommentTest {
                 false,
                 "Got ice Cream!",
                 null,
-                null,
                 Privacy.Public);
         ArrayList<String> userIdList = new ArrayList<String>();
         userIdList.add(userId);
@@ -83,7 +82,7 @@ public class CommentTest {
     private void MockMoodEventwithComment(@NonNull UserManager userManager, Context context) {
         user = userManager.getCurrentUser();
         userId = user.getID();
-        MoodEvent moodEvent = new MoodEvent(userId, EmotionalState.Happy, SocialSituation.Alone, false, "Got ice Cream!", null, null, Privacy.Public);
+        MoodEvent moodEvent = new MoodEvent(userId, EmotionalState.Happy, SocialSituation.Alone, false, "Got ice Cream!", null, Privacy.Public);
 
         // Add mood event
         ArrayList<String> userIdList = new ArrayList<>();

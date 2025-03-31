@@ -50,7 +50,6 @@ public class MoodEvent extends DatabaseObject {
                      boolean includeLocation,
                      String reason,
                      String imageLink,
-                     MusicEvent musicEvent,
                      Privacy privacy) {
         this.userID = userID;
         setEmotionalState(emotionalState);
@@ -76,7 +75,6 @@ public class MoodEvent extends DatabaseObject {
                      boolean includeLocation,
                      String reason,
                      String imageLink,
-                     MusicEvent musicEvent,
                      Privacy privacy) {
         this(
                 userID,
@@ -85,7 +83,6 @@ public class MoodEvent extends DatabaseObject {
                 includeLocation,
                 reason,
                 imageLink,
-                musicEvent,
                 privacy
         );
     }

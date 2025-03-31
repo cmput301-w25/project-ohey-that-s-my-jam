@@ -282,7 +282,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                             moodEventsManager.deleteMoodEvent(moodEvent);
                             MusicEventsManager musicEventsManager =
                                     new MusicEventsManager(List.of(UserManager.getInstance().getCurrentUser().getID()));
-                            musicEventsManager.deleteAlbumArtFromStorage(moodEvent.getMusicEvent());
+                            musicEventsManager.deleteAlbumArtFromStorage(moodEvent.getMusicEvent()); // TODO: verify that this is working
                             dismiss();
                         })
                         .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
@@ -368,8 +368,6 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 musicEvent.setPrivacy(privacy);
                 moodEvent.setMusicEvent(musicEvent);
                 saveAlbumArt(moodEvent);
-            } else {
-                moodEvent.setMusicEvent(null);
             }
             moodEventsManager.updateMoodEvent(moodEvent);
         } else {
@@ -383,7 +381,6 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                     attachLocation,
                     reason,
                     imageLink,
-                    null,
                     privacy
             );
             if (location != null){

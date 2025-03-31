@@ -60,7 +60,6 @@ public class FirestoreDBTest {
                 false,
                 "Lakers won",
                 null,
-                null,
                 Privacy.Public
         );
     }

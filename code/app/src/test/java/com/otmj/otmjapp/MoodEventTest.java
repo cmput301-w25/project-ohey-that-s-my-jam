@@ -18,8 +18,7 @@ public class MoodEventTest {
                                             false,
                                             "I am happy",
                                             "http://example.com/profile.jpg",
-                                            null,
-                                            Privacy.Public);
+                Privacy.Public);
         return moodEvent;
     }
 

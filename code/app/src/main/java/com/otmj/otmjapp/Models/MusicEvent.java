@@ -38,14 +38,6 @@ public class MusicEvent extends DatabaseObject {
         this.track = track;
     }
 
-    public String getFeeling() {
-        return feeling;
-    }
-
-    public void setFeeling(String feeling) {
-        this.feeling = feeling;
-    }
-
     public String getAssociatedMood() {
         return associatedMood;
     }
@@ -56,6 +48,14 @@ public class MusicEvent extends DatabaseObject {
         } else if (value instanceof String) {
             this.associatedMood = (String) value;
         }
+    }
+
+    public String getFeeling() {
+        return feeling;
+    }
+
+    public void setFeeling(String feeling) {
+        this.feeling = feeling;
     }
 
     public User getUser() {
