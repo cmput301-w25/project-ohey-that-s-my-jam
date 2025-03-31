@@ -31,7 +31,6 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.otmj.otmjapp.Helper.FirestoreDB;
 import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.LocationHelper;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
@@ -46,7 +45,6 @@ import com.otmj.otmjapp.Models.SocialSituation;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -273,6 +271,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                         .setPositiveButton("Delete", (dialog, which) -> {
                             MoodEventsManager moodEventsManager =
                                     new MoodEventsManager(List.of(UserManager.getInstance().getCurrentUser().getID()));
+
                             moodEventsManager.deleteMoodEvent(moodEvent);
 
                             MusicEventsManager musicEventsManager =
@@ -353,7 +352,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             moodEvent.setReason(reason);
             moodEvent.setSocialSituation(selectedSocialSituation);
             moodEvent.setPrivacy(privacy);
-            moodEvent.setImageLink(imageLink); // this is where download link function should be called
+            moodEvent.setImageLink(imageLink);
 
             if (location != null) {
                 SimpleLocation temp_simpleLocation = new SimpleLocation(location.getLatitude(),location.getLongitude());

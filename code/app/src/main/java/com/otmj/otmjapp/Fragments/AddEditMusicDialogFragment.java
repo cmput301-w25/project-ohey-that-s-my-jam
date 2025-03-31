@@ -188,4 +188,3 @@ public class AddEditMusicDialogFragment extends DialogFragment {
         this.onTrackSelectedListener = listener;
     }
 }
-

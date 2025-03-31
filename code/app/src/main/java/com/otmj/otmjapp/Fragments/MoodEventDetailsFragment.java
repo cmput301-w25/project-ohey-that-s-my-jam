@@ -112,8 +112,10 @@ public class MoodEventDetailsFragment extends Fragment {
         } else {
             unfollowButton.setVisibility(View.VISIBLE);
             unfollowButton.setOnClickListener(v -> {
-                new FollowHandler().unfollowUser(moodEventUser.getID());
-                v.setVisibility(View.GONE);
+                FollowHandler followHandler = new FollowHandler();
+                followHandler.unfollowUser(moodEvent.getUserID());
+                unfollowButton.setEnabled(false); // Disable clicks
+                unfollowButton.setAlpha(0.5f); // Make it look disabled
             });
         }
 

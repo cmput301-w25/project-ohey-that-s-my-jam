@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-
 import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.R;
