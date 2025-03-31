@@ -39,6 +39,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.otmj.otmjapp.Adapters.CommentAdapter;
 import com.otmj.otmjapp.Helper.CommentHandler;
 import com.otmj.otmjapp.Helper.CustomImageSpan;
+import com.otmj.otmjapp.Helper.FollowHandler;
 import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.LocationHelper;
 import com.otmj.otmjapp.Helper.UserManager;
@@ -97,6 +98,8 @@ public class MoodEventDetailsFragment extends Fragment {
         ListView commentsListView = binding.commentsListView;
         Button unfollowButton = binding.detailsUnfollowButton;
 
+
+
         // Get the passed arguments using Safe Args
         MoodEventDetailsFragmentArgs args = MoodEventDetailsFragmentArgs.fromBundle(getArguments());
         MoodEvent moodEvent = args.getMoodEvent();
@@ -109,6 +112,12 @@ public class MoodEventDetailsFragment extends Fragment {
             unfollowButton.setVisibility(View.GONE);
         } else {
             unfollowButton.setVisibility(View.VISIBLE);
+            unfollowButton.setOnClickListener(v -> {
+                FollowHandler followHandler = new FollowHandler();
+                followHandler.unfollowUser(moodEvent.getUserID());
+                unfollowButton.setEnabled(false); // Disable clicks
+                unfollowButton.setAlpha(0.5f); // Make it look disabled
+            });
         }
 
         String profileImageUrl = moodEvent.getUser().getProfilePictureLink(); // Make sure this returns a proper URL
