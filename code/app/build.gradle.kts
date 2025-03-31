@@ -92,6 +92,7 @@ dependencies {
 
     testImplementation("org.mockito:mockito-core:5.7.0")
     testImplementation("org.mockito:mockito-inline:5.2.0")
+    androidTestImplementation("android.arch.core:core-testing:1.0.0")
     implementation("net.bytebuddy:byte-buddy:1.17.1")
 
     // for getting location

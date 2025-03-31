@@ -189,6 +189,10 @@ public class MoodEventsManager {
                 : MoodHistoryFilter.Default(userIDs));
     }
 
+    /**
+     * Get moodEvents that have location and is public
+     * @return An observable value that returns mood events that have location.
+     */
     public LiveData<ArrayList<MoodEvent>> getMoodEventsWithLocation() {
         MoodHistoryFilter filter = MoodHistoryFilter.Default(userIDs);
         // Get only public mood events
@@ -199,6 +203,10 @@ public class MoodEventsManager {
         return getMoodEvents(filter);
     }
 
+    /**
+     * Get moodEvents that have location
+     * @return An observable value that returns mood events that have location.
+     */
     public LiveData<ArrayList<MoodEvent>> getMyMoodEventsWithLocation() {
         // to get the moodevents with locations that current user has
         MoodHistoryFilter filter = MoodHistoryFilter.Default(userIDs);
