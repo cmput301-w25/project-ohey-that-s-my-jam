@@ -69,10 +69,12 @@ public class FollowListFragment extends Fragment {
             }
         });
 
-        // Get the arguments passed from the previous fragment
         Bundle arguments = getArguments();
         if (arguments != null) {
+            // Get the arguments passed from the previous fragment
             String buttonClicked = arguments.getString("buttonClicked");
+            String userID = arguments.getString("userID");
+
 
             // Check if the followers button was clicked
             if ("followers".equals(buttonClicked)) {
@@ -82,7 +84,7 @@ public class FollowListFragment extends Fragment {
                 Log.d("FollowListFragment", "Followers button clicked");
 
                 // Fetch followers using FollowHandler
-                followHandler.fetchFollowers(currentUserId, new FollowHandler.FollowCallback() {
+                followHandler.fetchFollowers(userID, new FollowHandler.FollowCallback() {
                     @Override
                     public void onSuccess(ArrayList<User> followersList) {
                         // Log the followers list size
@@ -111,7 +113,7 @@ public class FollowListFragment extends Fragment {
                 Log.d("FollowListFragment", "Following button clicked");
 
                 // Fetch following using FollowHandler
-                followHandler.fetchFollowing(currentUserId, new FollowHandler.FollowCallback() {
+                followHandler.fetchFollowing(userID, new FollowHandler.FollowCallback() {
                     @Override
                     public void onSuccess(ArrayList<User> followingList) {
                         // Log the following list size
