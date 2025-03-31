@@ -42,6 +42,7 @@ import com.otmj.otmjapp.Helper.CustomImageSpan;
 import com.otmj.otmjapp.Helper.FollowHandler;
 import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.LocationHelper;
+import com.otmj.otmjapp.Helper.MusicEventsManager;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.Comment;
 import com.otmj.otmjapp.Models.MoodEvent;
@@ -51,6 +52,7 @@ import com.otmj.otmjapp.R;
 import com.otmj.otmjapp.databinding.FragmentMoodEventDetailsBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -98,6 +100,7 @@ public class MoodEventDetailsFragment extends Fragment {
         TextView detailsEmotionAndSocialSituation = binding.detailsEmotionAndSocialSituation;
         ListView commentsListView = binding.commentsListView;
         Button unfollowButton = binding.detailsUnfollowButton;
+        Button musicButton = binding.musicEventDetails;
 
         // Get the passed arguments using Safe Args
         MoodEventDetailsFragmentArgs args = MoodEventDetailsFragmentArgs.fromBundle(getArguments());
@@ -177,6 +180,20 @@ public class MoodEventDetailsFragment extends Fragment {
         } else {
             eventLocationText.setVisibility(View.GONE);
         }
+
+        // Check if a music event exists
+        MusicEventsManager musicEventsManager = new MusicEventsManager(List.of(moodEvent.getUserID()));
+        musicEventsManager.getAssociatedMusicEvent(moodEvent.getID(), music -> {
+            musicButton.setVisibility(View.VISIBLE);
+            // Only show title for now
+            musicButton.setText(music.getTrack().getTitle());
+            // Open preview when clicked, if available
+            if (music.getTrack().getPreviewURL() != null) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(music.getTrack().getPreviewURL()));
+                startActivity(browserIntent);
+            }
+        });
 
         profileImage.setOnClickListener(v -> {
             // Only view profile of other users
