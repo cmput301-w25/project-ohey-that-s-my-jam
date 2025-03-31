@@ -86,8 +86,6 @@ public class MusicEventsManager {
             public void onSuccess(ArrayList<MusicEvent> result) {
                 if (!result.isEmpty()) {
                     callback.onComplete(result.get(0));
-                } else {
-                    callback.onComplete(null); // No associated music event
                 }
             }
 

@@ -241,7 +241,11 @@ public class UserProfileFragment extends Fragment {
             });
             moodEventsLiveData = mood_event_controller.getAllMoodEvents(null);
             binding.logoutButton.setVisibility(View.VISIBLE);
-            binding.logoutButton.setOnClickListener(v -> user_manager.logout(this));
+            binding.logoutButton.setOnClickListener(v -> {
+                user_manager.logout();
+                NavHostFragment.findNavController(UserProfileFragment.this)
+                        .navigate(R.id.logoutFromApp);
+            });
             if (moodEventsLiveData != null) {
                 getMoodEventFromDB();
             }
