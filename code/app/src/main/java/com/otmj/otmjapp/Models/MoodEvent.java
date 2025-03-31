@@ -1,7 +1,5 @@
 package com.otmj.otmjapp.Models;
 
-import android.location.Location;
-
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.Exclude;
