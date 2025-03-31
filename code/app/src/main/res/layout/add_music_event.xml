@@ -42,7 +42,6 @@
         app:selectionRequired="false" />
 
     <SearchView
-        android:id="@+id/search_song"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:queryHint="@string/search_music_hint" />
@@ -60,15 +59,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
-            android:id="@+id/search_results"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="225dp"
             android:layout_marginTop="10dp"
             android:background="#F0F2F0"
-            android:choiceMode="singleChoice"
             app:layout_constraintTop_toTopOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -76,7 +72,6 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/input_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="15dp"
