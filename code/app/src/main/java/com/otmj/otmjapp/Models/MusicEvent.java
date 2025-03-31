@@ -1,61 +1,61 @@
 package com.otmj.otmjapp.Models;
 
-import com.google.gson.annotations.SerializedName;
+import com.google.firebase.firestore.Exclude;
 import com.otmj.otmjapp.API.Models.Track;
+
+import java.util.Objects;
 
 /**
  * Represents a music event - the association of a track with a feeling.
+ * A music event is associated with some mood event
  */
 public class MusicEvent extends DatabaseObject {
+    private String moodEventID;
+    private String userID;
+    // Actual music event information
     private Track track;
-    @SerializedName("associatedMood")
-    private String associatedMood;
     private String feeling;
+    // ----------------------------
+    @Exclude
+    private MoodEvent moodEvent;
+    @Exclude
     private User user;
-    private String albumArtURL;
-    private Privacy privacy;
 
-    // empty constructor for firebase
+    // Empty constructor for firebase
     MusicEvent() {}
-    //TODO: make sure on edit mood event, album art is shown
+
     /**
      * Constructor for MusicEvent
-     * <p>
      * @param track          The track associated with the music event.
      * @param feeling        The feeling evoked by the track.
      */
-    public MusicEvent(Track track,
-                      String feeling) {
+    public MusicEvent(Track track, String feeling) {
         this.track = track;
         this.feeling = feeling;
     }
 
-    public Track getTrack() {
-        return track;
+    public String getMoodEventID() {
+        return moodEventID;
     }
 
-    public void setTrack(Track track) {
-        this.track = track;
+    public void setMoodEventID(String moodEventID) {
+        this.moodEventID = moodEventID;
     }
 
-    public String getAssociatedMood() {
-        return associatedMood;
+    public MoodEvent getMoodEvent() {
+        return moodEvent;
     }
 
-    public void setAssociatedMood(Object value) {
-        if (value instanceof Long) {
-            this.associatedMood = String.valueOf(value);
-        } else if (value instanceof String) {
-            this.associatedMood = (String) value;
-        }
+    public void setMoodEvent(MoodEvent moodEvent) {
+        this.moodEvent = moodEvent;
     }
 
-    public String getFeeling() {
-        return feeling;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setFeeling(String feeling) {
-        this.feeling = feeling;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public User getUser() {
@@ -66,15 +66,34 @@ public class MusicEvent extends DatabaseObject {
         this.user = user;
     }
 
-    public String getAlbumArtURL() {
-        return albumArtURL;
+    public Track getTrack() {
+        return track;
     }
 
-    public void setAlbumArtURL(String albumArtURL) {
-        this.albumArtURL = albumArtURL;
+    public void setTrack(Track track) {
+        this.track = track;
     }
 
-    public Privacy getPrivacy() { return privacy; }
+    public String getFeeling() {
+        return feeling;
+    }
 
-    public void setPrivacy(Privacy privacy) { this.privacy = privacy; }
+    public void setFeeling(String feeling) {
+        this.feeling = feeling;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof MusicEvent)) return false;
+        MusicEvent that = (MusicEvent) o;
+        return Objects.equals(moodEventID, that.moodEventID)
+                && Objects.equals(userID, that.userID)
+                && Objects.equals(track, that.track)
+                && Objects.equals(feeling, that.feeling);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(moodEventID, userID, track, feeling);
+    }
 }

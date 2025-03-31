@@ -3,6 +3,7 @@ package com.otmj.otmjapp.API.Models;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Track {
     @SerializedName("album")
@@ -13,15 +14,15 @@ public class Track {
     private final int duration;
     @SerializedName("name")
     private final String title;
-    @SerializedName("id")
-    private final String id;
+    @SerializedName("preview_url")
+    private final String previewURL;
 
     // default constructor required for field initialization
     Track() {
         this.album = null;
         this.artists = null;
         this.title = "";
-        this.id = "";
+        this.previewURL = "";
         this.duration = 0;
     }
 
@@ -37,11 +38,27 @@ public class Track {
         return album;
     }
 
-    public String getID() {
-        return id;
+    public String getPreviewURL() {
+        return previewURL;
     }
 
     public int getDuration() {
         return duration;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Track)) return false;
+        Track track = (Track) o;
+        return duration == track.duration
+                && Objects.equals(album, track.album)
+                && Objects.equals(artists, track.artists)
+                && Objects.equals(title, track.title)
+                && Objects.equals(previewURL, track.previewURL);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(album, artists, duration, title, previewURL);
     }
 }

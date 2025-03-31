@@ -5,7 +5,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import com.google.firebase.firestore.Query;
+import com.otmj.otmjapp.Models.DBSortOption;
 import com.otmj.otmjapp.Models.DatabaseObject;
 
 import java.util.ArrayList;
@@ -95,9 +97,7 @@ public class FirestoreDB<T extends DatabaseObject> {
         // Order by the given sort options
         if (sortOptions != null) {
             for (DBSortOption sort : sortOptions) {
-                if (sort != null) {
-                    ref = sort.getSorting(ref);
-                }
+                ref = sort.getSorting(ref);
             }
         }
 

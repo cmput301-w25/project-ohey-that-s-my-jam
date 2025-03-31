@@ -5,7 +5,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,7 +18,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.otmj.otmjapp.Adapters.UserProfilePageMoodEventAdapter;
-import com.otmj.otmjapp.Helper.FilterOptions;
+import com.otmj.otmjapp.Helper.FirestoreDB;
+import com.otmj.otmjapp.Models.FilterOptions;
 import com.otmj.otmjapp.Helper.ImageHandler;
 import com.otmj.otmjapp.Helper.MoodEventsManager;
 import com.otmj.otmjapp.Helper.FollowHandler;
@@ -26,7 +31,6 @@ import com.otmj.otmjapp.databinding.MyProfileBinding;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 public class UserProfileFragment extends Fragment {
@@ -34,6 +38,40 @@ public class UserProfileFragment extends Fragment {
     private UserProfilePageMoodEventAdapter moodEventAdapter;
     private LiveData<ArrayList<MoodEvent>> moodEventsLiveData;
     private FilterOptions filterOptions;
+
+    private final ActivityResultLauncher<PickVisualMediaRequest> galleryLauncher =
+            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                if (uri != null) {
+                    long imageSize = ImageHandler.getImageSize(requireContext(), uri);
+                    if (imageSize <= 65536) {
+                        Toast.makeText(requireContext(), "Loading image...", Toast.LENGTH_SHORT).show();
+                        ImageHandler.uploadToFirebaseStorage(requireContext(), uri, new ImageHandler.UploadCallback() {
+                            @Override
+                            public void onSuccess(String imageUrl) {
+                                Log.d("Image Upload", "Image successfully uploaded: " + imageUrl);
+
+                                // 1. Update in-memory User object
+                                User currentUser = UserManager.getInstance().getCurrentUser();
+                                currentUser.setProfilePictureLink(imageUrl);
+
+                                // 2. Push updated User object to Firestore using your FirestoreDB helper
+                                FirestoreDB<User> userDB = new FirestoreDB<>("users");
+                                userDB.updateDocument(currentUser);
+
+                                // 3. Update UI immediately
+                                ImageHandler.loadCircularImage(requireContext(), imageUrl, binding.profileImage);
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                Log.e("Image Upload", "Failed to upload image: " + e.getMessage());
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getContext(), "Image size too big", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
 
     @Override
@@ -51,33 +89,6 @@ public class UserProfileFragment extends Fragment {
         // Enable the buttons
         binding.followersButton.setClickable(true);
         binding.followingButton.setClickable(true);
-
-        // Navigate to Followers List when Followers Button is clicked
-        binding.followersButton.setOnClickListener(v -> {
-            Bundle args = new Bundle();
-            args.putString("buttonClicked", "followers");  // Add an argument indicating which button was clicked
-
-            // Navigate to Followers List using Navigation Component
-            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followersListFragment, args);
-        });
-
-        // Navigate to Followers List when Following Button is clicked
-        binding.followingButton.setOnClickListener(v -> {
-            Bundle args = new Bundle();
-            args.putString("buttonClicked", "following");  // Add an argument indicating which button was clicked
-
-            // Navigate to Following List using Navigation Component
-            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, args);
-        });
-
-        // Navigate to Requests List when Requests Button is clicked
-        binding.viewRequestsButton.setOnClickListener(v -> {
-            Bundle args = new Bundle();
-            args.putString("buttonClicked", "requests");  // Add an argument indicating which button was clicked
-
-            // Navigate to Requests List using Navigation Component
-            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, args);
-        });
 
         UserProfileFragmentArgs args = UserProfileFragmentArgs.fromBundle(getArguments());
 
@@ -122,7 +133,7 @@ public class UserProfileFragment extends Fragment {
                 // Save filter options
                 filterOptions = newFilterOptions;
                 // Get new mood events with specified filter
-                moodEventsLiveData = mood_event_controller.getUserMoodEvents(
+                moodEventsLiveData = mood_event_controller.getAllMoodEvents(
                         newFilterOptions.buildFilter(idOfUser));
                 if (moodEventsLiveData != null) {
                     getMoodEventFromDB();
@@ -223,13 +234,52 @@ public class UserProfileFragment extends Fragment {
             });
 
         } else {
-            moodEventsLiveData = mood_event_controller.getUserMoodEvents(null);
+            binding.profileImage.setOnClickListener(v -> {
+                galleryLauncher.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
+            });
+            moodEventsLiveData = mood_event_controller.getAllMoodEvents(null);
             binding.logoutButton.setVisibility(View.VISIBLE);
-            binding.logoutButton.setOnClickListener(v -> user_manager.logout(this));
+            binding.logoutButton.setOnClickListener(v -> {
+                user_manager.logout();
+                NavHostFragment.findNavController(UserProfileFragment.this)
+                        .navigate(R.id.logoutFromApp);
+            });
             if (moodEventsLiveData != null) {
                 getMoodEventFromDB();
             }
         }
+
+        // Navigate to Followers List when Followers Button is clicked
+        binding.followersButton.setOnClickListener(v -> {
+            Bundle followersargs = new Bundle();
+            followersargs.putString("buttonClicked", "followers");  // Add an argument indicating which button was clicked
+            followersargs.putString("userID", user.getID());
+
+            // Navigate to Followers List using Navigation Component
+            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followersListFragment, followersargs);
+        });
+
+        // Navigate to Followers List when Following Button is clicked
+        binding.followingButton.setOnClickListener(v -> {
+            Bundle followingargs = new Bundle();
+            followingargs.putString("buttonClicked", "following");  // Add an argument indicating which button was clicked
+            followingargs.putString("userID", user.getID());
+
+
+            // Navigate to Following List using Navigation Component
+            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, followingargs);
+        });
+
+        // Navigate to Requests List when Requests Button is clicked
+        binding.viewRequestsButton.setOnClickListener(v -> {
+            Bundle viewRequestsargs = new Bundle();
+            viewRequestsargs.putString("buttonClicked", "requests");  // Add an argument indicating which button was clicked
+
+            // Navigate to Requests List using Navigation Component
+            Navigation.findNavController(v).navigate(R.id.action_userProfileFragment_to_followingListFragment, viewRequestsargs);
+        });
     }
 
     public void getMoodEventFromDB(){

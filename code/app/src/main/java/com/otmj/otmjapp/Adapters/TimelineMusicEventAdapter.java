@@ -45,7 +45,7 @@ public class TimelineMusicEventAdapter extends ArrayAdapter<MusicEvent> {
         trackTitle.setText(title);
 
         TextView mood = view.findViewById(R.id.mood);
-        String moodText = "Mood: " + currentMusicEvent.getAssociatedMood();
+        String moodText = "Mood: " + currentMusicEvent.getMoodEvent().getEmotionalState().toString();
         mood.setText(moodText);
 
         TextView feeling = view.findViewById(R.id.feeling);
@@ -59,14 +59,15 @@ public class TimelineMusicEventAdapter extends ArrayAdapter<MusicEvent> {
         ImageView albumArt = view.findViewById(R.id.albumArt);
 
         // load image if available
-        if(currentMusicEvent.getAlbumArtURL() != null && !currentMusicEvent.getAlbumArtURL().isEmpty()) {
-            Log.d("ImageLoader", "Loading image: " + currentMusicEvent.getAlbumArtURL());
+        String imageURL = currentMusicEvent.getTrack().getAlbum().getImages().get(0).getURL();
+        if(imageURL != null && !imageURL.isEmpty()) {
+            Log.d("ImageLoader", "Loading image: " + imageURL);
 
             // ensure ImageView is visible
             albumArt.setVisibility(View.VISIBLE);
 
             // use ImageHandler to load the image
-            ImageHandler.loadImage(parent.getContext(), currentMusicEvent.getAlbumArtURL(), albumArt);
+            ImageHandler.loadImage(parent.getContext(), imageURL, albumArt);
         }
 
         return view;

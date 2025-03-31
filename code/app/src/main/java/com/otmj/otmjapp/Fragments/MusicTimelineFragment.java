@@ -11,9 +11,7 @@ import android.widget.ListView;
 import androidx.fragment.app.Fragment;
 
 import com.otmj.otmjapp.Adapters.TimelineMusicEventAdapter;
-import com.otmj.otmjapp.Helper.FilterOptions;
 import com.otmj.otmjapp.Helper.FollowHandler;
-import com.otmj.otmjapp.Helper.MoodHistoryFilter;
 import com.otmj.otmjapp.Helper.MusicEventsManager;
 import com.otmj.otmjapp.Helper.UserManager;
 import com.otmj.otmjapp.Models.MusicEvent;
@@ -21,14 +19,11 @@ import com.otmj.otmjapp.Models.User;
 import com.otmj.otmjapp.databinding.FragmentMusicTimelineBinding;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class MusicTimelineFragment extends Fragment {
     private FragmentMusicTimelineBinding binding;
     private final ArrayList<MusicEvent> allMusicEvents = new ArrayList<>();
     private TimelineMusicEventAdapter musicEventAdapter;
-    private FilterOptions filterOptions = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,56 +57,14 @@ public class MusicTimelineFragment extends Fragment {
         followHandler.getFollowIDs(currentUser.getID(), FollowHandler.FollowType.Following, ids -> {
             ids.add(currentUser.getID()); // Add user's ID to list
             Log.d("MusicTimelineFragment", "Following IDs: " + ids.toString());
-            MoodHistoryFilter filter = MoodHistoryFilter.PublicMoodEvents();
             MusicEventsManager musicEventsManager = new MusicEventsManager(ids);
-            musicEventsManager.getPublicMusicEvents(filter).observe(
-                    getViewLifecycleOwner(),
-                    this::updateMusicEventsList
-            );
-
-            // Show filter popup on click
-            binding.filterButton.setOnClickListener(v -> {
-                FilterFragment filterPopup = new FilterFragment(filterOptions, (newFilterOptions) -> {
-                    // save filter options
-                    filterOptions = newFilterOptions;
-                    // use the new filter options to show music events
-                    musicEventsManager.getPublicMusicEvents(newFilterOptions.buildFilter(ids)).observe(
-                            getViewLifecycleOwner(),
-                            this::updateMusicEventsList
-                    );
-                });
+            musicEventsManager.getAllMusicEvents(true, musicEvent -> {
+                allMusicEvents.add(musicEvent);
+                if (musicEventAdapter != null) {
+                    musicEventAdapter.notifyDataSetChanged();
+                }
             });
         });
-    }
-
-    private void updateMusicEventsList(List<MusicEvent> musicEvents) {
-        allMusicEvents.clear();
-
-        HashMap<String, ArrayList<MusicEvent>> musicEventsPerUser = new HashMap<>();
-        for (MusicEvent musicEvent : musicEvents) {
-            // If this is the first time this userID is seen
-            if(null != musicEvent.getUser()) {
-                if (!musicEventsPerUser.containsKey(musicEvent.getUser().getID())) {
-                    // Add to map with current mood event
-                    musicEventsPerUser.put(musicEvent.getUser().getID(), new ArrayList<>(List.of(musicEvent)));
-                } else {
-                    ArrayList<MusicEvent> userMusicEvents = musicEventsPerUser.get(musicEvent.getUser().getID());
-                    // Only add if we don't have up to 3 mood events for the user
-                    if (userMusicEvents != null && userMusicEvents.size() < 3) {
-                        userMusicEvents.add(musicEvent);
-                    } else {
-                        continue;
-                    }
-                }
-            }
-
-            // At this point, we're only adding a maximum of 3 mood events per user
-            allMusicEvents.add(musicEvent);
-        }
-
-        if (musicEventAdapter != null) {
-            musicEventAdapter.notifyDataSetChanged();
-        }
     }
 
     @Override

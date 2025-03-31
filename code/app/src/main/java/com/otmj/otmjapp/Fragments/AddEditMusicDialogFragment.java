@@ -33,7 +33,7 @@ public class AddEditMusicDialogFragment extends DialogFragment {
      */
     public interface SearchResultsCallback {
         /**
-         * Defines what happens when search results are retrieved.
+         * Define what to do when search results are found.
          * @param tracks A list of tracks that are returned based on the search query.
          */
         void onTracksFound(ArrayList<Track> tracks);
@@ -44,7 +44,7 @@ public class AddEditMusicDialogFragment extends DialogFragment {
      */
     public interface onTrackSelectedListener {
         /**
-         * Defines what to do when a track is selected from the search results.
+         * Define what to do when a track is selected from the search results.
          * <p>
          * @param createdMusicEvent The music event created with the selected track.
          */
@@ -188,4 +188,3 @@ public class AddEditMusicDialogFragment extends DialogFragment {
         this.onTrackSelectedListener = listener;
     }
 }
-

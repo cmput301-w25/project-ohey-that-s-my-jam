@@ -1,211 +1,164 @@
 package com.otmj.otmjapp.Helper;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.ImageView;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.google.firebase.firestore.Filter;
+import com.otmj.otmjapp.Models.FirestoreCollections;
 import com.otmj.otmjapp.Models.MoodEvent;
 import com.otmj.otmjapp.Models.MusicEvent;
-import com.otmj.otmjapp.Models.User;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MusicEventsManager {
-    public interface URICallback {
-        void onSuccess(String uri);
+    public interface MusicEventCallback {
+        void onComplete(MusicEvent musicEvent);
     }
 
     /**
-     * Specifies the user(s) from which to get mood events
+     * Specifies the user(s) from which to get music events
      */
     private final ArrayList<String> userIDs;
     /**
      * Holds its own reference to the mood events db collection
      */
-    private final FirestoreDB<MoodEvent> db;
+    private final FirestoreDB<MusicEvent> db;
     /**
      * Observable object that callers can observe to get notified of changes
      */
     private final MutableLiveData<ArrayList<MusicEvent>> musicHistory;
-    private MoodHistoryFilter lastFilter = null;
+
     public MusicEventsManager(List<String> userIDs) {
         assert !userIDs.isEmpty();
 
         this.userIDs = new ArrayList<>(userIDs);
-        this.db = new FirestoreDB<>(FirestoreCollections.MoodEvents.name);
-        this.db.addCollectionListener(() -> {
-            if (lastFilter != null) {
-                getMusicEvents(lastFilter);
-            }
-        });
+        this.db = new FirestoreDB<>(FirestoreCollections.MusicEvents.name);
 
         musicHistory = new MutableLiveData<>(new ArrayList<>());
     }
 
-    private LiveData<ArrayList<MusicEvent>> getMusicEvents(@NonNull MoodHistoryFilter filter) { //TODO: music history filter not working
-        // We need the users associated with each mood event
-        UserManager.getInstance().getUsers(userIDs, new UserManager.AuthenticationCallback() {
+    /**
+     * Get all music events of given users
+     * @param onlyPublic    Specifies whether to get only public music events
+     *                      or only both private and public
+     * @param callback      Callback to handle result
+     */
+    public void getAllMusicEvents(boolean onlyPublic, MusicEventCallback callback) {
+        Filter filter = Filter.inArray("userID", userIDs);
+        db.getDocuments(filter, MusicEvent.class, new FirestoreDB.DBCallback<>() {
             @Override
-            public void onAuthenticated(ArrayList<User> authenticatedUsers) {
-                // Get all mood events from specified users
-                db.getDocuments(filter.getFilter(), MoodEvent.class, new FirestoreDB.DBCallback<>() {
-                    @Override
-                    public void onSuccess(ArrayList<MoodEvent> result) {
-                        lastFilter = filter;
+            public void onSuccess(ArrayList<MusicEvent> result) {
+                MoodEventsManager moodEventsManager = new MoodEventsManager(userIDs);
+                for (MusicEvent musicEvent : result) {
+                    // Get mood event details
+                    moodEventsManager.getMoodEvent(musicEvent.getMoodEventID(), m -> {
+                        // If onlyPublic is set, then only return public music event
+                        if (!onlyPublic || m.getPrivacy() == MoodEvent.Privacy.Public) {
+                            musicEvent.setMoodEvent(m);
+                            musicEvent.setUser(m.getUser());
 
-                        ArrayList<MusicEvent> musicEvents = new ArrayList<>();
-                        // For each mood event
-                        for (MoodEvent moodEvent : result) {
-                            if(null != moodEvent.getMusicEvent()) {
-                                moodEvent.getMusicEvent().setUser(moodEvent.getUser());
-                                musicEvents.add(moodEvent.getMusicEvent());
-                            }
+                            callback.onComplete(musicEvent);
                         }
-
-                        musicHistory.setValue(musicEvents);
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        // TODO: Do something about error
-                        Log.d("MoodEventsManager", e.toString());
-                    }
-                }, filter.getSortOption());
+                    });
+                }
             }
 
             @Override
-            public void onAuthenticationFailure(String reason) {
-                // TODO: Handle case where we're unable to get users
-                Log.d("MoodEventsManager", reason);
+            public void onFailure(Exception e) {
+                Log.e("MusicEventsManager", "Unable to retrieve music events");
             }
         });
-
-        return musicHistory;
     }
 
     /**
-     * Gets all public mood events from user(s)
-     * @param customFilter A filter specifies the condition for the mood event to be returned
-     *                     and how to sort it
-     *
-     * @return An observable value that returns all the music events.
-     * @see #getMusicEvents(MoodHistoryFilter)
+     * Get music event of specified mood event of one of the given users
+     * @param moodEventID   Associated mood event id
      */
-    public LiveData<ArrayList<MusicEvent>> getPublicMusicEvents(MoodHistoryFilter customFilter) {
-        if (customFilter == null) {
-            customFilter = MoodHistoryFilter.Default(userIDs);
-        }
-        customFilter.addFilter(MoodHistoryFilter.PublicMoodEvents());
+    public void getAssociatedMusicEvent(String moodEventID, MusicEventCallback callback) {
+        Filter filter = Filter.and(
+                Filter.inArray("userID", userIDs),
+                Filter.equalTo("moodEventID", moodEventID)
+        );
+        db.getDocuments(filter, MusicEvent.class, new FirestoreDB.DBCallback<>() {
+            @Override
+            public void onSuccess(ArrayList<MusicEvent> result) {
+                if (!result.isEmpty()) {
+                    callback.onComplete(result.get(0));
+                }
+            }
 
-        return getMusicEvents(customFilter);
-    }
-
-    /**
-     * Gets all private mood events from user(s)
-     * @param customFilter A filter specifies the condition for the mood event to be returned
-     *                     and how to sort it
-     *
-     * @return An observable value that returns all the mood events.
-     * @see #getMusicEvents(MoodHistoryFilter)
-     */
-    public LiveData<ArrayList<MusicEvent>> getUserMusicEvents(MoodHistoryFilter customFilter) {
-        return getMusicEvents((null != customFilter)
-                ? customFilter
-                : MoodHistoryFilter.Default(userIDs));
-    }
-
-    /**
-     * Uploads the album art of a music event to Firebase Storage.
-     * <p>
-     * @param imageView  The ImageView object containing the image to be uploaded.
-     * @param imageName  The name of the image file
-     * @param moodEvent The MoodEvent object that contains the MusicEvent with the album art
-     */
-    public void uploadAlbumArtToStorage(ImageView imageView, String imageName, MoodEvent moodEvent) {
-        // create reference to file in storage
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        String filename = imageName + ".jpg";
-        StorageReference albumArtImagesRef = storageRef.child("track_albums/" + filename);
-
-        Log.d("FirebaseStorage", "Upload path: " + albumArtImagesRef.toString());
-
-        // get bitmap from ImageView
-        imageView.setDrawingCacheEnabled(true);
-        imageView.buildDrawingCache();
-
-        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-
-        // compress bitmap into JPEG format
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
-        byte[] data = baos.toByteArray();
-
-        // sends byte array to to Firebase Storage
-        UploadTask uploadTask = albumArtImagesRef.putBytes(data);
-
-        uploadTask.addOnFailureListener(e -> {
-            Log.d("MusicEventsManager", "Image upload failed: " + e.getMessage());
-        }).addOnSuccessListener(taskSnapshot -> {
-            Log.d("MusicEventsManager", "Image upload successful");
-
-            getDownloadURL("track_albums/" + filename, url -> {
-                Log.d("MusicEventsManager", "Download URL: " + url);
-                moodEvent.getMusicEvent().setAlbumArtURL(url);
-
-                // update the mood event so that its reference to the music event contains the
-                // album art url
-                db.updateDocument(moodEvent);
-
-            });
+            @Override
+            public void onFailure(Exception e) {}
         });
     }
 
     /**
-     * Deletes the album art from Firebase Storage.
-     * <p>
-     * @param musicEvent The MusicEvent object associated with the image.
+     * Insert new music event to database
+     * @param musicEvent Music event to insert
      */
-    public void deleteAlbumArtFromStorage(MusicEvent musicEvent) {
-        String filename = musicEvent.getTrack().getTitle() + musicEvent.getTrack().getArtists().get(0) + ".jpg";
+    public void addMusicEvent(MusicEvent musicEvent) {
+        db.addDocument(musicEvent, new FirestoreDB.DBCallback<>() {
+            @Override
+            public void onSuccess(ArrayList<MusicEvent> result) {
+                if (!result.isEmpty()) {
+                    MusicEvent m = result.get(0);
 
-        // create reference to file in storage
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference albumArtImagesRef = storageRef.child("track_albums/" + filename);
+                    if (musicHistory.getValue() == null) {
+                        musicHistory.setValue(new ArrayList<>(List.of(m)));
+                    } else {
+                        musicHistory.getValue().add(m);
+                    }
+                } else {
+                    Log.e("MusicEventsManager", "Unable to add music event to DB");
+                }
+            }
 
-        //delete file
-        albumArtImagesRef.delete()
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("MusicEventsManager", "Image deletion successful");
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("FirebaseStorage", "Error deleting file: " + e.getMessage());
-                });
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("MusicEventsManager", e.toString());
+            }
+        });
     }
 
     /**
-     * Retrieves the download url for a track's album art.
-     * <p>
-     * @param filepath The path to the album art's image in Firebase Storage.
-     * @param callback The callback to invoke when the download URL is retrieved.
+     * Updates the album art of a music event in the database.
+     * @param musicEvent The MusicEvent object to update.
      */
-    public void getDownloadURL(String filepath, URICallback callback) {
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(filepath);
+    public void updateMusicEvent(MusicEvent musicEvent) {
+        ArrayList<MusicEvent> musicEvents = musicHistory.getValue();
+        if (musicEvents != null) {
+            int indexOfMusicEvent = musicEvents.indexOf(musicEvent);
+            if (indexOfMusicEvent != -1) {
+                // Update music event at that index
+                musicEvents.remove(indexOfMusicEvent);
+                musicEvents.add(indexOfMusicEvent, musicEvent);
+            }
+        }
+        db.updateDocument(musicEvent);
+    }
 
-        storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            Log.d("MusicEventsManager", "Download URL: " + uri.toString());
-            callback.onSuccess(uri.toString());
-        }).addOnFailureListener(e -> {
-            Log.d("MusicEventsManager", "Download URL failed: " + e.getMessage());
+    /**
+     * Deletes a music event from the database.
+     * @param musicEvent The MusicEvent object to delete.
+     */
+    public void deleteMusicEvent(MusicEvent musicEvent) {
+        if (musicHistory.getValue() != null) {
+            musicHistory.getValue().remove(musicEvent);
+        }
+        db.deleteDocument(musicEvent);
+    }
+
+    /**
+     * Delete the music event associated with specified mood event
+     * @param moodEventID   ID of mood event associated with some music event
+     */
+    public void deleteMusicEvent(String moodEventID) {
+        // First get the music event
+        getAssociatedMusicEvent(moodEventID, m -> {
+            // Then delete it
+            deleteMusicEvent(moodEventID);
         });
     }
 }

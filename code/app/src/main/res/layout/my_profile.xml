@@ -109,7 +109,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="0dp"
                     android:padding="5dp">
 
                         <com.google.android.material.button.MaterialButton
@@ -194,6 +194,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="90dp"
                 android:clipToPadding="false"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
                 android:fillViewport="true"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"/>

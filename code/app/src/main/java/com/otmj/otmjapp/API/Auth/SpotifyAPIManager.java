@@ -26,7 +26,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -270,7 +269,7 @@ public class SpotifyAPIManager {
     }
 
     /**
-     * Checks if the access token has expired.
+     * Checks if the access token has expit red.
      *
      * @return Whether or not the access token has expired.
      */
@@ -278,10 +277,10 @@ public class SpotifyAPIManager {
         if(prefsHelper.getTokenExpirationTime().equals("undefined")) {
             return false;
         } else {
-            LocalTime expirationTime = LocalTime.parse(prefsHelper.getTokenExpirationTime(),
+            LocalDateTime expirationTime = LocalDateTime.parse(prefsHelper.getTokenExpirationTime(),
                     DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            LocalTime currentTime = LocalTime.now();
-            Log.d("SpotifyAPIManager", "Expired: " + LocalTime.now().isAfter(expirationTime));
+            LocalDateTime currentTime = LocalDateTime.now();
+            Log.d("SpotifyAPIManager", "Expired: " + currentTime.isAfter(expirationTime));
             return currentTime.isAfter(expirationTime); // there's still an issue with time generation. troubleshoot this
         }
     }
