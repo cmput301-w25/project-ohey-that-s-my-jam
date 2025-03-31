@@ -1,6 +1,7 @@
 package com.otmj.otmjapp.Helper;
 
 import com.google.firebase.firestore.Filter;
+import com.otmj.otmjapp.Models.FirestoreCollections;
 import com.otmj.otmjapp.Models.Follow;
 import com.otmj.otmjapp.Models.FollowRequest;
 import com.otmj.otmjapp.Models.User;
