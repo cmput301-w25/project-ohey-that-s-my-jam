@@ -50,14 +50,6 @@ public class RequestsListViewAdapter extends ArrayAdapter<User> {
         TextView userNameTextView = listItemView.findViewById(R.id.username);
         userNameTextView.setText(user.getUsername());
 
-        // Get the profile picture URL
-        String profilePicUrl = user.getProfilePictureLink();
-
-        // Check if the profile picture URL is null or empty
-        if (profilePicUrl == null || profilePicUrl.isEmpty()) {
-            profilePicUrl = "android.resource://com.otmj.otmjapp/drawable/placeholder_image"; // Use a placeholder image
-        }
-
         Button confirmRequest = listItemView.findViewById(R.id.confirm_request_button);
         confirmRequest.setOnClickListener(view -> {
             View request = (View) view.getParent();
@@ -81,13 +73,14 @@ public class RequestsListViewAdapter extends ArrayAdapter<User> {
             });
         });
 
+        // Get the profile picture URL
+        String profilePicUrl = user.getProfilePictureLink();
         ImageView profileImageView = listItemView.findViewById(R.id.profile_image);
-        // Load the profile image if available
-        if (user.getProfilePictureLink() != null && !user.getProfilePictureLink().isEmpty()) {
-            ImageHandler.loadCircularImage(listItemView.getContext(), user.getProfilePictureLink(), profileImageView);
-        } else {
-            profileImageView.setImageResource(R.drawable.profile_placeholder); // default image
-        }
+        ImageHandler.loadCircularImage(
+                getContext(),
+                (profilePicUrl == null || profilePicUrl.isEmpty()) ? "" : profilePicUrl,
+                profileImageView
+        );
 
         return listItemView;
     }
