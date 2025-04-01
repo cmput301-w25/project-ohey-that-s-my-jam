@@ -191,9 +191,12 @@ public class MoodEventDetailsFragment extends Fragment {
             musicButton.setText(music.getTrack().getTitle());
             // Open preview when clicked, if available
             if (music.getTrack().getPreviewURL() != null) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(music.getTrack().getPreviewURL()));
-                startActivity(browserIntent);
+                musicButton.setOnClickListener(v -> {
+                    ;
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(music.getTrack().getPreviewURL()));
+                    startActivity(browserIntent);
+                });
             } else {
                 musicButton.setActivated(false);
             }
