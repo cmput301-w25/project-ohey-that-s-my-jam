@@ -29,13 +29,15 @@ public class Track {
     private final String title;
     @SerializedName("external_urls")
     private ExternalUrls externalUrls;
+    private final transient String previewURL;
 
     // default constructor required for field initialization
     Track() {
         this.album = null;
         this.artists = null;
         this.title = "";
-        externalUrls = null;
+        this.externalUrls = null;
+        this.previewURL = null;
         this.duration = 0;
     }
 
@@ -55,7 +57,7 @@ public class Track {
         if (externalUrls != null) {
             return externalUrls.getSpotifyUrl();
         }
-        return null;
+        return previewURL;
     }
 
     public int getDuration() {
