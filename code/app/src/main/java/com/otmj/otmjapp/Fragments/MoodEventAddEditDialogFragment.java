@@ -399,7 +399,11 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             }
 
             if (null != musicEvent) {
-                musicEventsManager.updateMusicEvent(musicEvent);
+                if (musicEvent.getID() == null) {
+                    musicEventsManager.addMusicEvent(musicEvent);
+                } else {
+                    musicEventsManager.updateMusicEvent(musicEvent);
+                }
             }
             moodEventsManager.updateMoodEvent(moodEvent);
         // Add new mood event
