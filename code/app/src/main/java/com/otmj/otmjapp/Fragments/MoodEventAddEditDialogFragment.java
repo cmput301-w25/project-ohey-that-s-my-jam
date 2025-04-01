@@ -212,6 +212,7 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
                 }
                 if (moodEvent.getLocation() != null) {
                     attachLocation = true;
+                    location = moodEvent.getLocation().toLocation();
                     getCurrentAddress(moodEvent.getLocation().toLocation());
                     addLocationBottom.setImageResource(R.drawable.detach_location);
                 }
@@ -542,9 +543,9 @@ public class MoodEventAddEditDialogFragment extends DialogFragment {
             public void onAddressResult(String country, String state, String city) {
                 Log.d("Address", "Address: " + city + state + country);
                 addressTextView.setText(city + ", " + state + ", " + country);
-                new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                    addressTextView.setText(""); // or addressTextView.setText("");
-                }, 2000);
+                //new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                //    addressTextView.setText(""); // or addressTextView.setText("");
+                //}, 2000);
             }
 
             @Override
