@@ -60,7 +60,7 @@ public class FirestoreDBTest {
                 false,
                 "Lakers won",
                 null,
-                Privacy.Public
+                MoodEvent.Privacy.Public
         );
     }
 
