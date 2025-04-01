@@ -13,19 +13,20 @@
 
 ## Project Description
 
-[Brief description of the project in your own words]
+**Moodswing**, the app that transforms your emotional data into a vibrant, interactive map of your life. 
 
 ## Key Features
 
-- [Feature 1]: Brief description
-- [Feature 2]: Brief description
-- [Feature 3]: Brief description
+- Chart Your Emotional Terrain: Easily log your mood throughout the day.
+- Map Your Emotional Footprint: Our map view allows you to see how your mood correlates with specific locations.
+- Enrich Your Mood Logs: Add a personal touch to each mood entry by attaching photos and songs.
+- Connect and Share: Opt-in to share your mood data with close friends. See their emotional journeys, offer support, and build deeper connections.
 
 ## Setup Instructions
 
-1. [Step 1]
-2. [Step 2]
-3. [Step 3]
+1. Download [secret files](https://drive.google.com/drive/folders/1gEdq5SgcwHZlUTLDT3_DhAgJwgdgukYG?usp=drive_link).
+2. Put the "google_services.json" file in the `code/app` directory.
+3. Put the "*.properties" files in the `code` directory.
 
 ## Documentation
 
