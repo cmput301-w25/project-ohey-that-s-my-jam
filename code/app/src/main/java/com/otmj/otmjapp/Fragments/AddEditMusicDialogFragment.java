@@ -79,7 +79,8 @@ public class AddEditMusicDialogFragment extends DialogFragment {
                         if(prefsHelper.accessTokenExists()) {
                             if(authManager.accessTokenExpired()) {
                                 Log.d("AddEditMusicDialogFragment", "Access token expired");
-                                authManager.refreshAccessToken();
+//                                authManager.refreshAccessToken();
+                                authManager.login();
                             }
 
                             Log.d("AddEditMusicDialogFragment", "Searching for song: " + s);

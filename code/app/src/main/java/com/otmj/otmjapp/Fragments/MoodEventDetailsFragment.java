@@ -113,10 +113,12 @@ public class MoodEventDetailsFragment extends Fragment {
         if (Objects.equals(loggedInUser, moodEventUser)) {
             unfollowButton.setVisibility(View.GONE);
         } else {
-            FollowHandler followHandler = new FollowHandler();
-            followHandler.unfollowUser(moodEvent.getUserID());
-            unfollowButton.setEnabled(false); // Disable clicks
-            unfollowButton.setAlpha(0.5f); // Make it look disabled
+            unfollowButton.setOnClickListener(v -> {
+                FollowHandler followHandler = new FollowHandler();
+                followHandler.unfollowUser(moodEvent.getUserID());
+                unfollowButton.setEnabled(false); // Disable clicks
+                unfollowButton.setAlpha(0.5f); // Make it look disabled
+            });
         }
 
         String profileImageUrl = moodEvent.getUser().getProfilePictureLink(); // Make sure this returns a proper URL
@@ -192,6 +194,8 @@ public class MoodEventDetailsFragment extends Fragment {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW,
                         Uri.parse(music.getTrack().getPreviewURL()));
                 startActivity(browserIntent);
+            } else {
+                musicButton.setActivated(false);
             }
         });
 

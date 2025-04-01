@@ -1,5 +1,7 @@
 package com.otmj.otmjapp.Fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import android.util.Log;
@@ -39,7 +41,12 @@ public class MusicTimelineFragment extends Fragment {
 
         musicEventListView.setAdapter(musicEventAdapter);
         musicEventListView.setOnItemClickListener((adapterView, view1, i, l) -> {
-            // TODO: set behaviour when event is clicked
+            MusicEvent music = musicEventAdapter.getItem(i);
+            if (music != null && music.getTrack().getPreviewURL() != null) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(music.getTrack().getPreviewURL()));
+                startActivity(browserIntent);
+            }
         });
 
         return binding.getRoot();
