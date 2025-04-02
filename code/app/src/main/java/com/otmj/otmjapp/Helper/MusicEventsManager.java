@@ -54,12 +54,14 @@ public class MusicEventsManager {
                 for (MusicEvent musicEvent : result) {
                     // Get mood event details
                     moodEventsManager.getMoodEvent(musicEvent.getMoodEventID(), m -> {
-                        // If onlyPublic is set, then only return public music event
-                        if (!onlyPublic || m.getPrivacy() == MoodEvent.Privacy.Public) {
-                            musicEvent.setMoodEvent(m);
-                            musicEvent.setUser(m.getUser());
+                        if (m != null) {
+                            // If onlyPublic is set, then only return public music event
+                            if (!onlyPublic || m.getPrivacy() == MoodEvent.Privacy.Public) {
+                                musicEvent.setMoodEvent(m);
+                                musicEvent.setUser(m.getUser());
 
-                            callback.onComplete(musicEvent);
+                                callback.onComplete(musicEvent);
+                            }
                         }
                     });
                 }

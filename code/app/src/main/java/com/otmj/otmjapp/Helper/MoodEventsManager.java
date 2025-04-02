@@ -75,7 +75,23 @@ public class MoodEventsManager {
                     @Override
                     public void onSuccess(ArrayList<MoodEvent> result) {
                         if (!result.isEmpty()) {
-                            callback.onComplete(result.get(0));
+                            MoodEvent moodEvent = result.get(0);
+
+                            UserManager userManager = UserManager.getInstance();
+                            userManager.getUsers(List.of(moodEvent.getUserID()), new UserManager.AuthenticationCallback() {
+                                @Override
+                                public void onAuthenticated(ArrayList<User> users) {
+                                    if (!users.isEmpty()) {
+                                        moodEvent.setUser(users.get(0));
+                                    }
+                                    callback.onComplete(moodEvent);
+                                }
+
+                                @Override
+                                public void onAuthenticationFailure(String reason) {
+                                    callback.onComplete(moodEvent); // With null user object
+                                }
+                            });
                         } else {
                             callback.onComplete(null);
                         }

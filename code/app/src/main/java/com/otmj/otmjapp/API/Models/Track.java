@@ -6,6 +6,19 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Track {
+    public static class ExternalUrls {
+        @SerializedName("spotify")
+        private String spotifyUrl;
+
+        public String getSpotifyUrl() {
+            return spotifyUrl;
+        }
+
+        public void setSpotifyUrl(String spotifyUrl) {
+            this.spotifyUrl = spotifyUrl;
+        }
+    }
+
     @SerializedName("album")
     private final Album album;
     @SerializedName("artists")
@@ -14,15 +27,17 @@ public class Track {
     private final int duration;
     @SerializedName("name")
     private final String title;
-    @SerializedName("preview_url")
-    private final String previewURL;
+    @SerializedName("external_urls")
+    private ExternalUrls externalUrls;
+    private final transient String previewURL;
 
     // default constructor required for field initialization
     Track() {
         this.album = null;
         this.artists = null;
         this.title = "";
-        this.previewURL = "";
+        this.externalUrls = null;
+        this.previewURL = null;
         this.duration = 0;
     }
 
@@ -39,6 +54,9 @@ public class Track {
     }
 
     public String getPreviewURL() {
+        if (externalUrls != null) {
+            return externalUrls.getSpotifyUrl();
+        }
         return previewURL;
     }
 
@@ -53,12 +71,11 @@ public class Track {
         return duration == track.duration
                 && Objects.equals(album, track.album)
                 && Objects.equals(artists, track.artists)
-                && Objects.equals(title, track.title)
-                && Objects.equals(previewURL, track.previewURL);
+                && Objects.equals(title, track.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(album, artists, duration, title, previewURL);
+        return Objects.hash(album, artists, duration, title);
     }
 }

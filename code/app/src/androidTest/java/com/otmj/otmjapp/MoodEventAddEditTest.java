@@ -62,7 +62,7 @@ public class MoodEventAddEditTest {
     private void MockPublicMoodEvent(@NonNull UserManager userManager) {
         user = userManager.getCurrentUser();
         userId = user.getID();
-        MoodEvent moodEvent = new MoodEvent(userId, EmotionalState.Happy, SocialSituation.Alone, false, "Got ice Cream!", null, Privacy.Public);
+        MoodEvent moodEvent = new MoodEvent(userId, EmotionalState.Happy, SocialSituation.Alone, false, "Got ice Cream!", null, MoodEvent.Privacy.Public);
         ArrayList<String> userIdList = new ArrayList<String>();
         userIdList.add(userId);
         moodEventsManager = new MoodEventsManager(userIdList);
@@ -72,7 +72,7 @@ public class MoodEventAddEditTest {
     private void MockPrivateMoodEvent(@NonNull UserManager userManager){
         user = userManager.getCurrentUser();
         userId= user.getID();
-        MoodEvent moodEvent = new MoodEvent(userId, EmotionalState.Sad, SocialSituation.Alone, false, "Ice Cream melted", null, Private);
+        MoodEvent moodEvent = new MoodEvent(userId, EmotionalState.Sad, SocialSituation.Alone, false, "Ice Cream melted", null, MoodEvent.Privacy.Private);
         ArrayList<String> userIdList = new ArrayList<String>();
         userIdList.add(userId);
         moodEventsManager = new MoodEventsManager(userIdList);

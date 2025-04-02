@@ -2,6 +2,7 @@ package com.otmj.otmjapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -100,10 +101,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleLoginResponse(Intent intent) {
-        String authCode = Objects.requireNonNull(intent.getData()).getQueryParameter("code");
+        Uri uri = intent.getData();
+        if (uri != null) {
+            String authCode = uri.getQueryParameter("code");
 
-        SpotifyAPIManager authManager = new SpotifyAPIManager(this);
-        authManager.getAccessToken(authCode);
+            SpotifyAPIManager authManager = new SpotifyAPIManager(this);
+            authManager.getAccessToken(authCode);
+        }
     }
 
     private void initializeSharedPrefs() { //TODO: maybe move to SharedPreferencesHelper to make it singleton
